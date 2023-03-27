@@ -1,0 +1,58 @@
+/* Global styles */
+    global{
+    box-sizing: border-box;
+    }
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    }
+    
+    nav {
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    }
+    
+    nav ul {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    }
+    
+    nav li {
+    margin-right: 10px;
+    }
+    
+    nav a {
+    color: #fff;
+    text-decoration: none;
+    }
+    
+    header {
+    background-image: url('header-background.jpg');
+    background-size: cover;
+    color: #fff;
+    padding: 50px;
+    text-align: center;
+    }
+    
+    header h1 {
+    font-size: 4em;
+    margin-bottom: 0;
+    }
+    
+    header h2 {
+    font-size: 2em;
+    margin-top: 0;
+    }
+    
+    main {
+    margin: 20px;
+    }
+    
+    /* Page-specific styles /
+    / Insert your own page-specific styles here */
