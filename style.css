@@ -37,7 +37,7 @@
     header {
     background-image: url('header-background.jpg');
     background-size: cover;
-    color: #fff;
+    color: rgb(71, 122, 216);
     padding: 50px;
     text-align: center;
     }
@@ -55,6 +55,3 @@
     main {
     margin: 20px;
     }
-    
-    /* Page-specific styles /
-    / Insert your own page-specific styles here */
