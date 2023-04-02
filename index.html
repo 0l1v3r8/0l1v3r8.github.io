@@ -9,31 +9,55 @@
   <body>
     <nav class="sidebar">
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="profile.html">Profile</a></li>
-        <li><a href="education.html">Education</a></li>
-        <li><a href="experience.html">Portfolio</a></li>
-        <div class="subnav">
-          <button class="subnavbtn">Notes <i class="fa fa-caret-down"></i></button>
-          <div class="subnav-content">
+        <!-- Home -->
+        <li class="active">
+          <a href="index.html">Home</a>
+        </li>
+
+        <!-- Profile -->
+        <li>
+          <a href="profile.html">Profile</a>
+        </li>
+
+        <!-- Education -->
+        <li>
+          <a href="education.html">Education</a>
+        </li>
+
+        <!-- Experience -->
+        <li>
+          <a href="cv.html">Experience</a>
+        </li>
+
+        <!-- Notes -->
+        <li class="dropdown">
+          <button class="dropbtn">Notes </button>
+          <div class="dropdown-content">
             <a href="https://github.com/0l1v3r8/Notes/blob/main/Mathematics/Mathematics_main.pdf">Mathematics</a>
-            <a href="">Probability + Statistics</a>
-            <a href="">Physical Science</a>
+            <a href="#">Probability + Statistics</a>
+            <a href="#">Physical Science</a>
           </div>
-        </div>
-        <li><a href="contact.html">Contact</a></li>
+        </li>
+
+        <!-- Contact -->
+        <li>
+          <a href="contact.html">Contact</a>
+        </li>
       </ul>
     </nav>
-    <header>
-      <h1><u><b>Oliver Brady</b></u></h1>
-      <h2>Learning More</h2>
-      <h3>Data Science, Statistics, Climate, Mathematical Modelling</h3>
-    </header>
-    <main>
-      <!-- Main content goes here -->
-    </main>
-    <footer>
-      <p>Oliver Brady</p>
-    </footer>
+
+    <div class="content">
+      <header>
+        <h1><u><b>Oliver Brady</b></u></h1>
+        <h2>Learning More</h2>
+        <h3>Data Science, Statistics, Climate, Mathematical Modelling</h3>
+      </header>
+      <main>
+        <!-- Main content goes here -->
+      </main>
+      <footer>
+        <p>Oliver Brady</p>
+      </footer>
+    </div>
   </body>
 </html>
