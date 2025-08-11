@@ -3,471 +3,128 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Your CV & Goals — GitHub Pages</title>
+  <title>Oliver Brady — CV & Goals</title>
 
-  <!-- Lato font -->
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
       --bg: #ffffff;
-      --accent: #bfe5ef; /* light blue */
-      --green: #457a00;  /* dark green */
-      --muted: #667; 
+      --accent: #bfe5ef;
+      --green: #457a00;
       --max-width: 1100px;
-      --radius: 12px;
-      font-family: 'Lato', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      font-family: 'Lato', sans-serif;
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:linear-gradient(180deg,var(--bg) 0%, #f7fbfc 100%);
-      color:#122;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:24px;
-      display:flex;
-      justify-content:center;
-      font-size:16px;
-    }
+    html,body{height:100%;margin:0;padding:0;color:black;background:var(--bg);overflow-y:scroll}
+    body{display:flex;justify-content:center;padding:16px}
 
     .container{
-      width:100%;
-      max-width:var(--max-width);
+      width:100%;max-width:var(--max-width);
       background:var(--bg);
-      border-radius:16px;
-      box-shadow:0 6px 30px rgba(10,30,50,0.08);
-      overflow:hidden;
+      border-radius:8px;
       display:grid;
       grid-template-columns: 320px 1fr;
-      gap:24px;
-      padding:28px;
+      gap:16px;
     }
 
     header.site-header{
       grid-column:1 / -1;
-      display:flex;
-      align-items:center;
-      gap:18px;
-      margin-bottom:4px;
+      display:flex;flex-wrap:wrap;align-items:center;gap:12px;
     }
 
-    .avatar{
-      width:64px;height:64px;border-radius:12px;flex:0 0 64px;
-      background:linear-gradient(135deg,var(--accent),var(--green));
-      display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:20px
-    }
-
-    .name-group h1{margin:0;font-size:20px}
-    .name-group p{margin:0;color:var(--muted)}
+    .name-group h1{margin:0;font-size:1.5em}
+    .name-group p{margin:0;}
 
     nav.sidebar{
-      padding:18px;
-      background:linear-gradient(180deg, rgba(191,229,239,0.35), transparent);
-      border-radius:12px;
-      height:fit-content;
+      padding:12px;
+      background:var(--accent);
+      border-radius:8px;
     }
 
-    .section-title{font-size:14px;margin:0 0 8px 0;color:var(--green);font-weight:700}
+    main.content{padding:12px;background:var(--accent);border-radius:8px;overflow-x:auto}
 
-    .profile-item{margin-bottom:12px}
+    .card{background:var(--bg);border-radius:8px;padding:12px;margin-bottom:12px;border:1px solid var(--green)}
 
-    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--green);color:white;text-decoration:none;font-weight:700}
+    table.results{width:100%;border-collapse:collapse}
+    table.results th, table.results td{padding:6px;border-bottom:1px solid var(--green);text-align:left}
 
-    main.content{padding:18px;background:linear-gradient(180deg, rgba(71,122,0,0.05), transparent);border-radius:12px}
+    .goal{margin-bottom:8px}
+    .progress-wrap{background:white;border-radius:6px;height:10px;overflow:hidden;border:1px solid var(--green)}
+    .progress-bar{height:10px;background:var(--green);width:0%}
 
-    .card{background:white;border-radius:12px;padding:14px;margin-bottom:16px;box-shadow:0 2px 8px rgba(12,30,40,0.03)}
-
-    /* CV layout */
-    .cv-row{display:flex;gap:12px;flex-wrap:wrap}
-    .cv-item{flex:1 1 220px}
-
-    table.results{width:100%;border-collapse:collapse;margin-top:8px}
-    table.results th, table.results td{padding:8px 10px;border-bottom:1px solid #eef6f7;text-align:left}
-    table.results th{background:linear-gradient(90deg,var(--accent),transparent);font-weight:700}
-
-    /* Goals */
-    .goal{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-    .goal .meta{flex:1}
-    .progress-wrap{background:#eef9f0;border-radius:10px;height:14px;overflow:hidden}
-    .progress-bar{height:14px;border-radius:10px;background:linear-gradient(90deg,var(--green),#7fbf2a);width:0%;transition:width .4s}
-
-    .goal-controls{display:flex;gap:8px}
-    .link-like{background:none;border:0;color:var(--green);cursor:pointer;font-weight:700}
-
-    /* small screens */
-    @media (max-width:880px){
-      .container{grid-template-columns:1fr; padding:16px}
-      header.site-header{align-items:flex-start}
-    }
-
-    /* utility */
-    .muted{color:var(--muted)}
-    .flex{display:flex;gap:12px;align-items:center}
-    input,textarea,select{font-family:inherit}
-
-    /* footer */
-    footer{grid-column:1 / -1;text-align:center;color:var(--muted);font-size:13px;padding-top:6px}
-
-    /* small helper for print CV */
-    @media print{
-      body{background:white;padding:0}
-      .container{box-shadow:none}
-      nav.sidebar{display:none}
+    @media (max-width:768px){
+      .container{grid-template-columns:1fr}
+      nav.sidebar, main.content{padding:8px}
     }
   </style>
 </head>
 <body>
-  <div class="container" role="application">
-
-    <header class="site-header" aria-label="Profile header">
-      <div class="avatar" aria-hidden="true">YO</div>
+  <div class="container">
+    <header class="site-header">
       <div class="name-group">
-        <h1 id="fullname">Your Name</h1>
-        <p id="headline">Software Engineer • Runner • Lifelong learner</p>
-      </div>
-
-      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-        <a class="btn" id="downloadCv">Download CV</a>
-        <button id="printCv" class="btn" style="background:#2e5f00">Print</button>
+        <h1>Oliver Brady</h1>
+        <p>Software Engineer • Runner • Lifelong learner</p>
       </div>
     </header>
 
-    <nav class="sidebar" aria-label="Sidebar navigation">
-      <div class="profile-item">
-        <p class="section-title">Contact</p>
-        <p class="muted" id="contact">you@domain.com • +44 7000 000000</p>
-      </div>
-
-      <div class="profile-item">
-        <p class="section-title">Summary</p>
-        <p class="muted" id="summary">Short professional summary — concise and to the point. Edit inline below.</p>
-      </div>
-
-      <div class="profile-item">
-        <p class="section-title">Skills</p>
-        <p class="muted" id="skills">JavaScript · HTML · CSS · Node · Data visualisation</p>
-      </div>
-
-      <div style="margin-top:12px">
-        <p class="section-title">Quick links</p>
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-          <button class="link-like" id="editProfile">Edit profile</button>
-          <button class="link-like" id="resetSample">Reset sample data</button>
-        </div>
-      </div>
+    <nav class="sidebar">
+      <p><strong>Contact</strong></p>
+      <p>oliver@example.com</p>
     </nav>
 
-    <main class="content" id="main">
-
+    <main class="content">
       <section class="card" id="cv">
         <h2>Curriculum Vitae</h2>
-        <div class="cv-row" id="cvBlocks">
-          <div class="cv-item">
-            <h3 style="margin:6px 0 4px">Experience</h3>
-            <div id="experienceList">
-              <!-- sample filled by JS -->
-            </div>
-          </div>
-
-          <div class="cv-item">
-            <h3 style="margin:6px 0 4px">Education</h3>
-            <div id="educationList"></div>
-          </div>
-
-          <div class="cv-item">
-            <h3 style="margin:6px 0 4px">Achievements</h3>
-            <ul id="achievements"></ul>
-          </div>
-        </div>
+        <p>Experience, education, and achievements go here...</p>
       </section>
 
       <section class="card" id="races">
         <h2>Race results</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <label class="muted">Filter:
-            <select id="raceFilter"><option value="all">All</option><option value="5k">5k</option><option value="10k">10k</option><option value="half">Half Marathon</option><option value="marathon">Marathon</option></select>
-          </label>
-          <label class="muted">Sort by:
-            <select id="raceSort"><option value="date_desc">Newest</option><option value="date_asc">Oldest</option><option value="time_asc">Fastest</option></select>
-          </label>
-          <button class="link-like" id="addRaceBtn">+ Add result</button>
-        </div>
-
-        <table class="results" aria-live="polite">
-          <thead>
-            <tr><th>Date</th><th>Event</th><th>Distance</th><th>Time</th><th>Place</th><th></th></tr>
-          </thead>
+        <table class="results">
+          <thead><tr><th>Date</th><th>Event</th><th>Distance</th><th>Time</th></tr></thead>
           <tbody id="raceTableBody"></tbody>
         </table>
       </section>
 
       <section class="card" id="goals">
         <h2>Life goals & progress</h2>
-
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px">
-          <input id="newGoalTitle" placeholder="New goal title" style="flex:1;padding:8px;border-radius:8px;border:1px solid #e7f3f5" />
-          <input id="newGoalTarget" placeholder="Target (e.g. 'Run 500 km')" style="width:200px;padding:8px;border-radius:8px;border:1px solid #e7f3f5" />
-          <button id="addGoal" class="btn">Add Goal</button>
-        </div>
-
         <div id="goalsList"></div>
-
-        <div style="margin-top:12px" class="muted">Progress is saved locally in your browser (localStorage).</div>
       </section>
-
     </main>
-
-    <footer>Built for GitHub Pages • Colour scheme: white, #bfe5ef, #457a00 • Font: Lato</footer>
-
   </div>
 
-  <template id="goalTemplate">
-    <div class="goal card">
-      <div class="meta">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <strong class="goal-title">Goal title</strong>
-          <small class="muted goal-target">target</small>
-        </div>
-        <div style="margin-top:8px" class="progress-wrap"><div class="progress-bar" style="width:0%"></div></div>
-      </div>
-      <div class="goal-controls">
-        <input type="range" min="0" max="100" value="0" class="goal-slider" aria-label="Progress slider" />
-        <button class="link-like goal-edit">Edit</button>
-        <button class="link-like goal-delete">Delete</button>
-      </div>
-    </div>
-  </template>
-
-  <template id="raceRow">
-    <tr>
-      <td class="r-date"></td>
-      <td class="r-name"></td>
-      <td class="r-distance"></td>
-      <td class="r-time"></td>
-      <td class="r-place"></td>
-      <td><button class="link-like r-delete">Delete</button></td>
-    </tr>
-  </template>
-
   <script>
-    // --- Sample data (can be reset via UI) ---
-    const SAMPLE = {
-      profile: {
-        fullname: 'Alex Example',
-        headline: 'Full-stack developer • Runner',
-        contact: 'alex@example.com • +44 7700 900000',
-        summary: 'Passionate developer building delightful user experiences. Loves long runs and coffee.',
-        skills: 'JavaScript · React · Node · D3'
-      },
-      experience: [
-        {role:'Senior Engineer',company:'Acme Ltd',period:'2021 — present',desc:'Led frontend team building data dashboards.'},
-        {role:'Engineer',company:'Beta Co',period:'2018 — 2021',desc:'Worked on API and performance.'}
-      ],
-      education: [
-        {degree:'MSc Computer Science',place:'University X',year:'2017'},
-        {degree:'BSc Mathematics',place:'University Y',year:'2015'}
-      ],
-      achievements: ['Completed first marathon (2019)','Published a tutorial on data viz']
-    };
+    const KEY_GOALS_CSV = 'goals.csv';
 
-    // --- Utilities ---
-    const $ = sel => document.querySelector(sel);
-    const $all = sel => Array.from(document.querySelectorAll(sel));
-
-    // --- Persisted keys ---
-    const KEY_GOALS = 'site_goals_v1';
-    const KEY_RACES = 'site_races_v1';
-    const KEY_PROFILE = 'site_profile_v1';
-
-    // --- Initialise UI with sample or saved data ---
-    function init(){
-      // profile
-      const savedProfile = JSON.parse(localStorage.getItem(KEY_PROFILE) || 'null');
-      const profile = savedProfile || SAMPLE.profile;
-      $('#fullname').textContent = profile.fullname;
-      $('#headline').textContent = profile.headline;
-      $('#contact').textContent = profile.contact;
-      $('#summary').textContent = profile.summary;
-      $('#skills').textContent = profile.skills;
-
-      // cv lists
-      const expRoot = $('#experienceList'); expRoot.innerHTML = '';
-      (SAMPLE.experience || []).forEach(e => {
-        const el = document.createElement('div');
-        el.innerHTML = `<strong>${e.role}</strong> <div class="muted">${e.company} · ${e.period}</div><div>${e.desc}</div>`;
-        expRoot.appendChild(el);
-      });
-
-      const eduRoot = $('#educationList'); eduRoot.innerHTML = '';
-      (SAMPLE.education || []).forEach(ed => {
-        const el = document.createElement('div'); el.innerHTML = `<strong>${ed.degree}</strong> <div class="muted">${ed.place} · ${ed.year}</div>`; eduRoot.appendChild(el);
-      });
-
-      const ach = $('#achievements'); ach.innerHTML = ''; (SAMPLE.achievements||[]).forEach(a=>{const li=document.createElement('li');li.textContent=a;ach.appendChild(li)});
-
-      // races
-      if(!localStorage.getItem(KEY_RACES)){
-        const now = new Date();
-        const demo = [
-          {date: dateISOOffset(now,-90),'name':'Spring 5k','distance':'5k','time':'00:22:34','place':'12/237'},
-          {date: dateISOOffset(now,-30),'name':'City Half','distance':'Half Marathon','time':'01:42:03','place':'45/410'},
-          {date: dateISOOffset(now,-10),'name':'10k Challenge','distance':'10k','time':'00:47:12','place':'32/210'}
-        ];
-        localStorage.setItem(KEY_RACES, JSON.stringify(demo));
+    async function loadGoalsFromCSV(){
+      try{
+        const res = await fetch(KEY_GOALS_CSV);
+        const text = await res.text();
+        const lines = text.trim().split(/\r?\n/);
+        const goals = lines.map(line => {
+          const [title,target,progress] = line.split(',');
+          return {title,target,progress:Number(progress)};
+        });
+        renderGoals(goals);
+      }catch(err){
+        console.error('Error loading goals:', err);
       }
-
-      renderRaces();
-
-      // goals
-      if(!localStorage.getItem(KEY_GOALS)){
-        const demoGoals = [
-          {title:'Run 500 km in 2025',target:'500 km',progress:42},
-          {title:'Read 24 books',target:'24 books',progress:25},
-          {title:'Launch personal project',target:'MVP',progress:70}
-        ];
-        localStorage.setItem(KEY_GOALS, JSON.stringify(demoGoals));
-      }
-
-      renderGoals();
     }
 
-    function dateISOOffset(d, days){ const x=new Date(d); x.setDate(x.getDate()+days); return x.toISOString().slice(0,10); }
-
-    // --- Races ---
-    function renderRaces(){
-      const rows = JSON.parse(localStorage.getItem(KEY_RACES) || '[]');
-      const filter = $('#raceFilter').value;
-      const sort = $('#raceSort').value;
-      let filtered = rows.slice();
-      if(filter !== 'all') filtered = filtered.filter(r => r.distance.toLowerCase().includes(filter));
-
-      if(sort === 'date_desc') filtered.sort((a,b)=>b.date.localeCompare(a.date));
-      if(sort === 'date_asc') filtered.sort((a,b)=>a.date.localeCompare(b.date));
-      if(sort === 'time_asc') filtered.sort((a,b)=>timeToSec(a.time)-timeToSec(b.time));
-
-      const tbody = $('#raceTableBody'); tbody.innerHTML = '';
-      const template = document.getElementById('raceRow');
-      filtered.forEach((r, idx)=>{
-        const tr = template.content.cloneNode(true);
-        tr.querySelector('.r-date').textContent = r.date;
-        tr.querySelector('.r-name').textContent = r.name;
-        tr.querySelector('.r-distance').textContent = r.distance;
-        tr.querySelector('.r-time').textContent = r.time;
-        tr.querySelector('.r-place').textContent = r.place || '';
-        const del = tr.querySelector('.r-delete');
-        del.addEventListener('click', ()=>{
-          if(!confirm('Delete this result?')) return;
-          rows.splice(idx,1);
-          localStorage.setItem(KEY_RACES, JSON.stringify(rows));
-          renderRaces();
-        });
-        tbody.appendChild(tr);
+    function renderGoals(goals){
+      const container = document.getElementById('goalsList');
+      container.innerHTML = '';
+      goals.forEach(g => {
+        const div = document.createElement('div');
+        div.className = 'goal';
+        div.innerHTML = `<strong>${g.title}</strong> — ${g.target}<div class="progress-wrap"><div class="progress-bar" style="width:${g.progress}%"></div></div>`;
+        container.appendChild(div);
       });
     }
 
-    function timeToSec(t){ // HH:MM:SS or MM:SS
-      if(!t) return Infinity;
-      const parts = t.split(':').map(Number);
-      if(parts.length===3) return parts[0]*3600+parts[1]*60+parts[2];
-      if(parts.length===2) return parts[0]*60+parts[1];
-      return Number.MAX_SAFE_INTEGER;
-    }
-
-    // --- Goals ---
-    function renderGoals(){
-      const goals = JSON.parse(localStorage.getItem(KEY_GOALS) || '[]');
-      const container = $('#goalsList'); container.innerHTML='';
-      const tpl = document.getElementById('goalTemplate');
-      goals.forEach((g,i)=>{
-        const node = tpl.content.cloneNode(true);
-        node.querySelector('.goal-title').textContent = g.title;
-        node.querySelector('.goal-target').textContent = g.target || '';
-        const bar = node.querySelector('.progress-bar'); bar.style.width = (g.progress||0) + '%';
-        const slider = node.querySelector('.goal-slider'); slider.value = g.progress||0;
-        slider.addEventListener('input', e=>{
-          bar.style.width = e.target.value + '%';
-        });
-        slider.addEventListener('change', e=>{
-          goals[i].progress = Number(e.target.value);
-          localStorage.setItem(KEY_GOALS, JSON.stringify(goals));
-        });
-        node.querySelector('.goal-delete').addEventListener('click', ()=>{ if(!confirm('Delete goal?')) return; goals.splice(i,1); localStorage.setItem(KEY_GOALS, JSON.stringify(goals)); renderGoals(); });
-        node.querySelector('.goal-edit').addEventListener('click', ()=>{
-          const newTitle = prompt('Edit goal title', g.title);
-          if(newTitle!=null){ g.title = newTitle; localStorage.setItem(KEY_GOALS, JSON.stringify(goals)); renderGoals(); }
-        });
-        container.appendChild(node);
-      });
-    }
-
-    // --- Add handlers ---
-    document.getElementById('addGoal').addEventListener('click', ()=>{
-      const title = $('#newGoalTitle').value.trim();
-      const target = $('#newGoalTarget').value.trim();
-      if(!title) return alert('Please enter a goal title');
-      const goals = JSON.parse(localStorage.getItem(KEY_GOALS) || '[]');
-      goals.push({title,target,progress:0});
-      localStorage.setItem(KEY_GOALS, JSON.stringify(goals));
-      $('#newGoalTitle').value=''; $('#newGoalTarget').value='';
-      renderGoals();
-    });
-
-    $('#addRaceBtn').addEventListener('click', ()=>{
-      const name = prompt('Event name'); if(!name) return;
-      const date = prompt('Date (YYYY-MM-DD)', new Date().toISOString().slice(0,10)); if(!date) return;
-      const distance = prompt('Distance (e.g. 5k, 10k, Half Marathon)', '5k'); if(!distance) return;
-      const time = prompt('Time (HH:MM:SS or MM:SS)');
-      const place = prompt('Place (optional)');
-      const rows = JSON.parse(localStorage.getItem(KEY_RACES) || '[]');
-      rows.push({date,name,distance,time,place});
-      localStorage.setItem(KEY_RACES, JSON.stringify(rows));
-      renderRaces();
-    });
-
-    $('#raceFilter').addEventListener('change', renderRaces);
-    $('#raceSort').addEventListener('change', renderRaces);
-
-    // --- Edit profile inline ---
-    $('#editProfile').addEventListener('click', ()=>{
-      const newName = prompt('Full name', $('#fullname').textContent); if(newName==null) return;
-      const newHeadline = prompt('Headline', $('#headline').textContent); if(newHeadline==null) return;
-      const newContact = prompt('Contact', $('#contact').textContent); if(newContact==null) return;
-      const newSummary = prompt('Summary', $('#summary').textContent); if(newSummary==null) return;
-      const newSkills = prompt('Skills (separated by · )', $('#skills').textContent); if(newSkills==null) return;
-      const profile = {fullname:newName,headline:newHeadline,contact:newContact,summary:newSummary,skills:newSkills};
-      localStorage.setItem(KEY_PROFILE, JSON.stringify(profile));
-      init();
-    });
-
-    $('#resetSample').addEventListener('click', ()=>{
-      if(!confirm('Reset site data to sample values? This will overwrite saved races, goals and profile.')) return;
-      localStorage.removeItem(KEY_GOALS); localStorage.removeItem(KEY_RACES); localStorage.removeItem(KEY_PROFILE);
-      init();
-    });
-
-    $('#printCv').addEventListener('click', ()=>{ window.print(); });
-
-    // 'Download CV' creates a simple text CV and downloads as txt — you can change to PDF server-side if desired.
-    $('#downloadCv').addEventListener('click', ()=>{
-      const text = generatePlainCv();
-      const blob = new Blob([text], {type:'text/plain'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'cv.txt'; a.click(); URL.revokeObjectURL(url);
-    });
-
-    function generatePlainCv(){
-      const profile = JSON.parse(localStorage.getItem(KEY_PROFILE) || JSON.stringify(SAMPLE.profile));
-      let out = `${profile.fullname}\n${profile.headline}\n${profile.contact}\n\nSUMMARY:\n${profile.summary}\n\nSKILLS: ${profile.skills}\n\nEXPERIENCE:\n`;
-      SAMPLE.experience.forEach(e=>{ out += `- ${e.role}, ${e.company} (${e.period})\n  ${e.desc}\n` });
-      out += '\nEDUCATION:\n'; SAMPLE.education.forEach(ed=>{ out += `- ${ed.degree}, ${ed.place} (${ed.year})\n` });
-      return out;
-    }
-
-    // --- Initialisation ---
-    init();
+    loadGoalsFromCSV();
   </script>
 </body>
 </html>
