@@ -19,23 +19,29 @@
     </header>
 
     <nav class="sidebar">
+      <ul>
       <p><strong>Contact</strong></p>
+      <li>
       <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer">
   Connect with me on LinkedIn
-      </a>
+      </a></li>
+
+      <li>
       <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer">
   Follow me on Instagram
-</a>
+</a></li>
+</ul>
     </nav>
 
     <main class="content">
       <section class="card" id="cv">
         <h2>Curriculum Vitae</h2>
-        <p>Experience, education, and achievements go here...</p>
+        <p>Experience</p>
+        <p>Education</p>
       </section>
 
       <section class="card" id="races">
-        <h2>Race results</h2>
+        <h2>Race Results</h2>
         <table class="results">
           <thead><tr><th>Date</th><th>Event</th><th>Distance</th><th>Time</th></tr></thead>
           <tbody id="raceTableBody"></tbody>
@@ -49,36 +55,5 @@
     </main>
   </div>
 
-  <script>
-    const KEY_GOALS_CSV = 'goals.csv';
-
-    async function loadGoalsFromCSV(){
-      try{
-        const res = await fetch(KEY_GOALS_CSV);
-        const text = await res.text();
-        const lines = text.trim().split(/\r?\n/);
-        const goals = lines.map(line => {
-          const [title,target,progress] = line.split(',');
-          return {title,target,progress:Number(progress)};
-        });
-        renderGoals(goals);
-      }catch(err){
-        console.error('Error loading goals:', err);
-      }
-    }
-
-    function renderGoals(goals){
-      const container = document.getElementById('goalsList');
-      container.innerHTML = '';
-      goals.forEach(g => {
-        const div = document.createElement('div');
-        div.className = 'goal';
-        div.innerHTML = `<strong>${g.title}</strong> — ${g.target}<div class="progress-wrap"><div class="progress-bar" style="width:${g.progress}%"></div></div>`;
-        container.appendChild(div);
-      });
-    }
-
-    loadGoalsFromCSV();
-  </script>
 </body>
 </html>
