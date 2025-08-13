@@ -1,0 +1,119 @@
+/* --- Global Variables and Base Styles --- */
+:root {
+  --bg: #ffffff;
+  --accent: #bfe5ef;
+  --green: #457a00;
+  --max-width: 1100px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: black;
+  background-color: var(--bg);
+  /* font-family was moved here from :root */
+  font-family: 'Lato', sans-serif; 
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: scroll; /* Prevents layout shift when content overflows */
+}
+
+/* --- Layout Structure --- */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 16px;
+}
+
+header.site-header {
+  grid-column: 1 / -1; /* Span across all columns */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+nav.sidebar {
+  padding: 12px;
+  background-color: var(--accent);
+  border-radius: 8px;
+}
+
+main.content {
+  padding: 12px;
+  background-color: var(--accent);
+  border-radius: 8px;
+  overflow-x: auto; /* Allow horizontal scroll for wide content */
+}
+
+/* --- Components --- */
+.name-group h1 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.name-group p {
+  margin: 0;
+}
+
+.card {
+  background-color: var(--bg);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--green);
+}
+
+table.results {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.results th, 
+table.results td {
+  padding: 6px;
+  border-bottom: 1px solid var(--green);
+  text-align: left;
+}
+
+.goal {
+  margin-bottom: 8px;
+}
+
+.progress-wrap {
+  background-color: white;
+  border-radius: 6px;
+  height: 10px;
+  overflow: hidden;
+  border: 1px solid var(--green);
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: var(--green);
+  width: 0%; /* Intended to be updated with JS */
+}
+
+/* --- Media Query for Responsiveness --- */
+@media (max-width: 768px) {
+  .container {
+    /* Switch to a single-column layout on smaller screens */
+    grid-template-columns: 1fr;
+  }
+
+  nav.sidebar, 
+  main.content {
+    padding: 8px;
+  }
+}
