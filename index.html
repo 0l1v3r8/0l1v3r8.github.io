@@ -6,60 +6,9 @@
   <title>Oliver Brady — CV & Goals</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-
-  <style>
-    :root{
-      --bg: #ffffff;
-      --accent: #bfe5ef;
-      --green: #457a00;
-      --max-width: 1100px;
-      font-family: 'Lato', sans-serif;
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;padding:0;color:black;background:var(--bg);overflow-y:scroll}
-    body{display:flex;justify-content:center;padding:16px}
-
-    .container{
-      width:100%;max-width:var(--max-width);
-      background:var(--bg);
-      border-radius:8px;
-      display:grid;
-      grid-template-columns: 320px 1fr;
-      gap:16px;
-    }
-
-    header.site-header{
-      grid-column:1 / -1;
-      display:flex;flex-wrap:wrap;align-items:center;gap:12px;
-    }
-
-    .name-group h1{margin:0;font-size:1.5em}
-    .name-group p{margin:0;}
-
-    nav.sidebar{
-      padding:12px;
-      background:var(--accent);
-      border-radius:8px;
-    }
-
-    main.content{padding:12px;background:var(--accent);border-radius:8px;overflow-x:auto}
-
-    .card{background:var(--bg);border-radius:8px;padding:12px;margin-bottom:12px;border:1px solid var(--green)}
-
-    table.results{width:100%;border-collapse:collapse}
-    table.results th, table.results td{padding:6px;border-bottom:1px solid var(--green);text-align:left}
-
-    .goal{margin-bottom:8px}
-    .progress-wrap{background:white;border-radius:6px;height:10px;overflow:hidden;border:1px solid var(--green)}
-    .progress-bar{height:10px;background:var(--green);width:0%}
-
-    @media (max-width:768px){
-      .container{grid-template-columns:1fr}
-      nav.sidebar, main.content{padding:8px}
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
+  
 <body>
   <div class="container">
     <header class="site-header">
