@@ -48,13 +48,13 @@ header.site-header {
 nav.sidebar {
   padding: 12px;
   background-color: var(--green);
-  border-radius: 8px;
+  /*border-radius: 8px;*/
 }
 
 main.content {
   padding: 12px;
   background-color: var(--accent);
-  border-radius: 8px;
+  /*border-radius: 8px;*/
   overflow-x: auto; /* Allow horizontal scroll for wide content */
 }
 
@@ -70,7 +70,7 @@ main.content {
 
 .card {
   background-color: var(--bg);
-  border-radius: 8px;
+  /*border-radius: 8px;*/
   padding: 12px;
   margin-bottom: 12px;
   border: 1px solid var(--green);
@@ -94,7 +94,7 @@ table.results td {
 
 .progress-wrap {
   background-color: white;
-  border-radius: 6px;
+  /*border-radius: 6px;*/
   height: 10px;
   overflow: hidden;
   border: 1px solid var(--green);
