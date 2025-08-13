@@ -2,7 +2,8 @@
 :root {
   --bg: #ffffff;
   --accent: #bfe5ef;
-  --green: #457a00;
+  --green: #bfd6a1
+  ;
   --max-width: 1100px;
 }
 
@@ -46,7 +47,7 @@ header.site-header {
 
 nav.sidebar {
   padding: 12px;
-  background-color: var(--accent);
+  background-color: var(--green);
   border-radius: 8px;
 }
 
