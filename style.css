@@ -50,7 +50,13 @@ nav.sidebar {
   background-color: var(--green);
   /*border-radius: 8px;*/
 }
-
+ul{
+  list-style-type: none;
+  padding-left: 0;
+}
+img{
+  background-color: transparent;
+}
 main.content {
   padding: 12px;
   background-color: var(--accent);
