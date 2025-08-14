@@ -45,9 +45,11 @@ header.site-header {
   gap: 12px;
 }
 
-nav.sidebar {
+nav.navbar {
   padding: 12px;
-  background-color: var(--green);
+  text-align: center;
+  grid-column: 1 / -1;
+  background-color: var(--accent);
   /*border-radius: 8px;*/
 }
 ul{
@@ -59,7 +61,8 @@ img{
 }
 main.content {
   padding: 12px;
-  background-color: var(--accent);
+  grid-column: 1 / -1;
+  background-color: var(--green);
   /*border-radius: 8px;*/
   overflow-x: auto; /* Allow horizontal scroll for wide content */
 }
@@ -119,7 +122,7 @@ table.results td {
     grid-template-columns: 1fr;
   }
 
-  nav.sidebar, 
+  nav.navbar, 
   main.content {
     padding: 8px;
   }
