@@ -8,26 +8,25 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display.swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="timeline_ss.css">
-</head><body>
+</head>
+<body>
 
   <div class="container">
     
     <header class="site-header">
-      <div class="name-group">
-        <h1>Oliver Brady</h1>
-        <p>Learning More • Going Further</p>
-      </div>
+      <a href="index.html" class="header-link">
+        <div class="name-group">
+          <h1>Oliver Brady</h1>
+          <p>Learning More • Going Further</p>
+        </div>
+      </a>
     </header>
 
     <main class="content">
 
-      <a href="index.html" class="card-link home-link">
-        <section class="card" id="home-button">
-          <h2>&larr; Back to Home</h2>
-        </section>
-      </a>
-
-      <h2 class="timeline-main-title">Timeline</h2>
+      <div class="card" id="timeline-title-card">
+        <h2 class="timeline-main-title">Timeline</h2>
+      </div>
 
       <div id="timeline-container">
         </div>
@@ -44,7 +43,7 @@
       fetch(csvFilePath)
         .then(response => {
           if (!response.ok) {
-            throw new Error('Network response was not ok: ' + response.statusText);
+            throw new Error('Network response was not ok: 'D + response.statusText);
           }
           return response.text();
         })

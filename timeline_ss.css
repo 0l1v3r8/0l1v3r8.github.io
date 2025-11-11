@@ -1,13 +1,124 @@
+/* --- Your Provided Styles (from prompt 1) --- */
+:root {
+  --bg: #ffffff;
+  --accent: #bfe5ef;
+  --green: #bfd6a1;
+  --max-width: 1100px;
+  --padding: 1rem;
+  --gap: 1rem;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: black;
+  background-color: var(--bg);
+  font-family: 'Lato', sans-serif;
+  font-size: clamp(14px, 1.5vw, 18px);
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  padding: var(--padding);
+  overflow-y: scroll;
+}
+
+/* --- Layout Structure --- */
+.container {
+  width: 80%;
+  max-width: var(--max-width);
+  display: grid;
+  grid-template-columns: minmax(200px, 30%) 1fr;
+  gap: var(--gap);
+}
+
+.header-link {
+  text-decoration: none;
+  color: inherit; /* Inherits the black color from the body */
+}
+
+header.site-header {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: center;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+}
+
+.name-group h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+/* --- Responsive font size scaling for content --- */
+main.content {
+  padding: var(--padding);
+  grid-column: 1 / -1;
+  background-color: var(--green);
+  border: 1px solid black;
+  overflow-x: auto;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+}
+
+/* --- Responsive Behavior --- */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+  header.site-header {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --padding: 0.75rem;
+    --gap: 0.75rem;
+  }
+  body {
+    padding: var(--padding);
+  }
+  .container {
+    grid-template-columns: 1fr;
+    width: 95%;
+  }
+}
+/* --- END of Your Provided Styles --- */
+
+
 /* ===============================================
-   NEW/UPDATED TIMELINE STYLES
+   TIMELINE STYLES (Updated)
 ===============================================
 */
 
-/* This title will be centered because main.content is centered */
+/* NEW RULE
+  This styles the white box containing the title.
+  It inherits the white background, border, etc., from the .card class.
+  We just need to adjust the spacing.
+*/
+#timeline-title-card {
+  margin-bottom: 2rem; /* Sets the space below the title box */
+  padding: 0.5rem; /* Reduces padding to be tighter on the title */
+}
+
+/* MODIFIED RULE
+  We remove the margins from the h2 itself,
+  as the parent card now controls the spacing.
+*/
 .timeline-main-title {
   text-align: center;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+  margin-top: 0;
+  margin-bottom: 0;
   font-size: clamp(1.5rem, 3vw, 2.25rem);
   font-weight: 900;
 }
@@ -16,9 +127,8 @@
   position: relative;
   width: 100%;
   padding: 1rem 0;
-  text-align: left; /* Ensures timeline items are left-aligned */
+  text-align: left; 
   
-  /* Creates the central timeline line */
   &::before {
     content: '';
     position: absolute;
@@ -35,14 +145,13 @@
 .timeline-item {
   position: relative;
   margin-bottom: var(--gap);
-  padding-left: 50px; /* Space for the line and dot */
+  padding-left: 50px; 
 }
 
-/* The dot on the timeline */
 .timeline-item::before {
   content: '';
   position: absolute;
-  left: 10px; /* (20px line center - 10px dot radius) */
+  left: 10px; 
   top: 10px;
   width: 20px;
   height: 20px;
@@ -60,7 +169,7 @@
 }
 
 .timeline-content {
-  background-color: var(--bg); /* White card background */
+  background-color: var(--bg);
   border: 1px solid black;
   border-radius: 8px;
   padding: var(--padding);
@@ -73,27 +182,20 @@
   margin: 0 0 0.5rem 0;
 }
 
-/* --- CSS CHANGE IS HERE ---
-  We replace the old .timeline-category rule with these two.
-*/
-
-/* NEW: Wrapper to hold multiple category tags */
 .timeline-category-wrapper {
   display: flex;
-  flex-wrap: wrap; /* Allows tags to wrap to a new line */
-  gap: 0.5rem; /* Spacing between tags */
-  margin-bottom: 0.75rem; /* Space below the tags */
+  flex-wrap: wrap; 
+  gap: 0.5rem; 
+  margin-bottom: 0.75rem; 
 }
 
-/* UPDATED: Individual category tag */
 .timeline-category {
   font-size: 0.9em;
   font-weight: 700;
   color: black;
-  background-color: var(--accent); /* Using accent for category tag */
+  background-color: var(--accent); 
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  /* 'display: inline-block' and 'margin-bottom' are no longer needed here */
 }
 
 .timeline-description {
@@ -113,20 +215,12 @@
   }
 
   .timeline-item {
-    padding-left: 35px; /* Adjust for smaller dot/line */
+    padding-left: 35px;
   }
 
   .timeline-item::before {
     left: 0;
     width: 18px;
     height: 18px;
-  }
-
-  .timeline-main-title {
-    margin-bottom: 1.5rem;
-  }
-
-  .home-link #home-button h2 {
-    font-size: 1.1rem;
   }
 }
