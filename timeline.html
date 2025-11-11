@@ -24,6 +24,12 @@
 
     <main class="content">
 
+      <div class="card" id="filter-card">
+        <h3 class="filter-title">Filter by Category</h3>
+        <div id="filter-container">
+          </div>
+      </div>
+
       <div class="card" id="timeline-title-card">
         <h2 class="timeline-main-title">Timeline</h2>
       </div>
@@ -35,11 +41,20 @@
   </div>
 
   <script>
-    // The JavaScript remains exactly the same as before
-    document.addEventListener('DOMContentLoaded', () => {
-      const csvFilePath = 'achievements.csv';
-      const timelineContainer = document.getElementById('timeline-container');
+    // ---
+    // ===============================================
+    // JAVASCRIPT UPDATED FOR FILTERING
+    // ===============================================
+    // ---
+    
+    // Store all events in a global-like variable
+    let allEvents = [];
+    const timelineContainer = document.getElementById('timeline-container');
+    const filterContainer = document.getElementById('filter-container');
+    const csvFilePath = 'achievements.csv';
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+    document.addEventListener('DOMContentLoaded', () => {
       fetch(csvFilePath)
         .then(response => {
           if (!response.ok) {
@@ -48,89 +63,153 @@
           return response.text();
         })
         .then(csvText => {
-          const events = parseCSV(csvText);
+          // 1. Parse all events
+          allEvents = parseCSV(csvText);
           
-          events.sort((a, b) => {
+          // 2. Sort all events (newest first)
+          allEvents.sort((a, b) => {
             const dateA = new Date(a.year, a.month - 1, a.day);
             const dateB = new Date(b.year, b.month - 1, b.day);
-            return dateB - dateA; // Sorts descending (newest first)
+            return dateB - dateA;
           });
 
-          generateTimeline(events);
+          // 3. Find unique categories and create filters
+          const uniqueCategories = [...new Set(allEvents.flatMap(event => event.category))];
+          createCategoryFilters(uniqueCategories.sort());
+
+          // 4. Initial display of all events
+          filterAndDisplayEvents();
         })
         .catch(error => {
           console.error('Error fetching or parsing CSV:', error);
           timelineContainer.innerHTML = `<p style="color: red;">Error loading timeline data. Please check console for details.</p>`;
         });
-
-      function parseCSV(text) {
-        const lines = text.trim().split('\n');
-        if (lines.length < 2) return [];
-        const headers = lines[0].split(',').map(header => header.trim());
-        const events = [];
-        const colIndices = {
-          day: headers.indexOf('day'),
-          month: headers.indexOf('month'),
-          year: headers.indexOf('year'),
-          event: headers.indexOf('event'),
-          category: headers.indexOf('category'),
-          description: headers.indexOf('description'),
-        };
-        if (Object.values(colIndices).some(index => index === -1)) {
-          console.error('CSV headers are incorrect. Expected: day, month, year, event, category, description');
-          return [];
-        }
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i];
-          if (line.trim() === '') continue;
-          
-          const values = line.split(',');
-
-          const eventData = {
-            day: parseInt(values[colIndices.day], 10),
-            month: parseInt(values[colIndices.month], 10),
-            year: parseInt(values[colIndices.year], 10),
-            event: values[colIndices.event].trim(),
-            category: values[colIndices.category].trim().replace(/^"|"$/g, '').split('|'),
-            description: values[colIndices.description].trim().replace(/^"|"$/g, ''),
-          };
-          events.push(eventData);
-        }
-        return events;
-      }
-
-      function generateTimeline(events) {
-        if (events.length === 0) {
-          timelineContainer.innerHTML = '<p>No achievements to display.</p>';
-          return;
-        }
-        let timelineHTML = '';
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        
-        events.forEach(event => {
-          const dateStr = `${event.day} ${monthNames[event.month - 1]} ${event.year}`;
-
-          const categoryTagsHTML = event.category
-            .map(cat => `<div class="timeline-category">${cat.trim()}</div>`)
-            .join('');
-
-          timelineHTML += `
-            <div class="timeline-item">
-              <div class="timeline-date">${dateStr}</div>
-              <div class="timeline-content">
-                <h3 class="timeline-event-title">${event.event}</h3>
-                <div class="timeline-category-wrapper">
-                  ${categoryTagsHTML}
-                </div>
-                <p class="timeline-description">${event.description}</p>
-              </div>
-            </div>
-          `;
-        });
-
-        timelineContainer.innerHTML = timelineHTML;
-      }
     });
+
+    /**
+     * Creates the filter checkboxes from the list of unique categories.
+     */
+    function createCategoryFilters(categories) {
+      let filterHTML = categories.map(category => `
+        <label class="filter-label">
+          <input type="checkbox" name="category" value="${category}" class="filter-checkbox">
+          ${category}
+        </label>
+      `).join('');
+      
+      filterContainer.innerHTML = filterHTML;
+
+      // Add event listeners to all new checkboxes
+      document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', filterAndDisplayEvents);
+      });
+    }
+
+    /**
+     * Gets selected categories, filters events, and calls generateTimeline.
+     */
+    function filterAndDisplayEvents() {
+      // Get all checked category values
+      const selectedCategories = [...document.querySelectorAll('.filter-checkbox:checked')]
+        .map(cb => cb.value);
+
+      let filteredEvents;
+
+      if (selectedCategories.length === 0) {
+        // If no filter is checked, show all events
+        filteredEvents = allEvents;
+      } else {
+        // Filter the events
+        filteredEvents = allEvents.filter(event => 
+          // .some() checks if *any* of the event's categories are in the selected list
+          event.category.some(cat => selectedCategories.includes(cat))
+        );
+      }
+
+      // Re-generate the timeline with the filtered list
+      generateTimeline(filteredEvents);
+    }
+
+    /**
+     * Parses raw CSV text into an array of event objects.
+     */
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      if (lines.length < 2) return [];
+      const headers = lines[0].split(',').map(header => header.trim());
+      const events = [];
+      const colIndices = {
+        day: headers.indexOf('day'),
+        month: headers.indexOf('month'),
+        year: headers.indexOf('year'),
+        event: headers.indexOf('event'),
+        category: headers.indexOf('category'),
+        description: headers.indexOf('description'),
+      };
+      if (Object.values(colIndices).some(index => index === -1)) {
+        console.error('CSV headers are incorrect. Expected: day, month, year, event, category, description');
+        return [];
+      }
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.trim() === '') continue;
+        
+        const values = line.split(',');
+
+        const eventData = {
+          day: parseInt(values[colIndices.day], 10),
+          month: parseInt(values[colIndices.month], 10),
+          year: parseInt(values[colIndices.year], 10),
+          event: values[colIndices.event].trim(),
+          category: values[colIndices.category].trim().replace(/^"|"$/g, '').split('|').map(cat => cat.trim()),
+          description: values[colIndices.description].trim().replace(/^"|"$/g, ''),
+        };
+        events.push(eventData);
+      }
+      return events;
+    }
+
+    /**
+     * Generates the timeline HTML and injects it into the DOM.
+     * (This function is now called by filterAndDisplayEvents)
+     */
+    function generateTimeline(events) {
+      if (events.length === 0) {
+        // Check if filters are active to show a more helpful message
+        const hasFilters = document.querySelectorAll('.filter-checkbox:checked').length > 0;
+        if (hasFilters) {
+          timelineContainer.innerHTML = '<p style="text-align: center;">No achievements match the selected categories.</p>';
+        } else {
+          timelineContainer.innerHTML = '<p style="text-align: center;">No achievements to display.</p>';
+        }
+        return;
+      }
+      
+      let timelineHTML = '';
+      
+      events.forEach(event => {
+        const dateStr = `${event.day} ${monthNames[event.month - 1]} ${event.year}`;
+
+        const categoryTagsHTML = event.category
+          .map(cat => `<div class="timeline-category">${cat}</div>`)
+          .join('');
+
+        timelineHTML += `
+          <div class="timeline-item">
+            <div class="timeline-date">${dateStr}</div>
+            <div class="timeline-content">
+              <h3 class="timeline-event-title">${event.event}</h3>
+              <div class="timeline-category-wrapper">
+                ${categoryTagsHTML}
+              </div>
+              <p class="timeline-description">${event.description}</p>
+            </div>
+          </div>
+        `;
+      });
+
+      timelineContainer.innerHTML = timelineHTML;
+    }
   </script>
 </body>
 </html>
