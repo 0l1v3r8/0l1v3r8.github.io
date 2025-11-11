@@ -1,7 +1,7 @@
 day,month,year,event,category,description
 15,1,2022,Project Alpha Launch,Work,"Successfully deployed version 1.0 of Project Alpha to production."
-5,3,2022,Published Article,Writing,"My article on 'Advanced CSS Techniques' was published in TechReads Magazine."
-20,6,2022,Completed Marathon,Personal,"Finished the London Marathon with a personal best time."
+5,3,2022,Published Article,Writing|Personal,"My article on 'Advanced CSS Techniques' was published in TechReads Magazine."
+20,6,2022,Completed Marathon,Personal|Fitness,"Finished the London Marathon with a personal best time."
 1,9,2023,Graduated MSc,Education,"Received Master of Science in Computer Science with Distinction."
-10,2,2024,Keynote Speaker,Public Speaking,"Gave the opening keynote at the National Web Developers Conference."
+10,2,2024,Keynote Speaker,Public Speaking|Work,"Gave the opening keynote at the National Web Developers Conference."
 22,5,2024,Open Source Contribution,Development,"Merged a significant feature into a major open-source project."

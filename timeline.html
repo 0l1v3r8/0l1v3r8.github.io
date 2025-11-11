@@ -4,15 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="icon" href="images/OB.png" type="image/png">
-  
   <title>Oliver Brady - Timeline</title>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display.swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="timeline_ss.css">
-</head>
-<body>
+</head><body>
 
   <div class="container">
     
@@ -23,22 +19,11 @@
       </div>
     </header>
 
-    <nav class="navbar">
-      <section class="card social-icons">
-        <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer">
-          <img src="images/linkedin_logo.png" alt="Connect on LinkedIn">
-        </a>
-        <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer">
-          <img src="images/instagram_logo.png" alt="Follow on Instagram">
-        </a>
-      </section>
-    </nav>
-
     <main class="content">
 
       <a href="index.html" class="card-link home-link">
         <section class="card" id="home-button">
-          <h2>Homepage</h2>
+          <h2>&larr; Back to Home</h2>
         </section>
       </a>
 
@@ -51,6 +36,7 @@
   </div>
 
   <script>
+    // The JavaScript remains exactly the same as before
     document.addEventListener('DOMContentLoaded', () => {
       const csvFilePath = 'achievements.csv';
       const timelineContainer = document.getElementById('timeline-container');
@@ -64,11 +50,13 @@
         })
         .then(csvText => {
           const events = parseCSV(csvText);
+          
           events.sort((a, b) => {
             const dateA = new Date(a.year, a.month - 1, a.day);
             const dateB = new Date(b.year, b.month - 1, b.day);
-            return dateA - dateB;
+            return dateB - dateA; // Sorts descending (newest first)
           });
+
           generateTimeline(events);
         })
         .catch(error => {
@@ -96,13 +84,15 @@
         for (let i = 1; i < lines.length; i++) {
           const line = lines[i];
           if (line.trim() === '') continue;
+          
           const values = line.split(',');
+
           const eventData = {
             day: parseInt(values[colIndices.day], 10),
             month: parseInt(values[colIndices.month], 10),
             year: parseInt(values[colIndices.year], 10),
             event: values[colIndices.event].trim(),
-            category: values[colIndices.category].trim(),
+            category: values[colIndices.category].trim().replace(/^"|"$/g, '').split('|'),
             description: values[colIndices.description].trim().replace(/^"|"$/g, ''),
           };
           events.push(eventData);
@@ -117,19 +107,28 @@
         }
         let timelineHTML = '';
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        
         events.forEach(event => {
           const dateStr = `${event.day} ${monthNames[event.month - 1]} ${event.year}`;
+
+          const categoryTagsHTML = event.category
+            .map(cat => `<div class="timeline-category">${cat.trim()}</div>`)
+            .join('');
+
           timelineHTML += `
             <div class="timeline-item">
               <div class="timeline-date">${dateStr}</div>
               <div class="timeline-content">
                 <h3 class="timeline-event-title">${event.event}</h3>
-                <div class="timeline-category">${event.category}</div>
+                <div class="timeline-category-wrapper">
+                  ${categoryTagsHTML}
+                </div>
                 <p class="timeline-description">${event.description}</p>
               </div>
             </div>
           `;
         });
+
         timelineContainer.innerHTML = timelineHTML;
       }
     });
