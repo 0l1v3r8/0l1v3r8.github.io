@@ -1,4 +1,3 @@
-/* --- Your Provided Styles (from prompt 1) --- */
 :root {
   --bg: #ffffff;
   --accent: #bfe5ef;
@@ -7,7 +6,11 @@
   --padding: 1rem;
   --gap: 1rem;
 }
-* { box-sizing: border-box; }
+
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -17,12 +20,15 @@ html, body {
   font-family: 'Lato', sans-serif;
   font-size: clamp(14px, 1.5vw, 18px);
 }
+
 body {
   display: flex;
   justify-content: center;
   padding: var(--padding);
   overflow-y: scroll;
 }
+
+/* --- Layout Structure --- */
 .container {
   width: 80%;
   max-width: var(--max-width);
@@ -30,10 +36,7 @@ body {
   grid-template-columns: minmax(200px, 30%) 1fr;
   gap: var(--gap);
 }
-.header-link {
-  text-decoration: none;
-  color: inherit;
-}
+
 header.site-header {
   grid-column: 1 / -1;
   display: flex;
@@ -43,205 +46,120 @@ header.site-header {
   text-align: center;
   font-size: clamp(1rem, 2vw, 1.5rem);
 }
-.name-group h1 {
-  margin: 0;
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+
+nav.navbar {
+  padding: var(--padding);
   grid-column: 1 / -1;
-  width: 100%;
+  background-color: var(--accent);
+  border: 1px solid black;
 }
+/* Social icon image scaling */
+.social-icons img {
+  width: clamp(24px, 5vw, 48px); /* scales with screen width */
+  height: auto;
+  transition: transform 0.2s ease;
+}
+
+.social-icons a {
+  display: inline-block;
+}
+
+.social-icons img:hover {
+  transform: scale(1.1); /* Optional hover zoom */
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  background-color: transparent;
+}
+
+/* Responsive font size scaling for content */
 main.content {
   padding: var(--padding);
   grid-column: 1 / -1;
   background-color: var(--green);
   border: 1px solid black;
   overflow-x: auto;
+  text-align: center;
   font-size: clamp(1rem, 1.5vw, 1.25rem);
 }
 
-@media (max-width: 1024px) {
-  .container { grid-template-columns: 1fr; }
-  header.site-header { justify-content: center; }
-}
-@media (max-width: 600px) {
-  :root { --padding: 0.75rem; --gap: 0.75rem; }
-  body { padding: var(--padding); }
-  .container { grid-template-columns: 1fr; width: 95%; }
-}
-/* --- END of Your Provided Styles --- */
-
-
-/* ===============================================
-   NEW FILTER STYLES
-===============================================
-*/
-#filter-card {
-  margin-bottom: var(--gap);
-  padding: var(--padding);
-}
-
-.filter-title {
-  width: 100%;
-  text-align: center;
-  margin: 0 0 1rem 0;
-  font-weight: 700;
-  font-size: 1.25rem;
-}
-
-#filter-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  justify-content: center;
-}
-
-.filter-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9em;
-  font-weight: 700;
-  color: black;
-  background-color: var(--accent);
-  padding: 0.35rem 0.75rem;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  user-select: none;
-}
-
-.filter-label:hover {
-  background-color: #a9d4e1;
-}
-
-.filter-checkbox {
-  width: 16px;
-  height: 16px;
-  accent-color: #333;
-}
-
-/* ===============================================
-   TIMELINE STYLES
-===============================================
-*/
-
-#timeline-title-card {
-  margin-bottom: 2rem;
-  padding: 0.5rem; 
-}
-
-.timeline-main-title {
-  text-align: center;
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  font-weight: 700; 
-}
-
-#timeline-container {
-  position: relative;
-  width: 100%;
-  padding: 1rem 0;
-  text-align: left; 
-  
-  &::before {
-    content: '';
-    position: absolute;
-    left: 20px;
-    top: 0;
-    bottom: 0;
-    width: 4px;
-    background-color: var(--accent);
-    border: 1px solid black;
-    border-radius: 2px;
-  }
-}
-
-.timeline-item {
-  position: relative;
-  margin-bottom: var(--gap);
-  padding-left: 50px; 
-}
-
-.timeline-item::before {
-  content: '';
-  position: absolute;
-  left: 10px; 
-  top: 10px;
-  width: 20px;
-  height: 20px;
-  background-color: var(--bg);
-  border: 3px solid var(--accent);
-  border-radius: 50%;
-  z-index: 1;
-}
-
-.timeline-date {
-  font-weight: 700;
-  font-size: 0.9em;
-  color: #333;
-  margin-bottom: 0.5rem;
-}
-
-.timeline-content {
-  background-color: var(--bg);
-  border: 1px solid black;
-  border-radius: 8px;
-  padding: var(--padding);
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-}
-
-.timeline-event-title {
-  font-size: 1.25em;
-  font-weight: 700;
-  margin: 0 0 0.5rem 0;
-}
-
-/* ---
-  ===============================================
-  NEW STYLE FOR EVENT LINKS
-  ===============================================
---- */
-.timeline-link {
-  text-decoration: none;
-  color: inherit; /* Makes it match the h3 color */
-}
-
-.timeline-link:hover {
-  text-decoration: underline; /* Adds an underline on hover */
-}
-
-
-.timeline-category-wrapper {
-  display: flex;
-  flex-wrap: wrap; 
-  gap: 0.5rem; 
-  margin-bottom: 0.75rem; 
-}
-
-.timeline-category {
-  font-size: 0.9em;
-  font-weight: 700;
-  color: black;
-  background-color: var(--accent); 
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-}
-
-.timeline-description {
-  font-size: 1em;
-  font-weight: 400;
-  line-height: 1.5;
+/* --- Components --- */
+.name-group h1 {
   margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  grid-column: 1 / -1;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  #timeline-container {
-    padding: 0.5rem 0;
-    &::before { left: 10px; }
+.name-group p {
+  margin: 0.5rem 0 0 0;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+}
+
+.card {
+  background-color: var(--bg);
+  padding: var(--padding);
+  text-align: center;
+  margin-bottom: var(--gap);
+  border: 1px solid black;
+  width: 100%;
+  max-width: 100%;
+  word-wrap: break-word;
+
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  align-items: center;
+
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card-link:hover .card {
+  background-color: var(--accent);
+  cursor: pointer;
+}
+
+/* --- Responsive Behavior --- */
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
   }
-  .timeline-item { padding-left: 35px; }
-  .timeline-item::before { left: 0; width: 18px; height: 18px; }
-  #filter-container { gap: 0.5rem; }
-  .filter-label { padding: 0.25rem 0.5rem; font-size: 0.8em; }
+
+  header.site-header {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --padding: 0.75rem;
+    --gap: 0.75rem;
+  }
+
+  body {
+    padding: var(--padding);
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+    width: 95%;
+  }
+
+  .card {
+    padding: 0.5rem;
+  }
 }
