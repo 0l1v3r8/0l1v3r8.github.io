@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="images/OB.png" type="image/png">
+  
+  <title>Oliver Brady - Timeline</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="timeline_ss.css">
+</head>
+<body>
+
+  <div class="container">
+    
+    <header class="site-header">
+      <div class="name-group">
+        <h1>Oliver Brady</h1>
+        <p>Learning More • Going Further</p>
+      </div>
+    </header>
+
+    <nav class="navbar">
+      <section class="card social-icons">
+        <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer">
+          <img src="images/linkedin_logo.png" alt="Connect on LinkedIn">
+        </a>
+        <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer">
+          <img src="images/instagram_logo.png" alt="Follow on Instagram">
+        </a>
+      </section>
+    </nav>
+
+    <main class="content">
+
+      <a href="index.html" class="card-link home-link">
+        <section class="card" id="home-button">
+          <h2>Homepage</h2>
+        </section>
+      </a>
+
+      <h2 class="timeline-main-title">Timeline</h2>
+
+      <div id="timeline-container">
+        </div>
+    </main>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const csvFilePath = 'achievements.csv';
+      const timelineContainer = document.getElementById('timeline-container');
+
+      fetch(csvFilePath)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+          }
+          return response.text();
+        })
+        .then(csvText => {
+          const events = parseCSV(csvText);
+          events.sort((a, b) => {
+            const dateA = new Date(a.year, a.month - 1, a.day);
+            const dateB = new Date(b.year, b.month - 1, b.day);
+            return dateA - dateB;
+          });
+          generateTimeline(events);
+        })
+        .catch(error => {
+          console.error('Error fetching or parsing CSV:', error);
+          timelineContainer.innerHTML = `<p style="color: red;">Error loading timeline data. Please check console for details.</p>`;
+        });
+
+      function parseCSV(text) {
+        const lines = text.trim().split('\n');
+        if (lines.length < 2) return [];
+        const headers = lines[0].split(',').map(header => header.trim());
+        const events = [];
+        const colIndices = {
+          day: headers.indexOf('day'),
+          month: headers.indexOf('month'),
+          year: headers.indexOf('year'),
+          event: headers.indexOf('event'),
+          category: headers.indexOf('category'),
+          description: headers.indexOf('description'),
+        };
+        if (Object.values(colIndices).some(index => index === -1)) {
+          console.error('CSV headers are incorrect. Expected: day, month, year, event, category, description');
+          return [];
+        }
+        for (let i = 1; i < lines.length; i++) {
+          const line = lines[i];
+          if (line.trim() === '') continue;
+          const values = line.split(',');
+          const eventData = {
+            day: parseInt(values[colIndices.day], 10),
+            month: parseInt(values[colIndices.month], 10),
+            year: parseInt(values[colIndices.year], 10),
+            event: values[colIndices.event].trim(),
+            category: values[colIndices.category].trim(),
+            description: values[colIndices.description].trim().replace(/^"|"$/g, ''),
+          };
+          events.push(eventData);
+        }
+        return events;
+      }
+
+      function generateTimeline(events) {
+        if (events.length === 0) {
+          timelineContainer.innerHTML = '<p>No achievements to display.</p>';
+          return;
+        }
+        let timelineHTML = '';
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        events.forEach(event => {
+          const dateStr = `${event.day} ${monthNames[event.month - 1]} ${event.year}`;
+          timelineHTML += `
+            <div class="timeline-item">
+              <div class="timeline-date">${dateStr}</div>
+              <div class="timeline-content">
+                <h3 class="timeline-event-title">${event.event}</h3>
+                <div class="timeline-category">${event.category}</div>
+                <p class="timeline-description">${event.description}</p>
+              </div>
+            </div>
+          `;
+        });
+        timelineContainer.innerHTML = timelineHTML;
+      }
+    });
+  </script>
+</body>
+</html>
