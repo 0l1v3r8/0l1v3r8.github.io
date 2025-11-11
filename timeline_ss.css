@@ -101,26 +101,17 @@ main.content {
 ===============================================
 */
 
-/* NEW RULE
-  This styles the white box containing the title.
-  It inherits the white background, border, etc., from the .card class.
-  We just need to adjust the spacing.
-*/
 #timeline-title-card {
-  margin-bottom: 2rem; /* Sets the space below the title box */
-  padding: 0.5rem; /* Reduces padding to be tighter on the title */
+  margin-bottom: 2rem; 
+  padding: 0.5rem; 
 }
 
-/* MODIFIED RULE
-  We remove the margins from the h2 itself,
-  as the parent card now controls the spacing.
-*/
 .timeline-main-title {
   text-align: center;
   margin-top: 0;
   margin-bottom: 0;
   font-size: clamp(1.5rem, 3vw, 2.25rem);
-  font-weight: 900;
+  font-weight: 700; /* CHANGED: Was 900, now 700 */
 }
 
 #timeline-container {
@@ -178,7 +169,7 @@ main.content {
 
 .timeline-event-title {
   font-size: 1.25em;
-  font-weight: 900;
+  font-weight: 700; /* CHANGED: Was 900, now 700 */
   margin: 0 0 0.5rem 0;
 }
 
@@ -189,14 +180,6 @@ main.content {
   margin-bottom: 0.75rem; 
 }
 
-a {
-  color: inherit; /* Inherit color from parent text */
-  text-decoration: none; /* Often paired to remove the underline */
-}
-
-a:visited {
-  color: inherit; /* Visited links also inherit, so they look the same */
-}
 .timeline-category {
   font-size: 0.9em;
   font-weight: 700;
@@ -208,7 +191,7 @@ a:visited {
 
 .timeline-description {
   font-size: 1em;
-  font-weight: 400;
+  font-weight: 400; /* Standard paragraph weight */
   line-height: 1.5;
   margin: 0;
 }
