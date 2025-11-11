@@ -189,6 +189,14 @@ main.content {
   margin-bottom: 0.75rem; 
 }
 
+a {
+  color: inherit; /* Inherit color from parent text */
+  text-decoration: none; /* Often paired to remove the underline */
+}
+
+a:visited {
+  color: inherit; /* Visited links also inherit, so they look the same */
+}
 .timeline-category {
   font-size: 0.9em;
   font-weight: 700;
