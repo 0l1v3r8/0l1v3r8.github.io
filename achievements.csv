@@ -1,7 +1,7 @@
-day,month,year,event,category,description,link
-15,6,2025,Masters of Natural Sciences (Mnatsci),Academic,Successfully deployed version 1.0 of Project Alpha to production.,
-5,3,2022,Weymouth 70.3,Athletic|Personal,My article on 'Advanced CSS Techniques' was published in TechReads Magazine.,
-20,6,2022,Yorkshire Marathon,Personal|Fitness,Completed the Yorkshire Marathon de,
-1,9,2023,Graduated MSc,Education,Received Master of Science in Computer Science with Distinction.,
-10,2,2024,Keynote Speaker,Public Speaking|Work,Gave the opening keynote at the National Web Developers Conference.,
-22,5,2024,Open Source Contribution,Development,Merged a significant feature into a major open-source project.,
+month,year,event,category,description,link
+6,2025,Masters of Natural Sciences (Mnatsci),Academic,Successfully deployed version 1.0 of Project Alpha to production.,
+3,2025,Weymouth 70.3,Athletic|Personal,My article on 'Advanced CSS Techniques' was published in TechReads Magazine.,
+6,2025,Yorkshire Marathon,Adventure,Completed the Yorkshire Marathon de,
+9,2025,Graduated MSc,Education,Received Master of Science in Computer Science with Distinction.,
+2,2025,Keynote Speaker,Public Speaking|Work,Gave the opening keynote at the National Web Developers Conference.,
+5,2025,Open Source Contribution,Development,Merged a significant feature into a major open-source project.,
