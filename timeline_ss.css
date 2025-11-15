@@ -112,7 +112,21 @@ main.content {
   transition: background-color 0.2s ease;
   user-select: none; /* Prevents text selection when clicking */
 }
+.profile-portrait {
+  /* 1. Force the container to be a square */
+  width: 100px;  /* Set your desired size */
+  height: 100px; /* Must be THE SAME as width */
 
+  /* 2. Create the circle */
+  border-radius: 50%;
+
+  /* 3. This is the magic part: */
+  /* Ensures the image covers the square without stretching */
+  object-fit: cover;
+  
+  /* (Optional) Ensures the image is centered */
+  object-position: center; 
+}
 .filter-label:hover {
   background-color: #a9d4e1; /* Slightly darker accent */
 }

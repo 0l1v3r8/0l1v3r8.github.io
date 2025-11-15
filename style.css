@@ -122,10 +122,19 @@ main.content {
   font-size: clamp(1rem, 1.5vw, 1.25rem);
 }
 .profile-portrait {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%; /* This makes the image round */
-  object-fit: cover;   /* Ensures the image fills the space nicely */
+  /* 1. Force the container to be a square */
+  width: 100px;  /* Set your desired size */
+  height: 100px; /* Must be THE SAME as width */
+
+  /* 2. Create the circle */
+  border-radius: 50%;
+
+  /* 3. This is the magic part: */
+  /* Ensures the image covers the square without stretching */
+  object-fit: cover;
+  
+  /* (Optional) Ensures the image is centered */
+  object-position: center; 
 }
 .card-link {
   text-decoration: none;
