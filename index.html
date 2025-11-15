@@ -25,13 +25,33 @@
         </a>
         <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer">
           <img src="images/instagram_logo.png" alt="Follow on Instagram">
-        </a>
-            <a href="contact@oliverbrady.uk" target="_blank" rel="noopener noreferrer">
-          <img src="images/email.png" alt="Email me">
-        </a>
+        <a href="#" 
+            onclick="copyEmail(event, 'contact@oliverbrady.uk')" 
+            title="Click to copy email address">
+            <img src="images/email.png" alt="Email me (click to copy)">
+          </a>
       </section>
     </nav>
     
+    <script>
+  function copyEmail(event, email) {
+    // 1. Prevent the default "href='#'" link behavior (which jumps to the top of the page)
+    event.preventDefault(); 
+    
+    // 2. Get the email address you passed into the function
+    const emailToCopy = email;
+
+    // 3. Use the Clipboard API to write the email text
+    navigator.clipboard.writeText(emailToCopy).then(() => {
+      // 4. (Optional) Give the user feedback that it worked
+      alert("Email copied to clipboard:\n" + emailToCopy);
+    }).catch(err => {
+      // 5. (Optional) Handle any errors
+      console.error('Failed to copy email: ', err);
+      alert("Oops, something went wrong. Could not copy email.");
+    });
+  }
+</script>
     
 
     <main class="content">
