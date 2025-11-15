@@ -121,7 +121,12 @@ main.content {
 
   font-size: clamp(1rem, 1.5vw, 1.25rem);
 }
-
+.profile-portrait {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%; /* This makes the image round */
+  object-fit: cover;   /* Ensures the image fills the space nicely */
+}
 .card-link {
   text-decoration: none;
   color: inherit;
