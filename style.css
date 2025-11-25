@@ -46,7 +46,11 @@ header.site-header {
   text-align: center;
   font-size: clamp(1rem, 2vw, 1.5rem);
 }
-
+a {
+  font-style: inherit;
+  color: inherit;
+  text-decoration: none;
+}
 nav.navbar {
   padding: var(--padding);
   grid-column: 1 / -1;

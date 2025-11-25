@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Oliver Brady - Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display.swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Ensures text inside the flex-card stacks vertically */
+    .card-content-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    /* Style for the skill tags (mimicking the timeline look) */
+    .skill-tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .skill-tag {
+      background-color: var(--accent);
+      padding: 0.25rem 0.75rem;
+      border: 1px solid black;
+      border-radius: 1rem;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <header class="site-header">
+      <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
+      <a href="index.html" class="header-link">
+        <div class="name-group">
+          <h1>Oliver Brady</h1>
+          <p>Learning More • Going Further</p>
+        </div>
+      </a>
+    </header>
+
+
+    <main class="content">
+
+      <div class="card">
+        <div class="card-content-wrapper">
+          <h2>About Me</h2>
+          <p>
+            Hi, I'm Oliver. I am passionate about engineering and continuous learning. 
+            My focus is on solving complex problems through innovative solutions and 
+            maintaining a rigorous standard of performance.
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-content-wrapper">
+          <h3>Core Competencies</h3>
+          <div class="skill-tag-container">
+            <span class="skill-tag">Environmental Data Analysis</span>
+            <span class="skill-tag">Data Visualisation</span>
+            <span class="skill-tag">Mathematical Modelling</span>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+</body>
+</html>
