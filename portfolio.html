@@ -42,65 +42,56 @@
 
   </div>
 
-  <script>
-    // --- 1. YOUR DATA GOES HERE ---
-    const portfolioData = [
-      {
-        title: "Research Thesis",
-        category: ["Academic"],
-        type: "pdf", // Options: 'pdf', 'image', 'video', 'youtube'
-        source: "docs/thesis.pdf", 
-        description: "A deep dive into modern web standards and their economic impact."
-      },
-      {
-        title: "Street Photography Series",
-        category: ["Artistic"],
-        type: "image",
-        source: "images/photo-1.jpg",
-        description: "A collection of architectural shots taken in Central London."
-      },
-      {
-        title: "Marathon 2024",
-        category: ["Athletic"],
-        type: "image",
-        source: "images/marathon.jpg",
-        description: "Completed the London Marathon in 3h 45m, raising funds for charity."
-      },
-      {
-        title: "Short Film Project",
-        category: ["Artistic"],
-        type: "video",
-        source: "videos/short-film.mp4",
-        description: "Directed and edited a narrative short film about student life."
-      },
-      {
-        title: "Rugby Season Highlights",
-        category: ["Athletic"],
-        type: "youtube",
-        source: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Use Embed URL
-        description: "Highlight reel from the 2023-2024 First XV season."
-      },
-      {
-        title: "Degree Certification",
-        category: ["Academic"],
-        type: "image",
-        source: "images/certificate.jpg",
-        description: "First Class Honours in Computer Science."
-      }
-    ];
-
-    // --- 2. LOGIC ---
+<script>
+    // --- CONFIGURATION ---
+    const jsonPath = 'portfolio.json'; // The file created in Step 1
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    
+    // Global variables to hold state
+    let portfolioData = []; 
     const portfolioContainer = document.getElementById('portfolio-container');
     const filterContainer = document.getElementById('filter-container');
 
+    // --- MAIN INITIALIZATION ---
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Generate Checkboxes based on unique categories in data
-      const uniqueCategories = [...new Set(portfolioData.flatMap(item => item.category))].sort();
-      createCategoryFilters(uniqueCategories);
+      
+      // 1. Fetch the JSON Data
+      fetch(jsonPath)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          portfolioData = data;
 
-      // 2. Initial Render
-      filterAndDisplayItems();
+          // 2. SORT DATA (Newest First)
+          // If years are different, sort by year. If years are same, sort by month.
+          portfolioData.sort((a, b) => {
+            if (b.year !== a.year) {
+                return b.year - a.year; 
+            }
+            return b.month - a.month;
+          });
+
+          // 3. Generate Filters based on loaded data
+          const uniqueCategories = [...new Set(portfolioData.flatMap(item => item.category))].sort();
+          createCategoryFilters(uniqueCategories);
+
+          // 4. Initial Render
+          filterAndDisplayItems();
+        })
+        .catch(error => {
+          console.error('Error loading portfolio data:', error);
+          portfolioContainer.innerHTML = `
+            <p style="text-align: center; color: red; padding: 2rem;">
+              Unable to load portfolio data.<br>
+            </p>`;
+        });
     });
+
+    // --- HELPER FUNCTIONS ---
 
     function createCategoryFilters(categories) {
       let filterHTML = categories.map(category => `
@@ -109,10 +100,9 @@
           ${category}
         </label>
       `).join('');
-      
       filterContainer.innerHTML = filterHTML;
 
-      // Add click listeners to new checkboxes
+      // Add listeners to the new checkboxes
       document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', filterAndDisplayItems);
       });
@@ -143,12 +133,13 @@
       let html = '';
       
       items.forEach(item => {
-        // Generate Category Tags
+        // Create Date String (e.g., "May 2024")
+        const dateString = `${monthNames[item.month - 1]} ${item.year}`;
+
         const tagsHTML = item.category
           .map(cat => `<span class="tag tag-${cat.toLowerCase()}">${cat}</span>`)
           .join('');
 
-        // Generate Media HTML based on Type
         let mediaHTML = '';
         if (item.type === 'image') {
           mediaHTML = `<img src="${item.source}" alt="${item.title}" class="media-content">`;
@@ -171,14 +162,18 @@
             </div>`;
         }
 
-        // Build the Card
         html += `
           <div class="portfolio-item card">
             <div class="portfolio-media">
               ${mediaHTML}
             </div>
             <div class="portfolio-details">
-              <div class="tags-row">${tagsHTML}</div>
+              
+              <div class="meta-row">
+                <div class="tags-group">${tagsHTML}</div>
+                <span class="date-text">${dateString}</span>
+              </div>
+
               <h3>${item.title}</h3>
               <p>${item.description}</p>
             </div>
@@ -188,6 +183,6 @@
 
       portfolioContainer.innerHTML = html;
     }
-  </script>
+</script>
 </body>
 </html>
