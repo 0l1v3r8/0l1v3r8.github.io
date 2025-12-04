@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="images/OB.png" type="image/png">
+  <title>Oliver Brady - Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="portfolio_style.css">
+</head>
+<body>
+
+  <div class="container">
+    
+    <header class="site-header">
+      <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
+      <a href="index.html" class="header-link">
+        <div class="name-group">
+          <h1>Oliver Brady</h1>
+          <p>Learning More • Going Further</p>
+        </div>
+      </a>
+    </header>
+
+    <main class="content">
+
+      <div class="card title-card">
+        <h2 class="main-title">Portfolio</h2>
+      </div>
+
+      <div class="card" id="filter-card">
+        <h3 class="filter-title">Filter by Category:</h3>
+        <div id="filter-container">
+          </div>
+      </div>
+
+      <div id="portfolio-container">
+        </div>
+
+    </main>
+
+  </div>
+
+  <script>
+    // --- 1. YOUR DATA GOES HERE ---
+    const portfolioData = [
+      {
+        title: "Research Thesis",
+        category: ["Academic"],
+        type: "pdf", // Options: 'pdf', 'image', 'video', 'youtube'
+        source: "docs/thesis.pdf", 
+        description: "A deep dive into modern web standards and their economic impact."
+      },
+      {
+        title: "Street Photography Series",
+        category: ["Artistic"],
+        type: "image",
+        source: "images/photo-1.jpg",
+        description: "A collection of architectural shots taken in Central London."
+      },
+      {
+        title: "Marathon 2024",
+        category: ["Athletic"],
+        type: "image",
+        source: "images/marathon.jpg",
+        description: "Completed the London Marathon in 3h 45m, raising funds for charity."
+      },
+      {
+        title: "Short Film Project",
+        category: ["Artistic"],
+        type: "video",
+        source: "videos/short-film.mp4",
+        description: "Directed and edited a narrative short film about student life."
+      },
+      {
+        title: "Rugby Season Highlights",
+        category: ["Athletic"],
+        type: "youtube",
+        source: "https://www.youtube.com/embed/dQw4w9WgXcQ", // Use Embed URL
+        description: "Highlight reel from the 2023-2024 First XV season."
+      },
+      {
+        title: "Degree Certification",
+        category: ["Academic"],
+        type: "image",
+        source: "images/certificate.jpg",
+        description: "First Class Honours in Computer Science."
+      }
+    ];
+
+    // --- 2. LOGIC ---
+    const portfolioContainer = document.getElementById('portfolio-container');
+    const filterContainer = document.getElementById('filter-container');
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. Generate Checkboxes based on unique categories in data
+      const uniqueCategories = [...new Set(portfolioData.flatMap(item => item.category))].sort();
+      createCategoryFilters(uniqueCategories);
+
+      // 2. Initial Render
+      filterAndDisplayItems();
+    });
+
+    function createCategoryFilters(categories) {
+      let filterHTML = categories.map(category => `
+        <label class="filter-label">
+          <input type="checkbox" name="category" value="${category}" class="filter-checkbox">
+          ${category}
+        </label>
+      `).join('');
+      
+      filterContainer.innerHTML = filterHTML;
+
+      // Add click listeners to new checkboxes
+      document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', filterAndDisplayItems);
+      });
+    }
+
+    function filterAndDisplayItems() {
+      const selectedCategories = [...document.querySelectorAll('.filter-checkbox:checked')]
+        .map(cb => cb.value);
+
+      let filteredItems;
+
+      if (selectedCategories.length === 0) {
+        filteredItems = portfolioData; // Show all if nothing checked
+      } else {
+        filteredItems = portfolioData.filter(item => 
+          item.category.some(cat => selectedCategories.includes(cat))
+        );
+      }
+      generatePortfolio(filteredItems);
+    }
+
+    function generatePortfolio(items) {
+      if (items.length === 0) {
+        portfolioContainer.innerHTML = '<p style="text-align: center; padding: 2rem;">No items match the selected filters.</p>';
+        return;
+      }
+      
+      let html = '';
+      
+      items.forEach(item => {
+        // Generate Category Tags
+        const tagsHTML = item.category
+          .map(cat => `<span class="tag tag-${cat.toLowerCase()}">${cat}</span>`)
+          .join('');
+
+        // Generate Media HTML based on Type
+        let mediaHTML = '';
+        if (item.type === 'image') {
+          mediaHTML = `<img src="${item.source}" alt="${item.title}" class="media-content">`;
+        } else if (item.type === 'video') {
+          mediaHTML = `
+            <video controls class="media-content">
+              <source src="${item.source}" type="video/mp4">
+              Your browser does not support video.
+            </video>`;
+        } else if (item.type === 'youtube') {
+          mediaHTML = `
+            <div class="video-responsive">
+              <iframe src="${item.source}" frameborder="0" allowfullscreen></iframe>
+            </div>`;
+        } else if (item.type === 'pdf') {
+          mediaHTML = `
+            <div class="pdf-wrapper">
+              <span>PDF Document</span>
+              <a href="${item.source}" target="_blank" class="pdf-btn">Download / Read</a>
+            </div>`;
+        }
+
+        // Build the Card
+        html += `
+          <div class="portfolio-item card">
+            <div class="portfolio-media">
+              ${mediaHTML}
+            </div>
+            <div class="portfolio-details">
+              <div class="tags-row">${tagsHTML}</div>
+              <h3>${item.title}</h3>
+              <p>${item.description}</p>
+            </div>
+          </div>
+        `;
+      });
+
+      portfolioContainer.innerHTML = html;
+    }
+  </script>
+</body>
+</html>
