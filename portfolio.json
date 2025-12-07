@@ -1,21 +1,21 @@
 [
   {
-    "title": "Degree Certification",
+    "title": "Placeholder",
     "category": ["Academic"],
     "month": 7,
     "year": 2024,
     "type": "image",
     "source": "images/certificate.jpg",
-    "description": "First Class Honours in Computer Science."
+    "description": "Placeholder"
   },
   {
-    "title": "Marathon 2024",
+    "title": "Placeholder",
     "category": ["Athletic"],
     "month": 4,
     "year": 2024,
     "type": "image",
     "source": "images/marathon.jpg",
-    "description": "Completed the London Marathon in 3h 45m."
+    "description": "Placeholder"
   },
 {
     "title": "Notes",
@@ -27,39 +27,39 @@
     "description": "An amalgamation of all things interesting. An ongoing project..."
   },
   {
-    "title": "Research Thesis",
+    "title": "Placeholder",
     "category": ["Academic"],
     "month": 5,
     "year": 2024,
     "type": "pdf",
     "source": "docs/thesis.pdf",
-    "description": "A deep dive into modern web standards."
+    "description": "Placeholder"
   },
   {
-    "title": "Street Photography Series",
+    "title": "Placeholder",
     "category": ["Artistic"],
     "month": 12,
     "year": 2023,
     "type": "image",
     "source": "images/photo-1.jpg",
-    "description": "Architectural shots taken in Central London."
+    "description": "Placeholder"
   },
   {
-    "title": "Rugby Season Highlights",
+    "title": "Placeholder",
     "category": ["Athletic"],
     "month": 11,
     "year": 2023,
     "type": "youtube",
     "source": "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    "description": "Highlight reel from the First XV season."
+    "description": "Placeholder"
   },
   {
-    "title": "Short Film Project",
+    "title": "Placeholder",
     "category": ["Artistic"],
     "month": 10,
     "year": 2023,
     "type": "video",
     "source": "videos/short-film.mp4",
-    "description": "Directed and edited a narrative short film."
+    "description": "Placeholder"
   }
 ]
