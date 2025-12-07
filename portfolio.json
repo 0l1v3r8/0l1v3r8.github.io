@@ -17,6 +17,15 @@
     "source": "images/marathon.jpg",
     "description": "Completed the London Marathon in 3h 45m."
   },
+{
+    "title": "Notes",
+    "category": ["Academic"],
+    "month": 12,
+    "year": 2025,
+    "type": "pdf",
+    "source": "https://github.com/0l1v3r8/Notes/blob/main/Notes.pdf",
+    "description": "An amalgamation of all things interesting. An ongoing project..."
+  },
   {
     "title": "Research Thesis",
     "category": ["Academic"],
