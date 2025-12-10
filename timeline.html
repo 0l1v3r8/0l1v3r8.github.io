@@ -42,7 +42,7 @@
 
   </div>
 
-  <script>
+<script>
     let allEvents = [];
     const timelineContainer = document.getElementById('timeline-container');
     const filterContainer = document.getElementById('filter-container');
@@ -62,8 +62,8 @@
           
           // Sort events (newest first)
           allEvents.sort((a, b) => {
-            const dateA = new Date(a.year, a.month - 1); // <-- CHANGED
-            const dateB = new Date(b.year, b.month - 1); // <-- CHANGED
+            const dateA = new Date(a.year, a.month - 1);
+            const dateB = new Date(b.year, b.month - 1);
             return dateB - dateA;
           });
 
@@ -117,39 +117,52 @@
 
     /**
      * Parses raw CSV text into an array of event objects.
+     * Updated to handle commas inside quotes.
      */
     function parseCSV(text) {
+      // 1. Split lines (handles standard newlines)
       const lines = text.trim().split('\n');
       if (lines.length < 2) return [];
-      const headers = lines[0].split(',').map(header => header.trim());
+
+      // Regex to match commas ONLY if they are not followed by an odd number of quotes
+      // i.e., splits by commas outside of quotes.
+      const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+
+      // 2. Parse Headers using the Regex
+      const headers = lines[0].split(csvRegex).map(header => header.trim().replace(/^"|"$/g, ''));
+      
       const events = [];
       const colIndices = {
-        // 'day' has been removed
-        month: headers.indexOf('month'), // <-- CHANGED
+        month: headers.indexOf('month'),
         year: headers.indexOf('year'),
         event: headers.indexOf('event'),
         category: headers.indexOf('category'),
         description: headers.indexOf('description'),
         link: headers.indexOf('link'),
       };
+
       if (Object.values(colIndices).some(index => index === -1)) {
-        console.error('CSV headers are incorrect. Expected: month, year, event, category, description, link'); // <-- CHANGED
+        console.error('CSV headers are incorrect. Expected: month, year, event, category, description, link');
         return [];
       }
+
       for (let i = 1; i < lines.length; i++) {
         const line = lines[i];
         if (line.trim() === '') continue;
         
-        const values = line.split(',');
+        // 3. Parse Row Values using the Regex
+        const values = line.split(csvRegex);
+
+        // Helper to clean quotes off the values
+        const clean = (val) => val ? val.trim().replace(/^"|"$/g, '').replace(/""/g, '"') : '';
 
         const eventData = {
-          // 'day' has been removed
-          month: parseInt(values[colIndices.month], 10), // <-- CHANGED
-          year: parseInt(values[colIndices.year], 10),
-          event: values[colIndices.event].trim(),
-          category: values[colIndices.category].trim().replace(/^"|"$/g, '').split('|').map(cat => cat.trim()),
-          description: values[colIndices.description].trim().replace(/^"|"$/g, ''),
-          link: values[colIndices.link] ? values[colIndices.link].trim().replace(/^"|"$/g, '') : '',
+          month: parseInt(clean(values[colIndices.month]), 10),
+          year: parseInt(clean(values[colIndices.year]), 10),
+          event: clean(values[colIndices.event]),
+          category: clean(values[colIndices.category]).split('|').map(cat => cat.trim()),
+          description: clean(values[colIndices.description]),
+          link: clean(values[colIndices.link]),
         };
         events.push(eventData);
       }
@@ -173,8 +186,7 @@
       let timelineHTML = '';
       
       events.forEach(event => {
-        // Date string format changed to "Month Year"
-        const dateStr = `${monthNames[event.month - 1]} ${event.year}`; // <-- CHANGED
+        const dateStr = `${monthNames[event.month - 1]} ${event.year}`;
 
         const categoryTagsHTML = event.category
           .map(cat => `<div class="timeline-category">${cat}</div>`)
@@ -193,7 +205,7 @@
               <div class="timeline-category-wrapper">
                 ${categoryTagsHTML}
               </div>
-              <p class="timeline-description">${event.description}</p>
+              <div class="timeline-description">${event.description}</div>
             </div>
           </div>
         `;
