@@ -1,37 +1,3 @@
-/* --- Filter Section --- */
-#filter-card {
-  text-align: center;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-}
-
-.filter-title {
-  margin-top: 0;
-  margin-bottom: 1rem;
-  font-size: 1.2rem;
-}
-
-#filter-container {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-}
-
-.filter-label {
-  cursor: pointer;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.1rem;
-}
-
-.filter-checkbox {
-  transform: scale(1.5); /* Make checkboxes bigger */
-  cursor: pointer;
-}
-
 /* --- Portfolio Grid --- */
 #portfolio-container {
   display: grid;
@@ -43,8 +9,8 @@
 .portfolio-item {
   display: flex;
   flex-direction: column;
-  padding: 0; /* Override default card padding for cleaner edge-to-edge media */
-  overflow: hidden; /* Keeps images inside rounded corners */
+  padding: 0; 
+  overflow: hidden; 
 }
 
 /* --- Media Area --- */
@@ -52,7 +18,7 @@
   width: 100%;
   height: 250px;
   background-color: #eee;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid var(--dark-green);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -61,10 +27,10 @@
 .media-content {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensures images fill the box perfectly */
+  object-fit: cover; 
 }
 
-/* PDF Specific Styling */
+/* PDF Specific Styling (Using Red Theme) */
 .pdf-wrapper {
   display: flex;
   flex-direction: column;
@@ -73,8 +39,8 @@
   gap: 1rem;
   width: 100%;
   height: 100%;
-  background-color: #fce4ec; /* Light pink background for PDFs */
-  color: #c2185b;
+  background-color: var(--light-red); 
+  color: var(--dark-red);
   font-weight: 900;
   font-size: 1.5rem;
 }
@@ -82,13 +48,18 @@
 .pdf-btn {
   font-size: 1rem;
   padding: 0.5rem 1rem;
-  background-color: white;
-  border: 1px solid black;
+  background-color: var(--bg);
+  border: 2px solid var(--dark-red);
   text-decoration: none;
   color: black;
-  font-weight: normal;
+  font-weight: bold;
+  transition: all 0.2s ease;
 }
-.pdf-btn:hover { background-color: #ddd; }
+
+.pdf-btn:hover { 
+  background-color: var(--dark-red); 
+  color: var(--bg);
+}
 
 /* YouTube Responsive Fix */
 .video-responsive {
@@ -121,7 +92,7 @@
   line-height: 1.5;
 }
 
-/* Tags */
+/* Tags (Using Red Theme for important/interactive categorizing) */
 .tags-row {
   margin-bottom: 0.5rem;
 }
@@ -132,12 +103,9 @@
   text-transform: uppercase;
   font-weight: 900;
   padding: 0.25rem 0.5rem;
-  border: 1px solid black;
+  border: 1px solid var(--dark-red);
   margin-right: 0.5rem;
-  background-color: white;
+  background-color: var(--light-red);
+  color: black;
+  border-radius: 4px;
 }
-
-/* Specific Tag Colors (Optional) */
-.tag-academic { background-color: #e3f2fd; } /* Light Blue */
-.tag-artistic { background-color: #f3e5f5; } /* Light Purple */
-.tag-athletic { background-color: #e8f5e9; } /* Light Green */
