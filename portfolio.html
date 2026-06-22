@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="icon" href="images/OB.png" type="image/png">
-  <title>Oliver Brady - Portfolio</title>
+  <title>Oliver Brady - Profile</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="portfolio_style.css">
 </head>
+
 <body>
 
   <div class="container">
-    
+
     <header class="site-header">
       <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
       <a href="index.html" class="header-link">
@@ -25,164 +25,62 @@
 
     <main class="content">
 
-      <div class="card title-card">
-        <h2 class="main-title">Portfolio</h2>
-      </div>
-
-      <div class="card" id="filter-card">
-        <h3 class="filter-title">Filter:</h3>
-        <div id="filter-container">
-          </div>
-      </div>
-
-      <div id="portfolio-container">
+      <div class="card" style="cursor: default;">
+        <div class="card-content-wrapper">
+          <h2>About Me</h2>
+          <p>
+            I enjoy the challenge of turning theory into practice. I am motivated by the full implementation of
+            approaches—seeing how mathematical methodologies can genuinely impact the real world. I bring this same
+            active mindset to my personal life, constantly pushing my limits through endurance sports and exploration.
+          </p>
         </div>
+      </div>
+
+      <div class="card-grid">
+        <a href="portfolio.html" class="card-link">
+          <div class="card">
+            <div class="card-content-wrapper">
+              <h3>Academic</h3>
+              <div class="skill-tag-container">
+                <span class="skill-tag">Mathematical Modelling</span>
+                <span class="skill-tag">Interdisciplinary Research</span>
+                <span class="skill-tag">Data Analysis</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="timeline.html" class="card-link">
+          <div class="card">
+            <div class="card-content-wrapper">
+              <h3>Athletic and Adventure</h3>
+              <div class="skill-tag-container">
+                <span class="skill-tag">Triathlon</span>
+                <span class="skill-tag">Yoga</span>
+                <span class="skill-tag">Hiking</span>
+              </div>
+            </div>
+          </div>
+        </a>
+
+        <a href="portfolio.html" class="card-link">
+          <div class="card">
+            <div class="card-content-wrapper">
+              <h3>Artistic</h3>
+              <div class="skill-tag-container">
+                <span class="skill-tag">Music</span>
+                <span class="skill-tag">Photography</span>
+                <span class="skill-tag">Poetry</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
 
     </main>
 
   </div>
 
-<script>
-    // --- CONFIGURATION ---
-    const jsonPath = 'portfolio.json'; // The file created in Step 1
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
-    // Global variables to hold state
-    let portfolioData = []; 
-    const portfolioContainer = document.getElementById('portfolio-container');
-    const filterContainer = document.getElementById('filter-container');
-
-    // --- MAIN INITIALIZATION ---
-    document.addEventListener('DOMContentLoaded', () => {
-      
-      // 1. Fetch the JSON Data
-      fetch(jsonPath)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          portfolioData = data;
-
-          // 2. SORT DATA (Newest First)
-          // If years are different, sort by year. If years are same, sort by month.
-          portfolioData.sort((a, b) => {
-            if (b.year !== a.year) {
-                return b.year - a.year; 
-            }
-            return b.month - a.month;
-          });
-
-          // 3. Generate Filters based on loaded data
-          const uniqueCategories = [...new Set(portfolioData.flatMap(item => item.category))].sort();
-          createCategoryFilters(uniqueCategories);
-
-          // 4. Initial Render
-          filterAndDisplayItems();
-        })
-        .catch(error => {
-          console.error('Error loading portfolio data:', error);
-          portfolioContainer.innerHTML = `
-            <p style="text-align: center; color: red; padding: 2rem;">
-              Unable to load portfolio data.<br>
-            </p>`;
-        });
-    });
-
-    // --- HELPER FUNCTIONS ---
-
-    function createCategoryFilters(categories) {
-      let filterHTML = categories.map(category => `
-        <label class="filter-label">
-          <input type="checkbox" name="category" value="${category}" class="filter-checkbox">
-          ${category}
-        </label>
-      `).join('');
-      filterContainer.innerHTML = filterHTML;
-
-      // Add listeners to the new checkboxes
-      document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', filterAndDisplayItems);
-      });
-    }
-
-    function filterAndDisplayItems() {
-      const selectedCategories = [...document.querySelectorAll('.filter-checkbox:checked')]
-        .map(cb => cb.value);
-
-      let filteredItems;
-
-      if (selectedCategories.length === 0) {
-        filteredItems = portfolioData; // Show all if nothing checked
-      } else {
-        filteredItems = portfolioData.filter(item => 
-          item.category.some(cat => selectedCategories.includes(cat))
-        );
-      }
-      generatePortfolio(filteredItems);
-    }
-
-    function generatePortfolio(items) {
-      if (items.length === 0) {
-        portfolioContainer.innerHTML = '<p style="text-align: center; padding: 2rem;">No items match the selected filters.</p>';
-        return;
-      }
-      
-      let html = '';
-      
-      items.forEach(item => {
-        // Create Date String (e.g., "May 2024")
-        const dateString = `${monthNames[item.month - 1]} ${item.year}`;
-
-        const tagsHTML = item.category
-          .map(cat => `<span class="tag tag-${cat.toLowerCase()}">${cat}</span>`)
-          .join('');
-
-        let mediaHTML = '';
-        if (item.type === 'image') {
-          mediaHTML = `<img src="${item.source}" alt="${item.title}" class="media-content">`;
-        } else if (item.type === 'video') {
-          mediaHTML = `
-            <video controls class="media-content">
-              <source src="${item.source}" type="video/mp4">
-              Your browser does not support video.
-            </video>`;
-        } else if (item.type === 'youtube') {
-          mediaHTML = `
-            <div class="video-responsive">
-              <iframe src="${item.source}" frameborder="0" allowfullscreen></iframe>
-            </div>`;
-        } else if (item.type === 'pdf') {
-          mediaHTML = `
-            <div class="pdf-wrapper">
-              <span>PDF Document</span>
-              <a href="${item.source}" target="_blank" class="pdf-btn">Download / Read</a>
-            </div>`;
-        }
-
-        html += `
-          <div class="portfolio-item card">
-            <div class="portfolio-media">
-              ${mediaHTML}
-            </div>
-            <div class="portfolio-details">
-              
-              <div class="meta-row">
-                <div class="tags-group">${tagsHTML}</div>
-                <span class="date-text">${dateString}</span>
-              </div>
-
-              <h3>${item.title}</h3>
-              <p>${item.description}</p>
-            </div>
-          </div>
-        `;
-      });
-
-      portfolioContainer.innerHTML = html;
-    }
-</script>
 </body>
+
 </html>
