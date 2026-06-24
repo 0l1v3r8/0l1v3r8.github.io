@@ -1,25 +1,27 @@
 /* ===============================================
-   TIMELINE STYLES
+   TIMELINE STYLES (Fluid & Modernized)
 =============================================== */
 
 #timeline-title-card {
-  margin-bottom: 2rem;
-  padding: 0.5rem; 
+  margin-bottom: clamp(1rem, 2vw, 2rem);
+  padding: 1rem;
+  border-bottom: none;
+  /* Let the global grid handle the bottom border */
 }
 
 .timeline-main-title {
   text-align: center;
-  margin-top: 0;
-  margin-bottom: 0;
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  font-weight: 700; 
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 900;
+  color: var(--dark-blue);
 }
 
 #timeline-container {
   position: relative;
   width: 100%;
   padding: 1rem 0;
-  text-align: left; 
+  text-align: left;
 }
 
 /* The vertical timeline line (Blue Theme) */
@@ -27,96 +29,138 @@
   content: '';
   position: absolute;
   left: 20px;
+  /* Locked alignment */
   top: 0;
   bottom: 0;
   width: 4px;
   background-color: var(--light-blue);
-  border: 1px solid var(--dark-blue);
   border-radius: 2px;
 }
 
 .timeline-item {
   position: relative;
   margin-bottom: var(--gap);
-  padding-left: 50px; 
+  /* Padding scales to make room for the line and dot */
+  padding-left: clamp(45px, 6vw, 60px);
+  display: flex;
+  flex-direction: column;
 }
 
 /* The dots on the timeline (Blue Theme) */
 .timeline-item::before {
   content: '';
   position: absolute;
-  left: 10px; 
-  top: 10px;
-  width: 20px;
-  height: 20px;
+  left: 10px;
+  /* Exact center point of the 20px line */
+  top: 1.8rem;
+  /* Aligns smoothly with the card boundary */
+  width: 24px;
+  height: 24px;
   background-color: var(--bg);
   border: 3px solid var(--dark-blue);
   border-radius: 50%;
   z-index: 1;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Highlight the dot when hovering over the timeline item */
+.timeline-item:hover::before {
+  background-color: var(--light-blue);
+  transform: scale(1.25);
 }
 
 .timeline-date {
-  font-weight: 700;
-  font-size: 0.9em;
-  color: black;
+  font-weight: 900;
+  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  color: var(--dark-green);
   margin-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .timeline-content {
   background-color: var(--bg);
-  border: 1px solid var(--dark-green);
+  border: 1px solid rgba(26, 86, 104, 0.1);
+  border-left: 4px solid var(--dark-blue);
+  /* Thematic side-accent */
   border-radius: 8px;
   padding: var(--padding);
-  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Lifts the card and increases shadow on hover */
+.timeline-item:hover .timeline-content {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(26, 86, 104, 0.1);
 }
 
 .timeline-event-title {
-  font-size: 1.25em;
-  font-weight: 700;
+  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  font-weight: 900;
   margin: 0 0 0.5rem 0;
   color: var(--dark-blue);
 }
 
-.timeline-category-wrapper {
-  display: flex;
-  flex-wrap: wrap; 
-  gap: 0.5rem; 
-  margin-bottom: 0.75rem; 
+.timeline-link {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
 }
 
-/* Timeline tags (Red Theme for importance) */
+.timeline-link:hover {
+  color: var(--dark-red);
+}
+
+.timeline-category-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Timeline tags (Matching the new pill shape from the portfolio) */
 .timeline-category {
-  font-size: 0.9em;
-  font-weight: 700;
-  color: black;
-  background-color: var(--light-red);
-  border: 1px solid var(--dark-red);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--dark-red);
+  background-color: var(--bg);
+  border: 1px solid var(--light-red);
+  padding: 0.2rem 0.6rem;
+  border-radius: 15px;
+  /* Pill shape */
 }
 
 .timeline-description {
-  font-size: 1em;
+  font-size: 1rem;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.6;
   margin: 0;
-  color: black;
+  color: #444;
+  /* Softer text for easier reading */
 }
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  #timeline-container {
-    padding: 0.5rem 0;
+  #timeline-container::before {
+    left: 10px;
   }
-  #timeline-container::before { 
-    left: 10px; 
+
+  .timeline-item {
+    padding-left: 35px;
   }
-  .timeline-item { 
-    padding-left: 35px; 
+
+  .timeline-item::before {
+    left: 0;
+    /* Keeps the dot perfectly centered on the line for mobile */
+    width: 24px;
+    height: 24px;
+    top: 1.6rem;
   }
-  .timeline-item::before { 
-    left: 0; 
-    width: 18px; 
-    height: 18px; 
+
+  .timeline-date {
+    padding-left: 0;
   }
 }
