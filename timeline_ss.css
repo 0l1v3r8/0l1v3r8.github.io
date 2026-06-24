@@ -1,12 +1,11 @@
 /* ===============================================
-   TIMELINE STYLES (Fluid & Modernized)
+   HORIZONTAL TIMELINE TRACK (Fluid & Native)
 =============================================== */
 
 #timeline-title-card {
   margin-bottom: clamp(1rem, 2vw, 2rem);
   padding: 1rem;
   border-bottom: none;
-  /* Let the global grid handle the bottom border */
 }
 
 .timeline-main-title {
@@ -17,90 +16,81 @@
   color: var(--dark-blue);
 }
 
-#timeline-container {
+/* Wrapper to hold the track and the buttons */
+.timeline-track-wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
-  padding: 1rem 0;
-  text-align: left;
 }
 
-/* The vertical timeline line (Blue Theme) */
-#timeline-container::before {
-  content: '';
-  position: absolute;
-  left: 20px;
-  /* Locked alignment */
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background-color: var(--light-blue);
-  border-radius: 2px;
+/* The scrollable horizontal track */
+#timeline-container {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 1rem 0 2rem 0;
+  width: 100%;
+
+  /* Enables native buttery-smooth snapping */
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+
+  /* Hides the ugly default scrollbar */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
 }
 
-.timeline-item {
-  position: relative;
-  margin-bottom: var(--gap);
-  /* Padding scales to make room for the line and dot */
-  padding-left: clamp(45px, 6vw, 60px);
+#timeline-container::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Safari */
+}
+
+/* Individual Cards */
+.timeline-card {
+  /* Flex settings ensure cards don't shrink and stay consistent */
+  flex: 0 0 auto;
+  width: clamp(280px, 70vw, 380px);
+  /* Responsive width */
+  min-height: 250px;
+  scroll-snap-align: center;
+  /* Snaps exactly to the center of the viewport */
+
+  background-color: var(--bg);
+  border: 1px solid rgba(26, 86, 104, 0.1);
+  border-top: 6px solid var(--dark-blue);
+  /* Thematic top-accent instead of vertical line */
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* The dots on the timeline (Blue Theme) */
-.timeline-item::before {
-  content: '';
-  position: absolute;
-  left: 10px;
-  /* Exact center point of the 20px line */
-  top: 1.8rem;
-  /* Aligns smoothly with the card boundary */
-  width: 24px;
-  height: 24px;
-  background-color: var(--bg);
-  border: 3px solid var(--dark-blue);
-  border-radius: 50%;
-  z-index: 1;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-/* Highlight the dot when hovering over the timeline item */
-.timeline-item:hover::before {
-  background-color: var(--light-blue);
-  transform: scale(1.25);
+.timeline-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(26, 86, 104, 0.1);
 }
 
 .timeline-date {
   font-weight: 900;
-  font-size: clamp(0.85rem, 1.5vw, 1rem);
+  font-size: 0.85rem;
   color: var(--dark-green);
   margin-bottom: 0.5rem;
-  padding-left: 0.5rem;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.timeline-content {
-  background-color: var(--bg);
-  border: 1px solid rgba(26, 86, 104, 0.1);
-  border-left: 4px solid var(--dark-blue);
-  /* Thematic side-accent */
-  border-radius: 8px;
-  padding: var(--padding);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Lifts the card and increases shadow on hover */
-.timeline-item:hover .timeline-content {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(26, 86, 104, 0.1);
+  letter-spacing: 1px;
 }
 
 .timeline-event-title {
   font-size: clamp(1.2rem, 2vw, 1.4rem);
   font-weight: 900;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.75rem 0;
   color: var(--dark-blue);
+  line-height: 1.3;
 }
 
 .timeline-link {
@@ -116,13 +106,13 @@
 .timeline-category-wrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
   margin-bottom: 1rem;
 }
 
-/* Timeline tags (Matching the new pill shape from the portfolio) */
+/* Matching the new pill shape from the portfolio */
 .timeline-category {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 900;
   text-transform: uppercase;
   color: var(--dark-red);
@@ -130,7 +120,6 @@
   border: 1px solid var(--light-red);
   padding: 0.2rem 0.6rem;
   border-radius: 15px;
-  /* Pill shape */
 }
 
 .timeline-description {
@@ -139,28 +128,53 @@
   line-height: 1.6;
   margin: 0;
   color: #444;
-  /* Softer text for easier reading */
+  flex-grow: 1;
+  /* Pushes any extra space to the bottom */
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-  #timeline-container::before {
-    left: 10px;
+/* --- Navigation Arrows --- */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--bg);
+  color: var(--dark-blue);
+  border: 2px solid var(--light-blue);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.scroll-btn:hover {
+  background-color: var(--light-blue);
+  color: var(--dark-blue);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.left-btn {
+  left: -15px;
+}
+
+.right-btn {
+  right: -15px;
+}
+
+/* Hide arrows on mobile devices because users will naturally swipe */
+@media (max-width: 768px) {
+  .scroll-btn {
+    display: none;
   }
 
-  .timeline-item {
-    padding-left: 35px;
-  }
-
-  .timeline-item::before {
-    left: 0;
-    /* Keeps the dot perfectly centered on the line for mobile */
-    width: 24px;
-    height: 24px;
-    top: 1.6rem;
-  }
-
-  .timeline-date {
-    padding-left: 0;
+  /* Align cards to the start on mobile for a better swiping experience */
+  .timeline-card {
+    scroll-snap-align: start;
   }
 }
