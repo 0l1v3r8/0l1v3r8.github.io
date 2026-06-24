@@ -25,13 +25,13 @@
 
 html,
 body {
-  height: 100%;
+  min-height: 100vh;
+  /* This allows the background to stretch infinitely */
   margin: 0;
   padding: 0;
   color: #222;
   background-color: var(--bg);
   font-family: 'Lato', sans-serif;
-  /* Base font size scales smoothly between mobile and desktop */
   font-size: clamp(14px, 1.5vw, 18px);
   line-height: 1.6;
 }
@@ -139,11 +139,18 @@ main.content {
 
 /* A utility class to handle responsive side-by-side components */
 .card-grid {
-  display: grid;
-  /* Automatically adjusts the number of columns based on screen width */
-  grid-template-columns: repeat(auto-fit, minmax(clamp(220px, 30vw, 300px), 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--gap);
   width: 100%;
+}
+
+/* Forces the cards to share space evenly, and stretch if orphaned */
+.card-grid>* {
+  flex: 1 1 clamp(250px, 30vw, 300px);
+  min-width: 250px;
+  min-height: 160px;
+  /* Ensures the stretched bottom card matches the visual weight of the top cards */
 }
 
 /* --- Cards --- */
