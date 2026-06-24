@@ -22,17 +22,32 @@
     }
 
     .hero-text {
-      font-size: clamp(1.1rem, 1.8vw, 1.25rem);
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
       line-height: 1.8;
       color: #333;
       margin: 0;
+    }
+
+    /* Resolves the overlap bug by using flex-grow instead of height: 100% */
+    .card-link {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-link .card {
+      flex-grow: 1;
+      justify-content: flex-start;
+      border-top: 4px solid var(--dark-green);
+      border-bottom: none;
     }
 
     .funnel-arrow {
       font-size: 0.9rem;
       font-weight: 900;
       color: var(--dark-red);
-      margin-top: 1rem;
+      margin-top: auto;
+      /* Pushes the arrow to the very bottom of the card */
+      padding-top: 1.5rem;
       display: inline-block;
       border-bottom: 2px solid transparent;
       transition: border-color 0.2s ease, transform 0.2s ease;
@@ -40,7 +55,7 @@
 
     .card-link:hover .funnel-arrow {
       border-color: var(--dark-red);
-      transform: translateX(3px);
+      transform: translateX(4px);
       /* Small arrow nudge on hover */
     }
 
@@ -49,37 +64,21 @@
       border: 1px solid rgba(58, 87, 25, 0.15);
       box-shadow: none;
       border-bottom: none;
+      margin-top: 1rem;
+      padding: clamp(2rem, 5vw, 3.5rem) 1rem;
     }
 
-    .cta-button {
+    /* Wraps the social icons in a stylized pill */
+    .cta-icons-wrapper {
+      background-color: var(--bg);
+      padding: 0.75rem 2.5rem;
+      border-radius: 50px;
       display: inline-flex;
-      align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      font-size: 1rem;
-      padding: 0.75rem 2rem;
-      background-color: var(--dark-blue);
-      color: var(--bg);
-      border-radius: 25px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
-      border: 2px solid var(--dark-blue);
-    }
-
-    .cta-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 12px rgba(26, 86, 104, 0.2);
-    }
-
-    .cta-button.secondary {
-      background-color: transparent;
-      color: var(--dark-blue);
-    }
-
-    .cta-button.secondary:hover {
-      background-color: var(--dark-blue);
-      color: var(--bg);
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      margin-top: 1.5rem;
+      border: 2px solid var(--dark-green);
     }
   </style>
 </head>
@@ -98,6 +97,7 @@
       </a>
     </header>
 
+    <!-- Modern Toast Notification for Email -->
     <div id="copy-toast"
       style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: var(--dark-blue); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 25px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; opacity: 0; transition: opacity 0.3s ease;">
       Email copied to clipboard!
@@ -122,6 +122,7 @@
 
     <main class="content">
 
+      <!-- 1. The Welcome Hero -->
       <div class="card hero-card" style="cursor: default;">
         <div class="card-content-wrapper">
           <h2 style="color: var(--dark-blue); font-size: clamp(1.8rem, 3vw, 2.2rem); margin-bottom: 0.5rem;">Hi, I'm
@@ -134,11 +135,11 @@
         </div>
       </div>
 
+      <!-- 2. The Navigation Funnel -->
       <div class="card-grid">
 
-        <a href="portfolio.html" class="card-link">
-          <div class="card"
-            style="justify-content: space-between; border-top: 4px solid var(--dark-green); border-bottom: none; height: 100%;">
+        <a href="portfolio.html" class="card-link" aria-label="View Academic Portfolio">
+          <div class="card">
             <div class="card-content-wrapper">
               <h3>Academic</h3>
               <div class="skill-tag-container">
@@ -151,9 +152,8 @@
           </div>
         </a>
 
-        <a href="timeline.html" class="card-link">
-          <div class="card"
-            style="justify-content: space-between; border-top: 4px solid var(--dark-green); border-bottom: none; height: 100%;">
+        <a href="timeline.html" class="card-link" aria-label="Explore Athletic Timeline">
+          <div class="card">
             <div class="card-content-wrapper">
               <h3>Athletic and Adventure</h3>
               <div class="skill-tag-container">
@@ -166,9 +166,8 @@
           </div>
         </a>
 
-        <a href="portfolio.html" class="card-link">
-          <div class="card"
-            style="justify-content: space-between; border-top: 4px solid var(--dark-green); border-bottom: none; height: 100%;">
+        <a href="portfolio.html" class="card-link" aria-label="View Artistic Portfolio">
+          <div class="card">
             <div class="card-content-wrapper">
               <h3>Artistic</h3>
               <div class="skill-tag-container">
@@ -183,22 +182,30 @@
 
       </div>
 
-      <div class="card cta-card"
-        style="margin-top: 1rem; text-align: center; align-items: center; padding: clamp(2rem, 5vw, 4rem) 1rem;">
+      <!-- 3. The Dedicated Contact CTA -->
+      <div class="card cta-card">
         <h2 style="font-size: clamp(1.8rem, 3vw, 2.2rem); margin-bottom: 0.5rem; color: var(--dark-green);">Let's
           Connect</h2>
-        <p style="font-size: 1.1rem; color: #444; max-width: 600px; margin-bottom: 2.5rem; line-height: 1.6;">
+        <p style="font-size: 1.1rem; color: #444; max-width: 600px; margin-bottom: 0; line-height: 1.6;">
           Whether it's discussing theoretical applications, a new interdisciplinary project, or planning the next big
           adventure—I'd love to hear from you.
         </p>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
-          <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')" class="cta-button">
-            Email Me
-          </a>
-          <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer"
-            class="cta-button secondary">
-            Connect on LinkedIn
-          </a>
+
+        <div class="cta-icons-wrapper">
+          <div class="social-icons">
+            <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer"
+              aria-label="Connect on LinkedIn">
+              <img src="images/linkedin_logo.png" alt="LinkedIn Logo">
+            </a>
+            <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer"
+              aria-label="Follow on Instagram">
+              <img src="images/instagram_logo.png" alt="Instagram Logo">
+            </a>
+            <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')" title="Click to copy email address"
+              aria-label="Copy Email Address">
+              <img src="images/email.png" alt="Email Icon">
+            </a>
+          </div>
         </div>
       </div>
 
