@@ -12,7 +12,6 @@
 </head>
 
 <body>
-
   <div class="container">
 
     <header class="site-header">
@@ -26,74 +25,75 @@
     </header>
 
     <main class="content">
-
-      <div class="card title-card">
-        <h2 class="main-title">Portfolio</h2>
+      <div class="card title-card" style="margin-bottom: 1rem; padding: 1rem; border-bottom: none;">
+        <h2 class="main-title" style="margin: 0; font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 900;">Portfolio
+        </h2>
       </div>
 
       <div class="card" id="filter-card">
         <h3 class="filter-title">Filter:</h3>
-        <div id="filter-container">
-        </div>
+        <div id="filter-container"></div>
       </div>
 
-      <div id="portfolio-container">
+      <!-- NEW: The Horizontal Track Wrapper with Navigation Arrows -->
+      <div class="portfolio-track-wrapper">
+        <button class="scroll-btn left-btn" id="scrollLeftBtn" aria-label="Scroll Left">❮</button>
+
+        <div id="portfolio-container">
+          <!-- JS will inject horizontal cards here -->
+        </div>
+
+        <button class="scroll-btn right-btn" id="scrollRightBtn" aria-label="Scroll Right">❯</button>
       </div>
 
     </main>
-
   </div>
 
   <script>
-    // --- CONFIGURATION ---
-    const jsonPath = 'portfolio.json'; // The file created in Step 1
+    const jsonPath = 'portfolio.json';
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-    // Global variables to hold state
     let portfolioData = [];
     const portfolioContainer = document.getElementById('portfolio-container');
     const filterContainer = document.getElementById('filter-container');
 
-    // --- MAIN INITIALIZATION ---
     document.addEventListener('DOMContentLoaded', () => {
 
-      // 1. Fetch the JSON Data
       fetch(jsonPath)
         .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
           return response.json();
         })
         .then(data => {
           portfolioData = data;
 
-          // 2. SORT DATA (Newest First)
-          // If years are different, sort by year. If years are same, sort by month.
           portfolioData.sort((a, b) => {
-            if (b.year !== a.year) {
-              return b.year - a.year;
-            }
+            if (b.year !== a.year) return b.year - a.year;
             return b.month - a.month;
           });
 
-          // 3. Generate Filters based on loaded data
           const uniqueCategories = [...new Set(portfolioData.flatMap(item => item.category))].sort();
           createCategoryFilters(uniqueCategories);
 
-          // 4. Initial Render
           filterAndDisplayItems();
         })
         .catch(error => {
           console.error('Error loading portfolio data:', error);
-          portfolioContainer.innerHTML = `
-            <p style="text-align: center; color: red; padding: 2rem;">
-              Unable to load portfolio data.<br>
-            </p>`;
+          portfolioContainer.innerHTML = `<p style="text-align: center; color: var(--dark-red); padding: 2rem; width: 100%;">Unable to load portfolio data.</p>`;
         });
-    });
 
-    // --- HELPER FUNCTIONS ---
+      // --- Horizontal Scrolling Logic for Desktop Arrows ---
+      const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+      const scrollRightBtn = document.getElementById('scrollRightBtn');
+
+      scrollLeftBtn.addEventListener('click', () => {
+        portfolioContainer.scrollBy({ left: -350, behavior: 'smooth' });
+      });
+
+      scrollRightBtn.addEventListener('click', () => {
+        portfolioContainer.scrollBy({ left: 350, behavior: 'smooth' });
+      });
+    });
 
     function createCategoryFilters(categories) {
       let filterHTML = categories.map(category => `
@@ -104,20 +104,17 @@
       `).join('');
       filterContainer.innerHTML = filterHTML;
 
-      // Add listeners to the new checkboxes
       document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', filterAndDisplayItems);
       });
     }
 
     function filterAndDisplayItems() {
-      const selectedCategories = [...document.querySelectorAll('.filter-checkbox:checked')]
-        .map(cb => cb.value);
-
+      const selectedCategories = [...document.querySelectorAll('.filter-checkbox:checked')].map(cb => cb.value);
       let filteredItems;
 
       if (selectedCategories.length === 0) {
-        filteredItems = portfolioData; // Show all if nothing checked
+        filteredItems = portfolioData;
       } else {
         filteredItems = portfolioData.filter(item =>
           item.category.some(cat => selectedCategories.includes(cat))
@@ -128,19 +125,15 @@
 
     function generatePortfolio(items) {
       if (items.length === 0) {
-        portfolioContainer.innerHTML = '<p style="text-align: center; padding: 2rem;">No items match the selected filters.</p>';
+        portfolioContainer.innerHTML = '<p style="text-align: center; padding: 2rem; width: 100%;">No items match the selected filters.</p>';
         return;
       }
 
       let html = '';
 
       items.forEach(item => {
-        // Create Date String (e.g., "May 2024")
         const dateString = `${monthNames[item.month - 1]} ${item.year}`;
-
-        const tagsHTML = item.category
-          .map(cat => `<span class="tag tag-${cat.toLowerCase()}">${cat}</span>`)
-          .join('');
+        const tagsHTML = item.category.map(cat => `<span class="tag tag-${cat.toLowerCase()}">${cat}</span>`).join('');
 
         let mediaHTML = '';
         if (item.type === 'image') {
@@ -165,24 +158,21 @@
         }
 
         html += `
-          <div class="portfolio-item card">
+          <div class="portfolio-item">
             <div class="portfolio-media">
               ${mediaHTML}
             </div>
-            <div class="portfolio-details">
-              
+            <div class="portfolio-details">                             
               <div class="meta-row">
                 <div class="tags-group">${tagsHTML}</div>
                 <span class="date-text">${dateString}</span>
               </div>
-
               <h3>${item.title}</h3>
               <p>${item.description}</p>
             </div>
           </div>
         `;
       });
-
       portfolioContainer.innerHTML = html;
     }
   </script>

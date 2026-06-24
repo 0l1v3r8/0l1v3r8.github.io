@@ -1,24 +1,73 @@
-/* --- Portfolio Grid (Fluid Scaling) --- */
-#portfolio-container {
-  display: grid;
-  /* Scales automatically from 250px on phones to 320px on desktops */
-  grid-template-columns: repeat(auto-fit, minmax(clamp(250px, 30vw, 320px), 1fr));
-  gap: var(--gap);
+/* ===============================================
+   HORIZONTAL PORTFOLIO TRACK (Fluid & Native)
+=============================================== */
+
+/* Wrapper to hold the track and the buttons */
+.portfolio-track-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
   width: 100%;
 }
 
-/* Modifies the default .card class so images stretch edge-to-edge */
+/* The scrollable horizontal track */
+#portfolio-container {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 1rem 0 2rem 0;
+  width: 100%;
+
+  /* Enables native buttery-smooth snapping */
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+
+  /* Hides the ugly default scrollbar */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+}
+
+#portfolio-container::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Safari */
+}
+
+/* --- Individual Cards --- */
 .portfolio-item {
+  /* Flex settings ensure cards don't shrink and stay consistent */
+  flex: 0 0 auto;
+  width: clamp(280px, 70vw, 380px);
+  /* Responsive width */
+  scroll-snap-align: center;
+  /* Snaps exactly to the center of the viewport */
+
+  display: flex;
+  flex-direction: column;
   padding: 0;
   overflow: hidden;
   justify-content: flex-start;
+
+  /* Adopting the primary card styling */
+  background-color: var(--bg);
+  border: none;
+  border-bottom: 4px solid var(--dark-green);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.portfolio-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(58, 87, 25, 0.15);
 }
 
 /* --- Media Area --- */
 .portfolio-media {
   width: 100%;
   height: clamp(200px, 25vw, 250px);
-  /* Fluid height */
   background-color: #f8f9fa;
   border-bottom: 2px solid var(--light-green);
   display: flex;
@@ -54,7 +103,6 @@
   background-color: var(--bg);
   border: 2px solid var(--dark-red);
   border-radius: 25px;
-  /* Matches the new pill-shaped nav bar */
   text-decoration: none;
   color: var(--dark-red);
   font-weight: bold;
@@ -65,7 +113,6 @@
   background-color: var(--dark-red);
   color: var(--bg);
   transform: translateY(-2px);
-  /* Slight lift on hover */
 }
 
 /* YouTube Responsive Fix */
@@ -97,6 +144,7 @@
 .portfolio-details h3 {
   margin: 0.5rem 0 0.5rem 0;
   font-size: clamp(1.2rem, 2vw, 1.4rem);
+  color: var(--dark-green);
 }
 
 .portfolio-details p {
@@ -104,7 +152,6 @@
   font-size: 1rem;
   line-height: 1.5;
   color: #444;
-  /* Softer black for easy reading */
 }
 
 /* Meta Row (Tags and Date) */
@@ -139,5 +186,50 @@
   background-color: var(--bg);
   color: var(--dark-red);
   border-radius: 15px;
-  /* Modern pill shape */
+}
+
+/* --- Navigation Arrows --- */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--bg);
+  color: var(--dark-green);
+  border: 2px solid var(--light-green);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.scroll-btn:hover {
+  background-color: var(--light-green);
+  color: var(--dark-green);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.left-btn {
+  left: -15px;
+}
+
+.right-btn {
+  right: -15px;
+}
+
+/* Hide arrows on mobile devices (users will naturally swipe) */
+@media (max-width: 768px) {
+  .scroll-btn {
+    display: none;
+  }
+
+  .portfolio-item {
+    scroll-snap-align: start;
+  }
 }
