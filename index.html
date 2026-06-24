@@ -22,45 +22,62 @@
 
     <nav class="navbar">
       <div class="social-icons">
-        <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer">
-          <img src="images/linkedin_logo.png" alt="Connect on LinkedIn">
+        <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer"
+          aria-label="Connect on LinkedIn">
+          <img src="images/linkedin_logo.png" alt="LinkedIn Logo">
         </a>
-        <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer">
-          <img src="images/instagram_logo.png" alt="Follow on Instagram">
+        <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer"
+          aria-label="Follow on Instagram">
+          <img src="images/instagram_logo.png" alt="Instagram Logo">
         </a>
-        <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')" title="Click to copy email address">
-          <img src="images/email.png" alt="Email me">
+        <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')" title="Click to copy email address"
+          aria-label="Copy Email Address">
+          <img src="images/email.png" alt="Email Icon">
         </a>
       </div>
     </nav>
+
+    <!-- Modern Toast Notification -->
+    <div id="copy-toast"
+      style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: var(--dark-blue); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 25px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; opacity: 0; transition: opacity 0.3s ease;">
+      Email copied to clipboard!
+    </div>
 
     <script>
       function copyEmail(event, email) {
         event.preventDefault();
         navigator.clipboard.writeText(email).then(() => {
-          alert("Email copied to clipboard:\n" + email);
+          const toast = document.getElementById('copy-toast');
+          toast.style.display = 'block';
+          // Small timeout ensures display block renders before animating opacity
+          setTimeout(() => { toast.style.opacity = '1'; }, 10);
+
+          // Fade out after 2.5 seconds
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => { toast.style.display = 'none'; }, 300); // Wait for transition
+          }, 2500);
         }).catch(err => {
           console.error('Failed to copy email: ', err);
-          alert("Oops, something went wrong.");
         });
       }
     </script>
 
     <main class="content">
       <div class="card-grid">
-        <a href="profile.html" class="card-link">
+        <a href="profile.html" class="card-link" aria-label="View Profile">
           <section class="card" id="profile">
             <h2>Profile</h2>
           </section>
         </a>
 
-        <a href="portfolio.html" class="card-link">
+        <a href="portfolio.html" class="card-link" aria-label="View Portfolio">
           <section class="card" id="portfolio">
             <h2>Portfolio</h2>
           </section>
         </a>
 
-        <a href="timeline.html" class="card-link">
+        <a href="timeline.html" class="card-link" aria-label="View Timeline">
           <section class="card" id="timeline">
             <h2>Timeline</h2>
           </section>

@@ -35,12 +35,13 @@
         <div id="filter-container"></div>
       </div>
 
-      <!-- NEW: The Horizontal Track Wrapper with Navigation Arrows -->
+      <!-- The Horizontal Track Wrapper with Navigation Arrows -->
       <div class="portfolio-track-wrapper">
         <button class="scroll-btn left-btn" id="scrollLeftBtn" aria-label="Scroll Left">❮</button>
 
-        <div id="portfolio-container">
-          <!-- JS will inject horizontal cards here -->
+        <div id="portfolio-container" role="list">
+          <p style="text-align: center; width: 100%; color: var(--dark-green); font-weight: bold;">Loading portfolio...
+          </p>
         </div>
 
         <button class="scroll-btn right-btn" id="scrollRightBtn" aria-label="Scroll Right">❯</button>
@@ -56,9 +57,11 @@
     let portfolioData = [];
     const portfolioContainer = document.getElementById('portfolio-container');
     const filterContainer = document.getElementById('filter-container');
+    const scrollLeftBtn = document.getElementById('scrollLeftBtn');
+    const scrollRightBtn = document.getElementById('scrollRightBtn');
 
     document.addEventListener('DOMContentLoaded', () => {
-
+      // 1. Fetch the JSON Data
       fetch(jsonPath)
         .then(response => {
           if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -79,13 +82,10 @@
         })
         .catch(error => {
           console.error('Error loading portfolio data:', error);
-          portfolioContainer.innerHTML = `<p style="text-align: center; color: var(--dark-red); padding: 2rem; width: 100%;">Unable to load portfolio data.</p>`;
+          portfolioContainer.innerHTML = `<p style="text-align: center; color: var(--dark-red); padding: 2rem; width: 100%;">Unable to load portfolio data. Please check your connection.</p>`;
         });
 
-      // --- Horizontal Scrolling Logic for Desktop Arrows ---
-      const scrollLeftBtn = document.getElementById('scrollLeftBtn');
-      const scrollRightBtn = document.getElementById('scrollRightBtn');
-
+      // 2. Horizontal Scrolling Logic for Desktop Arrows
       scrollLeftBtn.addEventListener('click', () => {
         portfolioContainer.scrollBy({ left: -350, behavior: 'smooth' });
       });
@@ -93,7 +93,29 @@
       scrollRightBtn.addEventListener('click', () => {
         portfolioContainer.scrollBy({ left: 350, behavior: 'smooth' });
       });
+
+      // 3. Smart Arrow Visibility
+      portfolioContainer.addEventListener('scroll', updateArrowVisibility);
+      window.addEventListener('resize', updateArrowVisibility);
     });
+
+    function updateArrowVisibility() {
+      if (portfolioContainer.scrollLeft <= 0) {
+        scrollLeftBtn.style.opacity = '0.3';
+        scrollLeftBtn.style.pointerEvents = 'none';
+      } else {
+        scrollLeftBtn.style.opacity = '1';
+        scrollLeftBtn.style.pointerEvents = 'auto';
+      }
+
+      if (portfolioContainer.scrollLeft + portfolioContainer.clientWidth >= portfolioContainer.scrollWidth - 1) {
+        scrollRightBtn.style.opacity = '0.3';
+        scrollRightBtn.style.pointerEvents = 'none';
+      } else {
+        scrollRightBtn.style.opacity = '1';
+        scrollRightBtn.style.pointerEvents = 'auto';
+      }
+    }
 
     function createCategoryFilters(categories) {
       let filterHTML = categories.map(category => `
@@ -125,7 +147,8 @@
 
     function generatePortfolio(items) {
       if (items.length === 0) {
-        portfolioContainer.innerHTML = '<p style="text-align: center; padding: 2rem; width: 100%;">No items match the selected filters.</p>';
+        portfolioContainer.innerHTML = '<p style="text-align: center; padding: 2rem; width: 100%; color: var(--dark-red);">No items match the selected filters.</p>';
+        updateArrowVisibility();
         return;
       }
 
@@ -158,7 +181,7 @@
         }
 
         html += `
-          <div class="portfolio-item">
+          <div class="portfolio-item" role="listitem">
             <div class="portfolio-media">
               ${mediaHTML}
             </div>
@@ -174,6 +197,7 @@
         `;
       });
       portfolioContainer.innerHTML = html;
+      setTimeout(updateArrowVisibility, 50);
     }
   </script>
 </body>

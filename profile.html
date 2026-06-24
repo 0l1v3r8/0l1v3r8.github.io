@@ -1,16 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="images/OB.png" type="image/png">
   <title>Oliver Brady - Profile</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display.swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    /* Specific Profile Page Enhancements */
+    .hero-card {
+      background: linear-gradient(135deg, var(--bg) 0%, var(--light-blue) 100%);
+      border: 1px solid rgba(26, 86, 104, 0.1);
+      border-left: 6px solid var(--dark-blue);
+      border-bottom: none;
+      text-align: left;
+      align-items: flex-start;
+      padding: clamp(2rem, 4vw, 3rem);
+    }
+
+    .hero-text {
+      font-size: clamp(1.1rem, 1.8vw, 1.25rem);
+      line-height: 1.8;
+      color: #333;
+      margin: 0;
+    }
+
+    .funnel-arrow {
+      font-size: 0.9rem;
+      font-weight: 900;
+      color: var(--dark-red);
+      margin-top: 1rem;
+      display: inline-block;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .card-link:hover .funnel-arrow {
+      border-color: var(--dark-red);
+      transform: translateX(3px);
+      /* Small arrow nudge on hover */
+    }
+
+    .cta-card {
+      background-color: var(--light-green);
+      border: 1px solid rgba(58, 87, 25, 0.15);
+      box-shadow: none;
+      border-bottom: none;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 1rem;
+      padding: 0.75rem 2rem;
+      background-color: var(--dark-blue);
+      color: var(--bg);
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      border: 2px solid var(--dark-blue);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(26, 86, 104, 0.2);
+    }
+
+    .cta-button.secondary {
+      background-color: transparent;
+      color: var(--dark-blue);
+    }
+
+    .cta-button.secondary:hover {
+      background-color: var(--dark-blue);
+      color: var(--bg);
+    }
+  </style>
 </head>
+
 <body>
 
   <div class="container">
-    
+
     <header class="site-header">
       <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
       <a href="index.html" class="header-link">
@@ -21,60 +98,114 @@
       </a>
     </header>
 
+    <div id="copy-toast"
+      style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: var(--dark-blue); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 25px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; opacity: 0; transition: opacity 0.3s ease;">
+      Email copied to clipboard!
+    </div>
+
+    <script>
+      function copyEmail(event, email) {
+        event.preventDefault();
+        navigator.clipboard.writeText(email).then(() => {
+          const toast = document.getElementById('copy-toast');
+          toast.style.display = 'block';
+          setTimeout(() => { toast.style.opacity = '1'; }, 10);
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => { toast.style.display = 'none'; }, 300);
+          }, 2500);
+        }).catch(err => {
+          console.error('Failed to copy email: ', err);
+        });
+      }
+    </script>
 
     <main class="content">
 
-      <div class="card">
+      <div class="card hero-card" style="cursor: default;">
         <div class="card-content-wrapper">
-          <h2>About Me</h2>
-          <p>
-            I enjoy the challenge of turning theory into practice. I am motivated by the full implementation of approaches—seeing how mathematical methodologies can genuinely impact the real world. I bring this same active mindset to my personal life, constantly pushing my limits through endurance sports and exploration.
+          <h2 style="color: var(--dark-blue); font-size: clamp(1.8rem, 3vw, 2.2rem); margin-bottom: 0.5rem;">Hi, I'm
+            Oliver.</h2>
+          <p class="hero-text">
+            I enjoy the challenge of turning theory into practice. I am motivated by the full implementation of
+            approaches—seeing how mathematical methodologies can genuinely impact the real world. I bring this same
+            active mindset to my personal life, constantly pushing my limits through endurance sports and exploration.
           </p>
         </div>
       </div>
 
-      <div class="card">
-        <a href="portfolio.html">
-        <div class="card-content-wrapper">
-          <h3>Academic</h3>
-          <div class="skill-tag-container">
-            <span class="skill-tag">Mathematical Modelling</span>
-            <span class="skill-tag">Interdisciplinary Research</span>
-            <span class="skill-tag">Data Analysis</span>
+      <div class="card-grid">
+
+        <a href="portfolio.html" class="card-link">
+          <div class="card"
+            style="justify-content: space-between; border-top: 4px solid var(--dark-green); border-bottom: none; height: 100%;">
+            <div class="card-content-wrapper">
+              <h3>Academic</h3>
+              <div class="skill-tag-container">
+                <span class="skill-tag">Mathematical Modelling</span>
+                <span class="skill-tag">Interdisciplinary Research</span>
+                <span class="skill-tag">Data Analysis</span>
+              </div>
+            </div>
+            <span class="funnel-arrow">View Portfolio ➔</span>
           </div>
-        </div>
         </a>
+
+        <a href="timeline.html" class="card-link">
+          <div class="card"
+            style="justify-content: space-between; border-top: 4px solid var(--dark-green); border-bottom: none; height: 100%;">
+            <div class="card-content-wrapper">
+              <h3>Athletic and Adventure</h3>
+              <div class="skill-tag-container">
+                <span class="skill-tag">Triathlon</span>
+                <span class="skill-tag">Yoga</span>
+                <span class="skill-tag">Hiking</span>
+              </div>
+            </div>
+            <span class="funnel-arrow">Explore Timeline ➔</span>
+          </div>
+        </a>
+
+        <a href="portfolio.html" class="card-link">
+          <div class="card"
+            style="justify-content: space-between; border-top: 4px solid var(--dark-green); border-bottom: none; height: 100%;">
+            <div class="card-content-wrapper">
+              <h3>Artistic</h3>
+              <div class="skill-tag-container">
+                <span class="skill-tag">Music</span>
+                <span class="skill-tag">Photography</span>
+                <span class="skill-tag">Poetry</span>
+              </div>
+            </div>
+            <span class="funnel-arrow">View Portfolio ➔</span>
+          </div>
+        </a>
+
       </div>
 
-    <div class="card">
-        <a href="timeline.html">
-        <div class="card-content-wrapper">
-          <h3>Athletic and Adventure</h3>
-          <div class="skill-tag-container">
-            <span class="skill-tag">Triathlon</span>
-            <span class="skill-tag">Yoga</span>
-            <span class="skill-tag">Hiking</span>
-          </div>
+      <div class="card cta-card"
+        style="margin-top: 1rem; text-align: center; align-items: center; padding: clamp(2rem, 5vw, 4rem) 1rem;">
+        <h2 style="font-size: clamp(1.8rem, 3vw, 2.2rem); margin-bottom: 0.5rem; color: var(--dark-green);">Let's
+          Connect</h2>
+        <p style="font-size: 1.1rem; color: #444; max-width: 600px; margin-bottom: 2.5rem; line-height: 1.6;">
+          Whether it's discussing theoretical applications, a new interdisciplinary project, or planning the next big
+          adventure—I'd love to hear from you.
+        </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+          <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')" class="cta-button">
+            Email Me
+          </a>
+          <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer"
+            class="cta-button secondary">
+            Connect on LinkedIn
+          </a>
         </div>
-        </a>
-    </div>
-
-    <div class="card">
-        <a href="portfolio.html">
-        <div class="card-content-wrapper">
-          <h3>Artistic</h3>
-          <div class="skill-tag-container">
-            <span class="skill-tag">Music</span>
-            <span class="skill-tag">Photography</span>
-            <span class="skill-tag">Poetry</span>
-          </div>
-        </div>
-        </a>
-    </div>
+      </div>
 
     </main>
 
   </div>
 
 </body>
+
 </html>
