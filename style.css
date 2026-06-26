@@ -30,7 +30,7 @@ body {
   background-color: var(--bg);
   color: #222;
   font-family: 'Lato', sans-serif;
-  font-size: clamp(8px, 1.5vw, 20px);
+  font-size: clamp(8px, 2dvw, 40px);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -89,7 +89,7 @@ header.site-header {
 
 .name-group p {
   margin: 0.25rem 0 0 0;
-  font-size: clamp(0.9rem, 1.5vh, 1.1rem);
+  font-size: clamp(0.9rem, 2dvh, 1.1rem);
   color: var(--dark-blue);
   opacity: 0.85;
 }
@@ -159,7 +159,7 @@ main.content {
 
 .filter-label {
   cursor: pointer;
-  font-size: clamp(0.75rem, 1.5vh, 0.85rem);
+  font-size: clamp(0.75rem, 2dvh, 0.85rem);
   font-weight: 900;
   background: var(--bg);
   color: var(--dark-red);
