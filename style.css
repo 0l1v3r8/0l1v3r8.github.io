@@ -20,7 +20,7 @@
 /* THE VIEWPORT LOCK: Prevents vertical scrolling globally */
 html,
 body {
-  height: 95vh;
+  height: 95dvh;
   width: 100vw;
   margin: 0;
   padding: 0;
