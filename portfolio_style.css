@@ -60,12 +60,6 @@
   display: none;
 }
 
-.portfolio-media {
-  flex-shrink: 0;
-}
-
-/* Prevents images from getting crushed */
-
 .portfolio-item:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(58, 87, 25, 0.15);
@@ -73,6 +67,8 @@
 
 /* --- Media Area --- */
 .portfolio-media {
+  flex-shrink: 0;
+  /* Prevents images from getting crushed */
   width: 100%;
   height: clamp(200px, 25vw, 250px);
   background-color: #f8f9fa;

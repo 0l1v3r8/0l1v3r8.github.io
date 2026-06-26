@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Strict 2x2 Grid that fits 100% of the remaining screen height */
+    /* Strict Grid that fits 100% of the remaining screen height */
     .index-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -40,12 +40,17 @@
       transform: translateY(-3px);
     }
 
+    /* MAGIC RULE: If a card is the last item AND an odd number (like the 3rd card), stretch it full width */
+    .index-card:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+
     @media (max-width: 600px) {
 
-      /* Stacks evenly on mobile */
+      /* Divides the screen into exactly 3 equal horizontal rows on mobile */
       .index-grid {
         grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, 1fr);
+        grid-template-rows: repeat(3, 1fr);
       }
     }
   </style>
@@ -72,7 +77,7 @@
     </nav>
 
     <div id="copy-toast"
-      style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: var(--dark-blue); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 25px; z-index: 1000; opacity: 0; transition: opacity 0.3s ease;">
+      style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: var(--dark-blue); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 25px; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
       Email copied!</div>
 
     <script>
