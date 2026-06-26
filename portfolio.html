@@ -13,7 +13,6 @@
 
 <body>
   <div class="container">
-
     <header class="site-header">
       <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
       <a href="index.html" class="header-link">
@@ -46,7 +45,6 @@
 
         <button class="scroll-btn right-btn" id="scrollRightBtn" aria-label="Scroll Right">❯</button>
       </div>
-
     </main>
   </div>
 
@@ -86,18 +84,13 @@
         });
 
       // 2. Horizontal Scrolling Logic for Desktop Arrows
-      scrollLeftBtn.addEventListener('click', () => {
-        portfolioContainer.scrollBy({ left: -350, behavior: 'smooth' });
-      });
-
-      scrollRightBtn.addEventListener('click', () => {
-        portfolioContainer.scrollBy({ left: 350, behavior: 'smooth' });
-      });
-
-      // 3. Smart Arrow Visibility
+      portfolioContainer.addEventListener('wheel', (e) => { e.preventDefault(); portfolioContainer.scrollLeft += e.deltaY; });
+      scrollLeftBtn.addEventListener('click', () => portfolioContainer.scrollBy({ left: -350, behavior: 'smooth' }));
+      scrollRightBtn.addEventListener('click', () => portfolioContainer.scrollBy({ left: 350, behavior: 'smooth' }));
       portfolioContainer.addEventListener('scroll', updateArrowVisibility);
       window.addEventListener('resize', updateArrowVisibility);
-    });
+
+    }); // <-- THIS WAS THE MISSING CLOSURE
 
     function updateArrowVisibility() {
       if (portfolioContainer.scrollLeft <= 0) {

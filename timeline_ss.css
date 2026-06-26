@@ -56,41 +56,33 @@
   position: relative;
   flex: 0 0 auto;
   width: clamp(280px, 70vw, 380px);
-  /* Responsive width */
+  height: 100%;
+  /* Locks item to container height */
   scroll-snap-align: center;
-  /* Snaps exactly to the center of the viewport */
   padding-top: 40px;
-  /* Creates space ABOVE the card for the rail and dot */
   display: flex;
   flex-direction: column;
 }
 
-/* The continuous horizontal rail */
 .timeline-item::before {
   content: '';
   position: absolute;
   top: 0;
-  /* Aligns to the top of the 40px padding */
   left: 0;
   width: calc(100% + 1.5rem);
-  /* perfectly spans the card width PLUS the flex gap */
   height: 4px;
   background-color: var(--light-blue);
   z-index: 0;
 }
 
-/* Removes the protruding line from the very last item in the track */
 .timeline-item:last-child::before {
   width: 100%;
 }
 
-/* The Timeline Dot */
 .timeline-marker {
   position: absolute;
   top: -10px;
-  /* Centers the 24px dot exactly over the 4px horizontal rail */
   left: 30px;
-  /* Insets the dot nicely from the edge of the card */
   width: 24px;
   height: 24px;
   background-color: var(--bg);
@@ -100,44 +92,43 @@
   transition: all 0.3s ease;
 }
 
-/* The vertical stem connecting the dot to the card */
 .timeline-marker::after {
   content: '';
   position: absolute;
   top: 20px;
-  /* Starts at the bottom of the dot */
   left: 7.5px;
-  /* Centers horizontally on the dot */
   width: 3px;
   height: 20px;
-  /* Reaches exactly down to the top of the card */
   background-color: var(--dark-blue);
   z-index: 1;
 }
 
-/* Hover effect animates both the card and the timeline dot */
 .timeline-item:hover .timeline-marker {
   background-color: var(--light-blue);
   transform: scale(1.2);
 }
 
-/* --- Individual Cards --- */
-
 .timeline-card {
   background-color: var(--bg);
   border: 1px solid rgba(26, 86, 104, 0.1);
   border-top: 4px solid var(--dark-blue);
-  /* Strong top accent tying into the stem */
   border-radius: 8px;
   padding: 1.5rem;
-  min-height: 250px;
+
+  /* INTERNAL SCROLLING MAGIC */
+  height: 100%;
+  overflow-y: auto;
+
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   position: relative;
   z-index: 3;
-  /* Ensures the card sits visually above the stem */
+}
+
+.timeline-card::-webkit-scrollbar {
+  display: none;
 }
 
 .timeline-item:hover .timeline-card {

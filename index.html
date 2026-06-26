@@ -8,6 +8,47 @@
   <title>Oliver Brady</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* Strict 2x2 Grid that fits 100% of the remaining screen height */
+    .index-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: var(--gap);
+      height: 100%;
+    }
+
+    .index-card {
+      background-color: var(--bg);
+      border-radius: 8px;
+      border-bottom: 4px solid var(--dark-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-decoration: none;
+      color: var(--dark-green);
+      font-size: clamp(1.2rem, 3vh, 1.8rem);
+      font-weight: 900;
+      transition: all 0.2s ease;
+    }
+
+    .index-card:hover {
+      background-color: var(--light-red);
+      border-bottom-color: var(--dark-red);
+      color: var(--dark-red);
+      transform: translateY(-3px);
+    }
+
+    @media (max-width: 600px) {
+
+      /* Stacks evenly on mobile */
+      .index-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, 1fr);
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -22,69 +63,36 @@
 
     <nav class="navbar">
       <div class="social-icons">
-        <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer"
-          aria-label="Connect on LinkedIn">
-          <img src="images/linkedin_logo.png" alt="LinkedIn Logo">
-        </a>
-        <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer"
-          aria-label="Follow on Instagram">
-          <img src="images/instagram_logo.png" alt="Instagram Logo">
-        </a>
-        <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')" title="Click to copy email address"
-          aria-label="Copy Email Address">
-          <img src="images/email.png" alt="Email Icon">
-        </a>
+        <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer"><img
+            src="images/linkedin_logo.png" alt="LinkedIn"></a>
+        <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer"><img
+            src="images/instagram_logo.png" alt="Instagram"></a>
+        <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')"><img src="images/email.png" alt="Email"></a>
       </div>
     </nav>
 
-    <!-- Modern Toast Notification -->
     <div id="copy-toast"
-      style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: var(--dark-blue); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 25px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; opacity: 0; transition: opacity 0.3s ease;">
-      Email copied to clipboard!
-    </div>
+      style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: var(--dark-blue); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 25px; z-index: 1000; opacity: 0; transition: opacity 0.3s ease;">
+      Email copied!</div>
 
     <script>
-      function copyEmail(event, email) {
-        event.preventDefault();
+      function copyEmail(e, email) {
+        e.preventDefault();
         navigator.clipboard.writeText(email).then(() => {
-          const toast = document.getElementById('copy-toast');
-          toast.style.display = 'block';
-          // Small timeout ensures display block renders before animating opacity
-          setTimeout(() => { toast.style.opacity = '1'; }, 10);
-
-          // Fade out after 2.5 seconds
-          setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => { toast.style.display = 'none'; }, 300); // Wait for transition
-          }, 2500);
-        }).catch(err => {
-          console.error('Failed to copy email: ', err);
+          const t = document.getElementById('copy-toast');
+          t.style.display = 'block'; setTimeout(() => { t.style.opacity = '1'; }, 10);
+          setTimeout(() => { t.style.opacity = '0'; setTimeout(() => { t.style.display = 'none'; }, 300); }, 2500);
         });
       }
     </script>
 
     <main class="content">
-      <div class="card-grid">
-        <a href="profile.html" class="card-link" aria-label="View Profile">
-          <section class="card" id="profile">
-            <h2>Profile</h2>
-          </section>
-        </a>
-
-        <a href="portfolio.html" class="card-link" aria-label="View Portfolio">
-          <section class="card" id="portfolio">
-            <h2>Portfolio</h2>
-          </section>
-        </a>
-
-        <a href="timeline.html" class="card-link" aria-label="View Timeline">
-          <section class="card" id="timeline">
-            <h2>Timeline</h2>
-          </section>
-        </a>
+      <div class="index-grid">
+        <a href="profile.html" class="index-card">Profile</a>
+        <a href="portfolio.html" class="index-card">Portfolio</a>
+        <a href="timeline.html" class="index-card">Timeline</a>
       </div>
     </main>
-
   </div>
 </body>
 

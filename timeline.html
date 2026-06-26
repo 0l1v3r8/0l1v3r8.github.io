@@ -12,9 +12,7 @@
 </head>
 
 <body>
-
   <div class="container">
-
     <header class="site-header">
       <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
       <a href="index.html" class="header-link">
@@ -25,28 +23,21 @@
       </a>
     </header>
 
-    <main class="content">
-      <div class="card" id="timeline-title-card">
-        <h2 class="timeline-main-title">Timeline</h2>
-      </div>
+    <main class="content" style="padding-top: 0.5rem; padding-bottom: 0;">
+      <div id="filter-container"
+        style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.5rem;"></div>
 
-      <div class="card" id="filter-card">
-        <h3 class="filter-title">Filter:</h3>
-        <div id="filter-container"></div>
-      </div>
+      <div class="track-wrapper">
+        <button class="scroll-btn left-btn" id="scrollLeftBtn"
+          style="border: 2px solid var(--dark-blue); color: var(--dark-blue);">❮</button>
 
-      <!-- The Horizontal Track Wrapper with Navigation Arrows -->
-      <div class="timeline-track-wrapper">
-        <button class="scroll-btn left-btn" id="scrollLeftBtn" aria-label="Scroll Left">❮</button>
-
-        <div id="timeline-container" role="list">
-          <p style="text-align: center; width: 100%; color: var(--dark-blue); font-weight: bold;">Loading timeline...
-          </p>
+        <div class="track-container" id="timeline-container">
+          <p style="text-align: center; width: 100%; color: var(--dark-blue);">Loading...</p>
         </div>
 
-        <button class="scroll-btn right-btn" id="scrollRightBtn" aria-label="Scroll Right">❯</button>
+        <button class="scroll-btn right-btn" id="scrollRightBtn"
+          style="border: 2px solid var(--dark-blue); color: var(--dark-blue);">❯</button>
       </div>
-
     </main>
   </div>
 
@@ -57,169 +48,110 @@
     const scrollLeftBtn = document.getElementById('scrollLeftBtn');
     const scrollRightBtn = document.getElementById('scrollRightBtn');
 
+    // Translates vertical mouse-wheel to horizontal scroll
+    timelineContainer.addEventListener('wheel', (e) => { e.preventDefault(); timelineContainer.scrollLeft += e.deltaY; });
+    scrollLeftBtn.addEventListener('click', () => timelineContainer.scrollBy({ left: -350, behavior: 'smooth' }));
+    scrollRightBtn.addEventListener('click', () => timelineContainer.scrollBy({ left: 350, behavior: 'smooth' }));
+    timelineContainer.addEventListener('scroll', updateArrowVisibility);
+
     const csvFilePath = 'achievements.csv';
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Fetch the CSV Data
-      fetch(csvFilePath)
-        .then(response => {
-          if (!response.ok) throw new Error('Network response was not ok');
-          return response.text();
-        })
-        .then(csvText => {
-          allEvents = parseCSV(csvText);
+      fetch(csvFilePath).then(r => r.text()).then(csvText => {
+        allEvents = parseCSV(csvText);
 
-          // Sort events chronologically (newest first)
-          allEvents.sort((a, b) => {
-            const dateA = new Date(a.year, a.month - 1);
-            const dateB = new Date(b.year, b.month - 1);
-            return dateB - dateA;
-          });
-
-          // Generate dynamic category filters
-          const uniqueCategories = [...new Set(allEvents.flatMap(event => event.category))];
-          createCategoryFilters(uniqueCategories.sort());
-
-          // Render the initial timeline
-          filterAndDisplayEvents();
-        })
-        .catch(error => {
-          console.error('Error fetching or parsing CSV:', error);
-          timelineContainer.innerHTML = `<p style="color: var(--dark-red); text-align: center; width: 100%;">Error loading timeline data. Please check your connection.</p>`;
+        // OPPOSITE DIRECTION: Sort Oldest to Newest
+        allEvents.sort((a, b) => {
+          const dateA = new Date(a.year, a.month - 1);
+          const dateB = new Date(b.year, b.month - 1);
+          return dateA - dateB;
         });
 
-      // 2. Horizontal Scrolling Logic for Desktop Arrows
-      scrollLeftBtn.addEventListener('click', () => {
-        timelineContainer.scrollBy({ left: -350, behavior: 'smooth' });
+        const uniqueCategories = [...new Set(allEvents.flatMap(event => event.category))];
+        createCategoryFilters(uniqueCategories.sort());
+        filterAndDisplayEvents();
       });
-
-      scrollRightBtn.addEventListener('click', () => {
-        timelineContainer.scrollBy({ left: 350, behavior: 'smooth' });
-      });
-
-      // 3. Smart Arrow Visibility
-      timelineContainer.addEventListener('scroll', updateArrowVisibility);
-      window.addEventListener('resize', updateArrowVisibility);
     });
 
     function updateArrowVisibility() {
-      // Fade out the left arrow if we are at the very beginning
-      if (timelineContainer.scrollLeft <= 0) {
-        scrollLeftBtn.style.opacity = '0.3';
-        scrollLeftBtn.style.pointerEvents = 'none';
-      } else {
-        scrollLeftBtn.style.opacity = '1';
-        scrollLeftBtn.style.pointerEvents = 'auto';
-      }
-
-      // Fade out the right arrow if we are at the very end
-      // We use a 1px buffer to account for sub-pixel rendering issues on some browsers
-      if (timelineContainer.scrollLeft + timelineContainer.clientWidth >= timelineContainer.scrollWidth - 1) {
-        scrollRightBtn.style.opacity = '0.3';
-        scrollRightBtn.style.pointerEvents = 'none';
-      } else {
-        scrollRightBtn.style.opacity = '1';
-        scrollRightBtn.style.pointerEvents = 'auto';
-      }
+      scrollLeftBtn.style.opacity = timelineContainer.scrollLeft <= 0 ? '0.3' : '1';
+      scrollRightBtn.style.opacity = timelineContainer.scrollLeft + timelineContainer.clientWidth >= timelineContainer.scrollWidth - 1 ? '0.3' : '1';
     }
 
     function createCategoryFilters(categories) {
-      let filterHTML = categories.map(category => `
-        <label class="filter-label">
-          <input type="checkbox" name="category" value="${category}" class="filter-checkbox">
+      filterContainer.innerHTML = categories.map(category => `
+        <label style="cursor: pointer; font-size: 0.8rem; font-weight: bold; background: var(--bg); color: var(--dark-red); border: 1px solid var(--light-red); padding: 0.2rem 0.6rem; border-radius: 15px;">
+          <input type="checkbox" name="category" value="${category}" class="filter-checkbox" style="display:none;">
           ${category}
         </label>
       `).join('');
-      filterContainer.innerHTML = filterHTML;
 
-      // Add event listeners to the new filters
       document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', filterAndDisplayEvents);
+        checkbox.addEventListener('change', function () {
+          this.parentElement.style.backgroundColor = this.checked ? 'var(--dark-red)' : 'var(--bg)';
+          this.parentElement.style.color = this.checked ? 'var(--bg)' : 'var(--dark-red)';
+          filterAndDisplayEvents();
+        });
       });
     }
 
     function filterAndDisplayEvents() {
       const selectedCategories = [...document.querySelectorAll('.filter-checkbox:checked')].map(cb => cb.value);
-
-      let filteredEvents = selectedCategories.length === 0 ? allEvents : allEvents.filter(event =>
-        event.category.some(cat => selectedCategories.includes(cat))
-      );
-
+      let filteredEvents = selectedCategories.length === 0 ? allEvents : allEvents.filter(event => event.category.some(cat => selectedCategories.includes(cat)));
       generateTimeline(filteredEvents);
     }
 
     function parseCSV(text) {
       const lines = text.trim().split('\n');
       if (lines.length < 2) return [];
-
-      // Regex handles commas seamlessly unless they are enclosed in double-quotes
       const csvRegex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
       const headers = lines[0].split(csvRegex).map(header => header.trim().replace(/^"|"$/g, ''));
-
       const events = [];
-      const colIndices = {
-        month: headers.indexOf('month'),
-        year: headers.indexOf('year'),
-        event: headers.indexOf('event'),
-        category: headers.indexOf('category'),
-        description: headers.indexOf('description'),
-        link: headers.indexOf('link')
-      };
+      const colIndices = { month: headers.indexOf('month'), year: headers.indexOf('year'), event: headers.indexOf('event'), category: headers.indexOf('category'), description: headers.indexOf('description'), link: headers.indexOf('link') };
 
       for (let i = 1; i < lines.length; i++) {
         const line = lines[i];
         if (line.trim() === '') continue;
-
         const values = line.split(csvRegex);
         const clean = (val) => val ? val.trim().replace(/^"|"$/g, '').replace(/""/g, '"') : '';
-
         events.push({
-          month: parseInt(clean(values[colIndices.month]), 10),
-          year: parseInt(clean(values[colIndices.year]), 10),
-          event: clean(values[colIndices.event]),
-          category: clean(values[colIndices.category]).split('|').map(cat => cat.trim()),
-          description: clean(values[colIndices.description]),
-          link: clean(values[colIndices.link]),
+          month: parseInt(clean(values[colIndices.month]), 10), year: parseInt(clean(values[colIndices.year]), 10),
+          event: clean(values[colIndices.event]), category: clean(values[colIndices.category]).split('|').map(cat => cat.trim()),
+          description: clean(values[colIndices.description]), link: clean(values[colIndices.link]),
         });
       }
       return events;
     }
 
     function generateTimeline(events) {
-      if (events.length === 0) {
-        timelineContainer.innerHTML = '<p style="text-align: center; width: 100%; color: var(--dark-red);">No achievements match the selected filters.</p>';
-        updateArrowVisibility(); // Ensure arrows react to the empty state
-        return;
-      }
+      if (events.length === 0) { timelineContainer.innerHTML = '<p style="text-align: center; width: 100%;">No achievements found.</p>'; return; }
 
       let timelineHTML = '';
-
       events.forEach(event => {
         const dateStr = `${monthNames[event.month - 1]} ${event.year}`;
-        const categoryTagsHTML = event.category.map(cat => `<div class="timeline-category">${cat}</div>`).join('');
-
-        let eventTitleHTML = event.link
-          ? `<a href="${event.link}" target="_blank" rel="noopener noreferrer" class="timeline-link">${event.event}</a>`
-          : event.event;
+        const catHTML = event.category.map(cat => `<span style="font-size: 0.7rem; font-weight: 900; text-transform: uppercase; color: var(--dark-red); background: var(--bg); border: 1px solid var(--light-red); padding: 0.2rem 0.6rem; border-radius: 15px;">${cat}</span>`).join('');
+        const titleHTML = event.link ? `<a href="${event.link}" target="_blank" style="color: inherit; text-decoration: none;">${event.event}</a>` : event.event;
 
         timelineHTML += `
-          <div class="timeline-item" role="listitem">
+          <div class="timeline-item">
             <div class="timeline-marker"></div>
             <div class="timeline-card">
-              <div class="timeline-date">${dateStr}</div>
-              <h3 class="timeline-event-title">${eventTitleHTML}</h3>
-              <div class="timeline-category-wrapper">${categoryTagsHTML}</div>
-              <div class="timeline-description">${event.description}</div>
+              <div style="font-weight: 900; font-size: 0.85rem; color: var(--dark-green); margin-bottom: 0.5rem; text-transform: uppercase;">${dateStr}</div>
+              <h3 style="font-size: clamp(1.1rem, 2vw, 1.3rem); margin: 0 0 0.5rem 0; color: var(--dark-blue);">${titleHTML}</h3>
+              <div style="display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.5rem;">${catHTML}</div>
+              <p style="font-size: 0.95rem; margin: 0; color: #444;">${event.description}</p>
             </div>
-          </div>
-        `;
+          </div>`;
       });
 
       timelineContainer.innerHTML = timelineHTML;
 
-      // Re-evaluate arrow states after the new cards are injected into the DOM
-      setTimeout(updateArrowVisibility, 50);
+      // AUTO SCROLL TO THE END (NEWEST EVENT)
+      setTimeout(() => {
+        timelineContainer.scrollLeft = timelineContainer.scrollWidth;
+        updateArrowVisibility();
+      }, 50);
     }
   </script>
 </body>

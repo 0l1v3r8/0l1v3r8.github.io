@@ -8,85 +8,64 @@
   <title>Oliver Brady - Profile</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-
   <style>
-    /* Specific Profile Page Enhancements */
-    .hero-card {
-      background: linear-gradient(135deg, var(--bg) 0%, var(--light-blue) 100%);
-      border: 1px solid rgba(26, 86, 104, 0.1);
-      border-left: 6px solid var(--dark-blue);
-      border-bottom: none;
-      text-align: left;
-      align-items: flex-start;
-      padding: clamp(2rem, 4vw, 3rem);
-    }
-
-    .hero-text {
-      font-size: clamp(1rem, 1.8vw, 1.15rem);
-      line-height: 1.8;
-      color: #333;
-      margin: 0;
-    }
-
-    /* Resolves the overlap bug by using flex-grow instead of height: 100% */
-    .card-link {
+    .profile-card {
+      flex: 0 0 auto;
+      width: clamp(280px, 70vw, 400px);
+      height: 100%;
+      background-color: var(--bg);
+      border-radius: 8px;
+      padding: 1.5rem;
+      border-bottom: 4px solid var(--dark-green);
       display: flex;
       flex-direction: column;
+      scroll-snap-align: center;
+      overflow-y: auto;
+      /* INTERNAL SCROLLING: Prevents squashing! */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+      text-decoration: none;
+      color: inherit;
     }
 
-    .card-link .card {
-      flex-grow: 1;
-      justify-content: flex-start;
-      border-top: 4px solid var(--dark-green);
+    .profile-card::-webkit-scrollbar {
+      display: none;
+    }
+
+    .profile-card.hero {
+      border-left: 6px solid var(--dark-blue);
       border-bottom: none;
+      background: linear-gradient(135deg, var(--bg) 0%, var(--light-blue) 100%);
+    }
+
+    .profile-card:hover:not(.hero) {
+      background-color: var(--light-red);
+      border-color: var(--dark-red);
+      transform: translateY(-3px);
     }
 
     .funnel-arrow {
-      font-size: 0.9rem;
+      margin-top: auto;
       font-weight: 900;
       color: var(--dark-red);
-      margin-top: auto;
-      /* Pushes the arrow to the very bottom of the card */
-      padding-top: 1.5rem;
+      padding-top: 1rem;
+    }
+
+    .skill-tag {
+      background: var(--bg);
+      color: var(--dark-red);
+      border: 1px solid var(--light-red);
+      padding: 0.2rem 0.6rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin: 0.2rem;
       display: inline-block;
-      border-bottom: 2px solid transparent;
-      transition: border-color 0.2s ease, transform 0.2s ease;
-    }
-
-    .card-link:hover .funnel-arrow {
-      border-color: var(--dark-red);
-      transform: translateX(4px);
-      /* Small arrow nudge on hover */
-    }
-
-    .cta-card {
-      background-color: var(--light-green);
-      border: 1px solid rgba(58, 87, 25, 0.15);
-      box-shadow: none;
-      border-bottom: none;
-      margin-top: 1rem;
-      padding: clamp(2rem, 5vw, 3.5rem) 1rem;
-    }
-
-    /* Wraps the social icons in a stylized pill */
-    .cta-icons-wrapper {
-      background-color: var(--bg);
-      padding: 0.75rem 2.5rem;
-      border-radius: 50px;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      margin-top: 1.5rem;
-      border: 2px solid var(--dark-green);
     }
   </style>
 </head>
 
 <body>
-
   <div class="container">
-
     <header class="site-header">
       <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
       <a href="index.html" class="header-link">
@@ -97,122 +76,58 @@
       </a>
     </header>
 
-    <!-- Modern Toast Notification for Email -->
-    <div id="copy-toast"
-      style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: var(--dark-blue); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 25px; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; opacity: 0; transition: opacity 0.3s ease;">
-      Email copied to clipboard!
-    </div>
+    <main class="content" style="padding-top: 0; padding-bottom: 0;">
+      <div class="track-wrapper">
+        <button class="scroll-btn left-btn" id="scrollLeftBtn">❮</button>
 
-    <script>
-      function copyEmail(event, email) {
-        event.preventDefault();
-        navigator.clipboard.writeText(email).then(() => {
-          const toast = document.getElementById('copy-toast');
-          toast.style.display = 'block';
-          setTimeout(() => { toast.style.opacity = '1'; }, 10);
-          setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => { toast.style.display = 'none'; }, 300);
-          }, 2500);
-        }).catch(err => {
-          console.error('Failed to copy email: ', err);
-        });
-      }
-    </script>
+        <div class="track-container" id="profile-container">
 
-    <main class="content">
-
-      <!-- 1. The Welcome Hero -->
-      <div class="card hero-card" style="cursor: default;">
-        <div class="card-content-wrapper">
-          <h2 style="color: var(--dark-blue); font-size: clamp(1.8rem, 3vw, 2.2rem); margin-bottom: 0.5rem;">Hi, I'm
-            Oliver.</h2>
-          <p class="hero-text">
-            I enjoy the challenge of turning theory into practice. I am motivated by the full implementation of
-            approaches—seeing how mathematical methodologies can genuinely impact the real world. I bring this same
-            active mindset to my personal life, constantly pushing my limits through endurance sports and exploration.
-          </p>
-        </div>
-      </div>
-
-      <!-- 2. The Navigation Funnel -->
-      <div class="card-grid">
-
-        <a href="portfolio.html" class="card-link" aria-label="View Academic Portfolio">
-          <div class="card">
-            <div class="card-content-wrapper">
-              <h3>Academic</h3>
-              <div class="skill-tag-container">
-                <span class="skill-tag">Mathematical Modelling</span>
-                <span class="skill-tag">Interdisciplinary Research</span>
-                <span class="skill-tag">Data Analysis</span>
-              </div>
-            </div>
-            <span class="funnel-arrow">View Portfolio ➔</span>
+          <div class="profile-card hero">
+            <h2 style="color: var(--dark-blue); margin-top: 0;">Hi, I'm Oliver.</h2>
+            <p>I enjoy the challenge of turning theory into practice. I am motivated by the full implementation of
+              approaches—seeing how mathematical methodologies can genuinely impact the real world. I bring this same
+              active mindset to my personal life, constantly pushing my limits through endurance sports and exploration.
+            </p>
           </div>
-        </a>
 
-        <a href="timeline.html" class="card-link" aria-label="Explore Athletic Timeline">
-          <div class="card">
-            <div class="card-content-wrapper">
-              <h3>Athletic and Adventure</h3>
-              <div class="skill-tag-container">
-                <span class="skill-tag">Triathlon</span>
-                <span class="skill-tag">Yoga</span>
-                <span class="skill-tag">Hiking</span>
-              </div>
-            </div>
+          <a href="portfolio.html" class="profile-card">
+            <h3 style="color: var(--dark-green); margin-top: 0;">Academic</h3>
+            <div><span class="skill-tag">Mathematical Modelling</span><span class="skill-tag">Interdisciplinary
+                Research</span><span class="skill-tag">Data Analysis</span></div>
+            <span class="funnel-arrow">View Portfolio ➔</span>
+          </a>
+
+          <a href="timeline.html" class="profile-card">
+            <h3 style="color: var(--dark-green); margin-top: 0;">Athletic & Adventure</h3>
+            <div><span class="skill-tag">Triathlon</span><span class="skill-tag">Yoga</span><span
+                class="skill-tag">Hiking</span></div>
             <span class="funnel-arrow">Explore Timeline ➔</span>
-          </div>
-        </a>
+          </a>
 
-        <a href="portfolio.html" class="card-link" aria-label="View Artistic Portfolio">
-          <div class="card">
-            <div class="card-content-wrapper">
-              <h3>Artistic</h3>
-              <div class="skill-tag-container">
-                <span class="skill-tag">Music</span>
-                <span class="skill-tag">Photography</span>
-                <span class="skill-tag">Poetry</span>
-              </div>
-            </div>
+          <a href="portfolio.html" class="profile-card">
+            <h3 style="color: var(--dark-green); margin-top: 0;">Artistic</h3>
+            <div><span class="skill-tag">Music</span><span class="skill-tag">Photography</span><span
+                class="skill-tag">Poetry</span></div>
             <span class="funnel-arrow">View Portfolio ➔</span>
-          </div>
-        </a>
+          </a>
 
-      </div>
-
-      <!-- 3. The Dedicated Contact CTA -->
-      <div class="card cta-card">
-        <h2 style="font-size: clamp(1.8rem, 3vw, 2.2rem); margin-bottom: 0.5rem; color: var(--dark-green);">Let's
-          Connect</h2>
-        <p style="font-size: 1.1rem; color: #444; max-width: 600px; margin-bottom: 0; line-height: 1.6;">
-          Whether it's discussing theoretical applications, a new interdisciplinary project, or planning the next big
-          adventure—I'd love to hear from you.
-        </p>
-
-        <div class="cta-icons-wrapper">
-          <div class="social-icons">
-            <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer"
-              aria-label="Connect on LinkedIn">
-              <img src="images/linkedin_logo.png" alt="LinkedIn Logo">
-            </a>
-            <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer"
-              aria-label="Follow on Instagram">
-              <img src="images/instagram_logo.png" alt="Instagram Logo">
-            </a>
-            <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')" title="Click to copy email address"
-              aria-label="Copy Email Address">
-              <img src="images/email.png" alt="Email Icon">
-            </a>
-          </div>
         </div>
+        <button class="scroll-btn right-btn" id="scrollRightBtn">❯</button>
       </div>
-
     </main>
-
   </div>
 
+  <script>
+    const cont = document.getElementById('profile-container');
+    document.getElementById('scrollLeftBtn').addEventListener('click', () => cont.scrollBy({ left: -350, behavior: 'smooth' }));
+    document.getElementById('scrollRightBtn').addEventListener('click', () => cont.scrollBy({ left: 350, behavior: 'smooth' }));
+
+    // Maps standard vertical mouse wheel scrolling to horizontal scrolling!
+    cont.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      cont.scrollLeft += e.deltaY;
+    });
+  </script>
 </body>
 
 </html>

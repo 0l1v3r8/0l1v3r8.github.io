@@ -37,20 +37,17 @@
 
 /* --- Individual Cards --- */
 .portfolio-item {
-  /* Flex settings ensure cards don't shrink and stay consistent */
   flex: 0 0 auto;
   width: clamp(280px, 70vw, 380px);
-  /* Responsive width */
+  height: 100%;
+  /* Lock to viewport height */
   scroll-snap-align: center;
-  /* Snaps exactly to the center of the viewport */
-
   display: flex;
   flex-direction: column;
   padding: 0;
-  overflow: hidden;
-  justify-content: flex-start;
-
-  /* Adopting the primary card styling */
+  overflow-y: auto;
+  /* Internal scrolling if content is long */
+  overflow-x: hidden;
   background-color: var(--bg);
   border: none;
   border-bottom: 4px solid var(--dark-green);
@@ -58,6 +55,16 @@
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.portfolio-item::-webkit-scrollbar {
+  display: none;
+}
+
+.portfolio-media {
+  flex-shrink: 0;
+}
+
+/* Prevents images from getting crushed */
 
 .portfolio-item:hover {
   transform: translateY(-5px);
