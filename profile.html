@@ -10,25 +10,10 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .profile-card {
-      flex: 0 0 auto;
-      width: clamp(280px, 70vw, 400px);
-      height: 100%;
-      background-color: var(--bg);
-      border-radius: 8px;
-      padding: 1.5rem;
+      padding: clamp(1rem, 2vh, 1.5rem);
       border-bottom: 4px solid var(--dark-green);
-      display: flex;
-      flex-direction: column;
-      scroll-snap-align: center;
-      overflow-y: auto;
-      /* INTERNAL SCROLLING: Prevents squashing! */
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
       text-decoration: none;
       color: inherit;
-    }
-
-    .profile-card::-webkit-scrollbar {
-      display: none;
     }
 
     .profile-card.hero {
@@ -40,7 +25,6 @@
     .profile-card:hover:not(.hero) {
       background-color: var(--light-red);
       border-color: var(--dark-red);
-      transform: translateY(-3px);
     }
 
     .funnel-arrow {
@@ -67,8 +51,8 @@
 <body>
   <div class="container">
     <header class="site-header">
-      <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
       <a href="index.html" class="header-link">
+        <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
         <div class="name-group">
           <h1>Oliver Brady</h1>
           <p>Learning More • Going Further</p>
@@ -76,13 +60,12 @@
       </a>
     </header>
 
-    <main class="content" style="padding-top: 0; padding-bottom: 0;">
+    <main class="content">
       <div class="track-wrapper">
         <button class="scroll-btn left-btn" id="scrollLeftBtn">❮</button>
 
         <div class="track-container" id="profile-container">
-
-          <div class="profile-card hero">
+          <div class="track-item track-item-scrollable profile-card hero">
             <h2 style="color: var(--dark-blue); margin-top: 0;">Hi, I'm Oliver.</h2>
             <p>I enjoy the challenge of turning theory into practice. I am motivated by the full implementation of
               approaches—seeing how mathematical methodologies can genuinely impact the real world. I bring this same
@@ -90,28 +73,28 @@
             </p>
           </div>
 
-          <a href="portfolio.html" class="profile-card">
+          <a href="portfolio.html" class="track-item track-item-scrollable profile-card">
             <h3 style="color: var(--dark-green); margin-top: 0;">Academic</h3>
             <div><span class="skill-tag">Mathematical Modelling</span><span class="skill-tag">Interdisciplinary
                 Research</span><span class="skill-tag">Data Analysis</span></div>
             <span class="funnel-arrow">View Portfolio ➔</span>
           </a>
 
-          <a href="timeline.html" class="profile-card">
+          <a href="timeline.html" class="track-item track-item-scrollable profile-card">
             <h3 style="color: var(--dark-green); margin-top: 0;">Athletic & Adventure</h3>
             <div><span class="skill-tag">Triathlon</span><span class="skill-tag">Yoga</span><span
                 class="skill-tag">Hiking</span></div>
             <span class="funnel-arrow">Explore Timeline ➔</span>
           </a>
 
-          <a href="portfolio.html" class="profile-card">
+          <a href="portfolio.html" class="track-item track-item-scrollable profile-card">
             <h3 style="color: var(--dark-green); margin-top: 0;">Artistic</h3>
             <div><span class="skill-tag">Music</span><span class="skill-tag">Photography</span><span
                 class="skill-tag">Poetry</span></div>
             <span class="funnel-arrow">View Portfolio ➔</span>
           </a>
-
         </div>
+
         <button class="scroll-btn right-btn" id="scrollRightBtn">❯</button>
       </div>
     </main>
@@ -121,12 +104,7 @@
     const cont = document.getElementById('profile-container');
     document.getElementById('scrollLeftBtn').addEventListener('click', () => cont.scrollBy({ left: -350, behavior: 'smooth' }));
     document.getElementById('scrollRightBtn').addEventListener('click', () => cont.scrollBy({ left: 350, behavior: 'smooth' }));
-
-    // Maps standard vertical mouse wheel scrolling to horizontal scrolling!
-    cont.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      cont.scrollLeft += e.deltaY;
-    });
+    cont.addEventListener('wheel', (e) => { e.preventDefault(); cont.scrollLeft += e.deltaY; });
   </script>
 </body>
 

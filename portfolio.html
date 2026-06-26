@@ -14,8 +14,8 @@
 <body>
   <div class="container">
     <header class="site-header">
-      <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
       <a href="index.html" class="header-link">
+        <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
         <div class="name-group">
           <h1>Oliver Brady</h1>
           <p>Learning More • Going Further</p>
@@ -24,21 +24,12 @@
     </header>
 
     <main class="content">
-      <div class="card title-card" style="margin-bottom: 1rem; padding: 1rem; border-bottom: none;">
-        <h2 class="main-title" style="margin: 0; font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: 900;">Portfolio
-        </h2>
-      </div>
+      <div class="filter-wrapper" id="filter-container"></div>
 
-      <div class="card" id="filter-card">
-        <h3 class="filter-title">Filter:</h3>
-        <div id="filter-container"></div>
-      </div>
-
-      <!-- The Horizontal Track Wrapper with Navigation Arrows -->
-      <div class="portfolio-track-wrapper">
+      <div class="track-wrapper">
         <button class="scroll-btn left-btn" id="scrollLeftBtn" aria-label="Scroll Left">❮</button>
 
-        <div id="portfolio-container" role="list">
+        <div class="track-container" id="portfolio-container" role="list">
           <p style="text-align: center; width: 100%; color: var(--dark-green); font-weight: bold;">Loading portfolio...
           </p>
         </div>
@@ -51,145 +42,82 @@
   <script>
     const jsonPath = 'portfolio.json';
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
     let portfolioData = [];
+
     const portfolioContainer = document.getElementById('portfolio-container');
     const filterContainer = document.getElementById('filter-container');
     const scrollLeftBtn = document.getElementById('scrollLeftBtn');
     const scrollRightBtn = document.getElementById('scrollRightBtn');
 
     document.addEventListener('DOMContentLoaded', () => {
-      // 1. Fetch the JSON Data
       fetch(jsonPath)
-        .then(response => {
-          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-          portfolioData = data;
-
-          portfolioData.sort((a, b) => {
-            if (b.year !== a.year) return b.year - a.year;
-            return b.month - a.month;
-          });
-
-          const uniqueCategories = [...new Set(portfolioData.flatMap(item => item.category))].sort();
-          createCategoryFilters(uniqueCategories);
-
+          portfolioData = data.sort((a, b) => b.year !== a.year ? b.year - a.year : b.month - a.month);
+          createCategoryFilters([...new Set(portfolioData.flatMap(item => item.category))].sort());
           filterAndDisplayItems();
         })
         .catch(error => {
-          console.error('Error loading portfolio data:', error);
-          portfolioContainer.innerHTML = `<p style="text-align: center; color: var(--dark-red); padding: 2rem; width: 100%;">Unable to load portfolio data. Please check your connection.</p>`;
+          portfolioContainer.innerHTML = `<p style="text-align: center; color: var(--dark-red); width: 100%;">Unable to load portfolio.</p>`;
         });
 
-      // 2. Horizontal Scrolling Logic for Desktop Arrows
       portfolioContainer.addEventListener('wheel', (e) => { e.preventDefault(); portfolioContainer.scrollLeft += e.deltaY; });
       scrollLeftBtn.addEventListener('click', () => portfolioContainer.scrollBy({ left: -350, behavior: 'smooth' }));
       scrollRightBtn.addEventListener('click', () => portfolioContainer.scrollBy({ left: 350, behavior: 'smooth' }));
       portfolioContainer.addEventListener('scroll', updateArrowVisibility);
       window.addEventListener('resize', updateArrowVisibility);
-
-    }); // <-- THIS WAS THE MISSING CLOSURE
+    });
 
     function updateArrowVisibility() {
-      if (portfolioContainer.scrollLeft <= 0) {
-        scrollLeftBtn.style.opacity = '0.3';
-        scrollLeftBtn.style.pointerEvents = 'none';
-      } else {
-        scrollLeftBtn.style.opacity = '1';
-        scrollLeftBtn.style.pointerEvents = 'auto';
-      }
-
-      if (portfolioContainer.scrollLeft + portfolioContainer.clientWidth >= portfolioContainer.scrollWidth - 1) {
-        scrollRightBtn.style.opacity = '0.3';
-        scrollRightBtn.style.pointerEvents = 'none';
-      } else {
-        scrollRightBtn.style.opacity = '1';
-        scrollRightBtn.style.pointerEvents = 'auto';
-      }
+      scrollLeftBtn.style.opacity = portfolioContainer.scrollLeft <= 0 ? '0.3' : '1';
+      scrollRightBtn.style.opacity = portfolioContainer.scrollLeft + portfolioContainer.clientWidth >= portfolioContainer.scrollWidth - 1 ? '0.3' : '1';
     }
 
     function createCategoryFilters(categories) {
-      let filterHTML = categories.map(category => `
+      filterContainer.innerHTML = categories.map(category => `
         <label class="filter-label">
           <input type="checkbox" name="category" value="${category}" class="filter-checkbox">
           ${category}
         </label>
       `).join('');
-      filterContainer.innerHTML = filterHTML;
-
-      document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', filterAndDisplayItems);
+      document.querySelectorAll('.filter-checkbox').forEach(cb => {
+        cb.addEventListener('change', function () {
+          this.parentElement.classList.toggle('active', this.checked);
+          filterAndDisplayItems();
+        });
       });
     }
 
     function filterAndDisplayItems() {
       const selectedCategories = [...document.querySelectorAll('.filter-checkbox:checked')].map(cb => cb.value);
-      let filteredItems;
+      const items = selectedCategories.length === 0 ? portfolioData : portfolioData.filter(item => item.category.some(cat => selectedCategories.includes(cat)));
 
-      if (selectedCategories.length === 0) {
-        filteredItems = portfolioData;
-      } else {
-        filteredItems = portfolioData.filter(item =>
-          item.category.some(cat => selectedCategories.includes(cat))
-        );
-      }
-      generatePortfolio(filteredItems);
-    }
-
-    function generatePortfolio(items) {
       if (items.length === 0) {
-        portfolioContainer.innerHTML = '<p style="text-align: center; padding: 2rem; width: 100%; color: var(--dark-red);">No items match the selected filters.</p>';
-        updateArrowVisibility();
+        portfolioContainer.innerHTML = '<p style="text-align: center; width: 100%; color: var(--dark-red);">No items match filters.</p>';
         return;
       }
 
-      let html = '';
+      portfolioContainer.innerHTML = items.map(item => {
+        const tags = item.category.map(cat => `<span class="tag">${cat}</span>`).join('');
+        let media = '';
+        if (item.type === 'image') media = `<img src="${item.source}" alt="${item.title}" class="media-content">`;
+        else if (item.type === 'video') media = `<video controls class="media-content"><source src="${item.source}" type="video/mp4"></video>`;
+        else if (item.type === 'youtube') media = `<div class="video-responsive"><iframe src="${item.source}" frameborder="0" allowfullscreen></iframe></div>`;
+        else if (item.type === 'pdf') media = `<div class="pdf-wrapper"><span>PDF Document</span><a href="${item.source}" target="_blank" class="pdf-btn">View</a></div>`;
 
-      items.forEach(item => {
-        const dateString = `${monthNames[item.month - 1]} ${item.year}`;
-        const tagsHTML = item.category.map(cat => `<span class="tag tag-${cat.toLowerCase()}">${cat}</span>`).join('');
-
-        let mediaHTML = '';
-        if (item.type === 'image') {
-          mediaHTML = `<img src="${item.source}" alt="${item.title}" class="media-content">`;
-        } else if (item.type === 'video') {
-          mediaHTML = `
-            <video controls class="media-content">
-              <source src="${item.source}" type="video/mp4">
-              Your browser does not support video.
-            </video>`;
-        } else if (item.type === 'youtube') {
-          mediaHTML = `
-            <div class="video-responsive">
-              <iframe src="${item.source}" frameborder="0" allowfullscreen></iframe>
-            </div>`;
-        } else if (item.type === 'pdf') {
-          mediaHTML = `
-            <div class="pdf-wrapper">
-              <span>PDF Document</span>
-              <a href="${item.source}" target="_blank" class="pdf-btn">Download / Read</a>
-            </div>`;
-        }
-
-        html += `
-          <div class="portfolio-item" role="listitem">
-            <div class="portfolio-media">
-              ${mediaHTML}
-            </div>
-            <div class="portfolio-details">                             
+        return `
+          <div class="portfolio-item track-item" role="listitem">
+            <div class="portfolio-media">${media}</div>
+            <div class="portfolio-details track-item-scrollable">                             
               <div class="meta-row">
-                <div class="tags-group">${tagsHTML}</div>
-                <span class="date-text">${dateString}</span>
+                <div class="tags-group">${tags}</div>
+                <span class="date-text">${monthNames[item.month - 1]} ${item.year}</span>
               </div>
               <h3>${item.title}</h3>
               <p>${item.description}</p>
             </div>
-          </div>
-        `;
-      });
-      portfolioContainer.innerHTML = html;
+          </div>`;
+      }).join('');
       setTimeout(updateArrowVisibility, 50);
     }
   </script>

@@ -9,13 +9,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Strict Grid that fits 100% of the remaining screen height */
     .index-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(2, 1fr);
       gap: var(--gap);
       height: 100%;
+      min-height: 0;
+      /* Prevents grid expanding out of the box */
     }
 
     .index-card {
@@ -26,11 +27,13 @@
       align-items: center;
       justify-content: center;
       height: 100%;
+      width: 100%;
       text-decoration: none;
       color: var(--dark-green);
       font-size: clamp(1.2rem, 3vh, 1.8rem);
       font-weight: 900;
       transition: all 0.2s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
     }
 
     .index-card:hover {
@@ -38,16 +41,14 @@
       border-bottom-color: var(--dark-red);
       color: var(--dark-red);
       transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(26, 86, 104, 0.15);
     }
 
-    /* MAGIC RULE: If a card is the last item AND an odd number (like the 3rd card), stretch it full width */
     .index-card:last-child:nth-child(odd) {
       grid-column: 1 / -1;
     }
 
     @media (max-width: 600px) {
-
-      /* Divides the screen into exactly 3 equal horizontal rows on mobile */
       .index-grid {
         grid-template-columns: 1fr;
         grid-template-rows: repeat(3, 1fr);
@@ -79,7 +80,6 @@
     <div id="copy-toast"
       style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: var(--dark-blue); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 25px; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
       Email copied!</div>
-
     <script>
       function copyEmail(e, email) {
         e.preventDefault();

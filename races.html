@@ -1,7 +1,91 @@
-<section class="card" id="races">
-    <h2>Races</h2>
-    <table class="results">
-      <thead><tr><th>Date</th><th>Event</th><th>Discipline</th><th>Distance</th><th>Time</th><th>Official Link</th><th>Strava</th></tr></thead>
-      <tbody id="raceTableBody"></tbody>
-    </table>
-  </section>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="icon" href="images/OB.png" type="image/png">
+  <title>Oliver Brady - Races</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .table-responsive {
+      flex-grow: 1;
+      /* Fits remaining viewport height smoothly */
+      width: 100%;
+      overflow-y: auto;
+      /* Contains the internal scroll */
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      background-color: var(--bg);
+      border-radius: 8px;
+    }
+
+    .table-responsive::-webkit-scrollbar {
+      display: none;
+    }
+
+    table.results {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: clamp(0.85rem, 1.5vw, 1rem);
+      text-align: left;
+    }
+
+    .results th {
+      background-color: var(--light-blue);
+      color: var(--dark-blue);
+      padding: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .results td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--light-green);
+    }
+
+    .results tr:hover {
+      background-color: #f8f9fa;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header class="site-header">
+      <a href="index.html" class="header-link">
+        <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
+        <div class="name-group">
+          <h1>Oliver Brady</h1>
+          <p>Learning More • Going Further</p>
+        </div>
+      </a>
+    </header>
+
+    <main class="content">
+      <h2 style="color: var(--dark-green); margin: 0 0 1rem 0;">Races</h2>
+      <div class="table-responsive">
+        <table class="results">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Event</th>
+              <th>Discipline</th>
+              <th>Distance</th>
+              <th>Time</th>
+              <th>Official Link</th>
+              <th>Strava</th>
+            </tr>
+          </thead>
+          <tbody id="raceTableBody">
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>

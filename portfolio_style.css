@@ -1,82 +1,22 @@
-/* ===============================================
-   HORIZONTAL PORTFOLIO TRACK (Fluid & Native)
-=============================================== */
-
-/* Wrapper to hold the track and the buttons */
-.portfolio-track-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-/* The scrollable horizontal track */
-#portfolio-container {
-  display: flex;
-  gap: 1.5rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 1rem 0 2rem 0;
-  width: 100%;
-
-  /* Enables native buttery-smooth snapping */
-  scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
-
-  /* Hides the ugly default scrollbar */
-  scrollbar-width: none;
-  /* Firefox */
-  -ms-overflow-style: none;
-  /* IE/Edge */
-}
-
-#portfolio-container::-webkit-scrollbar {
-  display: none;
-  /* Chrome/Safari */
-}
-
-/* --- Individual Cards --- */
+/* All structural logic is moved to style.css. File handles internal visual tuning only */
 .portfolio-item {
-  flex: 0 0 auto;
-  width: clamp(280px, 70vw, 380px);
-  height: 100%;
-  /* Lock to viewport height */
-  scroll-snap-align: center;
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  overflow-y: auto;
-  /* Internal scrolling if content is long */
-  overflow-x: hidden;
-  background-color: var(--bg);
-  border: none;
   border-bottom: 4px solid var(--dark-green);
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.portfolio-item::-webkit-scrollbar {
-  display: none;
-}
-
-.portfolio-item:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(58, 87, 25, 0.15);
-}
-
-/* --- Media Area --- */
 .portfolio-media {
   flex-shrink: 0;
-  /* Prevents images from getting crushed */
   width: 100%;
-  height: clamp(200px, 25vw, 250px);
+  height: clamp(140px, 22vh, 200px);
+  /* Tuned for responsive inner bounds */
   background-color: #f8f9fa;
   border-bottom: 2px solid var(--light-green);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
 }
 
 .media-content {
@@ -85,7 +25,6 @@
   object-fit: cover;
 }
 
-/* PDF Specific Styling */
 .pdf-wrapper {
   display: flex;
   flex-direction: column;
@@ -97,18 +36,17 @@
   background-color: var(--light-red);
   color: var(--dark-red);
   font-weight: 900;
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
 .pdf-btn {
-  font-size: 1rem;
-  padding: 0.5rem 1.5rem;
+  font-size: 0.9rem;
+  padding: 0.4rem 1.2rem;
   background-color: var(--bg);
   border: 2px solid var(--dark-red);
   border-radius: 25px;
   text-decoration: none;
   color: var(--dark-red);
-  font-weight: bold;
   transition: all 0.2s ease;
 }
 
@@ -118,13 +56,10 @@
   transform: translateY(-2px);
 }
 
-/* YouTube Responsive Fix */
 .video-responsive {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
   width: 100%;
   height: 100%;
 }
@@ -132,37 +67,35 @@
 .video-responsive iframe {
   width: 100%;
   height: 100%;
+  border: none;
 }
 
-/* --- Item Details --- */
 .portfolio-details {
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vh, 1.5rem);
   text-align: left;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
 .portfolio-details h3 {
-  margin: 0.5rem 0 0.5rem 0;
-  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  margin: 0.5rem 0;
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
   color: var(--dark-green);
 }
 
 .portfolio-details p {
   margin: 0;
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.5;
   color: #444;
 }
 
-/* Meta Row (Tags and Date) */
 .meta-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
@@ -180,7 +113,6 @@
 }
 
 .tag {
-  display: inline-block;
   font-size: 0.75rem;
   text-transform: uppercase;
   font-weight: 900;
@@ -189,50 +121,4 @@
   background-color: var(--bg);
   color: var(--dark-red);
   border-radius: 15px;
-}
-
-/* --- Navigation Arrows --- */
-.scroll-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: var(--bg);
-  color: var(--dark-green);
-  border: 2px solid var(--light-green);
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease;
-}
-
-.scroll-btn:hover {
-  background-color: var(--light-green);
-  color: var(--dark-green);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.left-btn {
-  left: -15px;
-}
-
-.right-btn {
-  right: -15px;
-}
-
-/* Hide arrows on mobile devices (users will naturally swipe) */
-@media (max-width: 768px) {
-  .scroll-btn {
-    display: none;
-  }
-
-  .portfolio-item {
-    scroll-snap-align: start;
-  }
 }
