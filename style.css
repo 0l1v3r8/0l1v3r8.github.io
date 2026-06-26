@@ -22,7 +22,7 @@ html,
 body {
   height: 100dvh;
   /* Using dynamic viewport height to fix mobile address bar jumps */
-  width: 100vw;
+  width: 100dvw;
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -30,7 +30,7 @@ body {
   background-color: var(--bg);
   color: #222;
   font-family: 'Lato', sans-serif;
-  font-size: clamp(14px, 1.5vw, 16px);
+  font-size: clamp(8px, 1.5vw, 20px);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -71,8 +71,8 @@ header.site-header {
 }
 
 .profile-portrait {
-  width: clamp(60px, 10vh, 90px);
-  height: clamp(60px, 10vh, 90px);
+  width: clamp(80px, 15dvh, 180px);
+  height: clamp(80px, 15dvh, 180px);
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 4px 12px rgba(26, 86, 104, 0.15);
@@ -82,7 +82,7 @@ header.site-header {
 .name-group h1 {
   color: var(--dark-blue);
   margin: 0;
-  font-size: clamp(1.4rem, 3vh, 2.2rem);
+  font-size: clamp(1.2rem, 3.5dvh, 2.5rem);
   font-weight: 900;
   line-height: 1.1;
 }
@@ -112,7 +112,7 @@ nav.navbar {
 }
 
 .social-icons img {
-  width: clamp(25px, 4vh, 32px);
+  width: clamp(20px, 5dvh, 50px);
   height: auto;
   transition: transform 0.2s ease, opacity 0.2s ease;
 }
@@ -212,7 +212,7 @@ main.content {
 /* Unified Card Wrapper */
 .track-item {
   flex: 0 0 auto;
-  width: clamp(280px, 80vw, 380px);
+  width: clamp(200px, 80dvw, 400px);
   /* Unifies sizes across timeline, portfolio, profile */
   height: 100%;
   /* Forces exact height fit */
