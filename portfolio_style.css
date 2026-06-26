@@ -36,7 +36,7 @@
   background-color: var(--light-red);
   color: var(--dark-red);
   font-weight: 900;
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-size: clamp(1rem, 2dvw, 1.2rem);
 }
 
 .pdf-btn {
@@ -80,7 +80,7 @@
 
 .portfolio-details h3 {
   margin: 0.5rem 0;
-  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
   color: var(--dark-green);
 }
 
