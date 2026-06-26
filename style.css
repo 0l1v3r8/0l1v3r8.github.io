@@ -71,8 +71,8 @@ header.site-header {
 }
 
 .profile-portrait {
-  width: clamp(80px, 15dvh, 180px);
-  height: clamp(80px, 15dvh, 180px);
+  width: clamp(80px, 20dvh, 180px);
+  height: clamp(80px, 20dvh, 180px);
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 4px 12px rgba(26, 86, 104, 0.15);
