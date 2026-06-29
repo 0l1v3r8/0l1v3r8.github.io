@@ -107,15 +107,22 @@
 
         return `
           <div class="portfolio-item track-item" role="listitem">
-            <div class="portfolio-media">${media}</div>
-            <div class="portfolio-details track-item-scrollable">                             
+            <div class="portfolio-header">                             
+              <h3>${item.title}</h3>
               <div class="meta-row">
                 <div class="tags-group">${tags}</div>
                 <span class="date-text">${monthNames[item.month - 1]} ${item.year}</span>
               </div>
-              <h3>${item.title}</h3>
+            </div>
+
+            <div class="portfolio-media">
+              ${media}
+            </div>
+            
+            <div class="portfolio-body track-item-scrollable"> 
               <p>${item.description}</p>
             </div>
+
           </div>`;
       }).join('');
       setTimeout(updateArrowVisibility, 50);

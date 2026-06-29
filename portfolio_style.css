@@ -8,9 +8,9 @@
   width: 100%;
   height: clamp(140px, 22vmin, 200px);
   background-color: #f8f9fa;
+  /* Now sandwiched with lines on top and bottom, and NO rounded corners */
+  border-top: 2px solid var(--light-green);
   border-bottom: 2px solid var(--light-green);
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,21 +69,34 @@
   border: none;
 }
 
-.portfolio-details {
+/* --- Split Details Area --- */
+
+.portfolio-header {
   padding: clamp(1rem, 3vmin, 1.5rem);
+  padding-bottom: 0.75rem;
+  /* Tighter against the media below */
+  text-align: left;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.portfolio-header h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: clamp(1.1rem, 3vmin, 1.5rem);
+  color: var(--dark-green);
+}
+
+.portfolio-body {
+  padding: clamp(1rem, 3vmin, 1.5rem);
+  padding-top: 0.75rem;
+  /* Tighter against the media above */
   text-align: left;
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-.portfolio-details h3 {
-  margin: 0.5rem 0;
-  font-size: clamp(1.1rem, 3vmin, 1.5rem);
-  color: var(--dark-green);
-}
-
-.portfolio-details p {
+.portfolio-body p {
   margin: 0;
   font-size: 0.95rem;
   line-height: 1.5;
@@ -94,7 +107,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
+  /* Zeroed out since it sits flush against the bottom of the header */
   flex-wrap: wrap;
   gap: 0.5rem;
 }
