@@ -45,6 +45,27 @@
       margin: 0.2rem;
       display: inline-block;
     }
+
+    /* CSS for the Toast Notification */
+    #copy-toast {
+      display: none;
+      opacity: 0;
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--dark-green);
+      color: var(--bg);
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      font-weight: bold;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+      pointer-events: none;
+      /* Prevents it from blocking clicks */
+    }
   </style>
 </head>
 
@@ -65,6 +86,7 @@
         <button class="scroll-btn left-btn" id="scrollLeftBtn">❮</button>
 
         <div class="track-container" id="profile-container">
+
           <div class="track-item track-item-scrollable profile-card hero">
             <h2 style="color: var(--dark-blue); margin-top: 0;">Hi, I'm Oliver.</h2>
             <p>I enjoy the challenge of turning theory into practice. I am motivated by the full implementation of
@@ -73,26 +95,69 @@
             </p>
           </div>
 
+          <div class="track-item track-item-scrollable profile-card">
+            <h3 style="color: var(--dark-green); margin-top: 0;">Current Positions</h3>
+            <div style="margin-bottom: 1rem;">
+              <strong>Primary Role Title</strong><br>
+              <span style="font-size: 0.9rem; color: #444;">Organization / Institution Name</span>
+            </div>
+            <div>
+              <strong>Secondary Role Title</strong><br>
+              <span style="font-size: 0.9rem; color: #444;">Organization / Institution Name</span>
+            </div>
+            <div style="margin-top: 1rem;">
+              <span class="skill-tag">Active</span>
+              <span class="skill-tag">2026</span>
+            </div>
+          </div>
+
           <a href="portfolio.html" class="track-item track-item-scrollable profile-card">
             <h3 style="color: var(--dark-green); margin-top: 0;">Academic</h3>
-            <div><span class="skill-tag">Mathematical Modelling</span><span class="skill-tag">Interdisciplinary
-                Research</span><span class="skill-tag">Data Analysis</span></div>
+            <div>
+              <span class="skill-tag">Mathematical Modelling</span>
+              <span class="skill-tag">Interdisciplinary Research</span>
+              <span class="skill-tag">Data Analysis</span>
+            </div>
             <span class="funnel-arrow">View Portfolio ➔</span>
           </a>
 
           <a href="timeline.html" class="track-item track-item-scrollable profile-card">
             <h3 style="color: var(--dark-green); margin-top: 0;">Athletic & Adventure</h3>
-            <div><span class="skill-tag">Triathlon</span><span class="skill-tag">Yoga</span><span
-                class="skill-tag">Hiking</span></div>
+            <div>
+              <span class="skill-tag">Triathlon</span>
+              <span class="skill-tag">Yoga</span>
+              <span class="skill-tag">Hiking</span>
+            </div>
             <span class="funnel-arrow">Explore Timeline ➔</span>
           </a>
 
           <a href="portfolio.html" class="track-item track-item-scrollable profile-card">
             <h3 style="color: var(--dark-green); margin-top: 0;">Artistic</h3>
-            <div><span class="skill-tag">Music</span><span class="skill-tag">Photography</span><span
-                class="skill-tag">Poetry</span></div>
+            <div>
+              <span class="skill-tag">Music</span>
+              <span class="skill-tag">Photography</span>
+              <span class="skill-tag">Poetry</span>
+            </div>
             <span class="funnel-arrow">View Portfolio ➔</span>
           </a>
+
+          <div class="track-item track-item-scrollable profile-card">
+            <h3 style="color: var(--dark-green); margin-top: 0;">Contact Me</h3>
+            <p>I am always open to new connections, collaborative projects, and discussing shared interests.</p>
+
+            <div class="social-icons" style="margin-top: auto; padding-top: 1rem; justify-content: flex-start;">
+              <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer">
+                <img src="images/linkedin_logo.png" alt="LinkedIn">
+              </a>
+              <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer">
+                <img src="images/instagram_logo.png" alt="Instagram">
+              </a>
+              <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')">
+                <img src="images/email.png" alt="Email">
+              </a>
+            </div>
+          </div>
+
         </div>
 
         <button class="scroll-btn right-btn" id="scrollRightBtn">❯</button>
@@ -100,11 +165,23 @@
     </main>
   </div>
 
+  <div id="copy-toast">Email copied to clipboard!</div>
+
   <script>
     const cont = document.getElementById('profile-container');
     document.getElementById('scrollLeftBtn').addEventListener('click', () => cont.scrollBy({ left: -350, behavior: 'smooth' }));
     document.getElementById('scrollRightBtn').addEventListener('click', () => cont.scrollBy({ left: 350, behavior: 'smooth' }));
     cont.addEventListener('wheel', (e) => { e.preventDefault(); cont.scrollLeft += e.deltaY; });
+
+    // Your exact toast copy script
+    function copyEmail(e, email) {
+      e.preventDefault();
+      navigator.clipboard.writeText(email).then(() => {
+        const t = document.getElementById('copy-toast');
+        t.style.display = 'block'; setTimeout(() => { t.style.opacity = '1'; }, 10);
+        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => { t.style.display = 'none'; }, 300); }, 2500);
+      });
+    }
   </script>
 </body>
 
