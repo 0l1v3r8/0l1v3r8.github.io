@@ -10,7 +10,8 @@
   <link rel="stylesheet" href="style.css">
   <style>
     .profile-card {
-      padding: clamp(1rem, 2vh, 1.5rem);
+      /* Swapped vh for vmin to maintain strict internal box sizing in landscape */
+      padding: clamp(1rem, 3vmin, 1.5rem);
       border-bottom: 4px solid var(--dark-green);
       text-decoration: none;
       color: inherit;
@@ -40,6 +41,7 @@
       border: 1px solid var(--light-red);
       padding: 0.2rem 0.6rem;
       border-radius: 15px;
+      /* Safe to leave as rem because we locked the root font-size in step 1 */
       font-size: 0.8rem;
       font-weight: bold;
       margin: 0.2rem;
