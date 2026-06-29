@@ -140,21 +140,51 @@ main.content {
   overflow: hidden;
 }
 
-/* --- Unified Filter System --- */
-.filter-wrapper {
+/* --- Unified Horizontal Option / Filter Blocks --- */
+.filter-wrapper,
+.option-block {
+  /* Add .option-block to your main page links wrapper */
   flex-shrink: 0;
   display: flex;
+  width: 100%;
   gap: 0.5rem;
-  justify-content: center;
-  flex-wrap: wrap;
+
+  /* Forces a horizontal swiping row instead of dropping to a new line */
+  flex-wrap: nowrap;
+
+  /* CRITICAL: 'center' cuts off the left side of scrolling flexboxes. */
+  justify-content: flex-start;
+
   margin-bottom: var(--gap);
-  max-height: 15vh;
-  overflow-y: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
   scrollbar-width: none;
+  /* Hides scrollbar in Firefox */
+  -ms-overflow-style: none;
+  /* Hides scrollbar in IE/Edge */
+  -webkit-overflow-scrolling: touch;
+  /* Smooth mobile momentum scrolling */
+
+  /* Add slight padding so hover/focus outlines aren't clipped */
+  padding: 0.2rem 0.5rem 0.5rem 0.5rem;
 }
 
-.filter-wrapper::-webkit-scrollbar {
+.filter-wrapper::-webkit-scrollbar,
+.option-block::-webkit-scrollbar {
   display: none;
+  /* Hides scrollbar in Chrome/Safari */
+}
+
+/* Optional: If you want the items centered when there is plenty of room, 
+   but safely scrollable when cramped, you can margin-auto the children */
+.filter-wrapper>*:first-child,
+.option-block>*:first-child {
+  margin-left: auto;
+}
+
+.filter-wrapper>*:last-child,
+.option-block>*:last-child {
+  margin-right: auto;
 }
 
 .filter-label {

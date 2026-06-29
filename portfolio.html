@@ -106,7 +106,8 @@
         else if (item.type === 'pdf') media = `<div class="pdf-wrapper"><span>PDF Document</span><a href="${item.source}" target="_blank" class="pdf-btn">View</a></div>`;
 
         return `
-          <div class="portfolio-item track-item" role="listitem">
+          <div class="portfolio-item track-item track-item-scrollable" role="listitem">
+            
             <div class="portfolio-header">                             
               <h3>${item.title}</h3>
               <div class="meta-row">
@@ -119,7 +120,7 @@
               ${media}
             </div>
             
-            <div class="portfolio-body track-item-scrollable"> 
+            <div class="portfolio-body"> 
               <p>${item.description}</p>
             </div>
 
