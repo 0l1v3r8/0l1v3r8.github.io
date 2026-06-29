@@ -1,4 +1,4 @@
-/* All structural logic is moved to style.css. File handles internal visual tuning only */
+/* Handles internal visual tuning for portfolio items only */
 .portfolio-item {
   border-bottom: 4px solid var(--dark-green);
 }
@@ -6,7 +6,6 @@
 .portfolio-media {
   flex-shrink: 0;
   width: 100%;
-  /* Swapped vh for vmin to protect landscape proportions */
   height: clamp(140px, 22vmin, 200px);
   background-color: #f8f9fa;
   border-bottom: 2px solid var(--light-green);
@@ -36,7 +35,6 @@
   background-color: var(--light-red);
   color: var(--dark-red);
   font-weight: 900;
-  /* Swapped dvw for vmin to prevent blowout on wide screens */
   font-size: clamp(1rem, 2vmin, 1.2rem);
 }
 
@@ -72,7 +70,6 @@
 }
 
 .portfolio-details {
-  /* Swapped vh for vmin for consistent internal spacing */
   padding: clamp(1rem, 3vmin, 1.5rem);
   text-align: left;
   display: flex;
@@ -82,7 +79,6 @@
 
 .portfolio-details h3 {
   margin: 0.5rem 0;
-  /* Swapped vw for vmin to match the card's stable scaling */
   font-size: clamp(1.1rem, 3vmin, 1.5rem);
   color: var(--dark-green);
 }

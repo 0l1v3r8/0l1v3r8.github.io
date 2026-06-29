@@ -1,7 +1,6 @@
 /* Erased global duplicate parameters. Handles timeline aesthetic purely. */
 .timeline-item {
   position: relative;
-  /* Swapped vh for vmin to prevent vertical crashing in landscape mode */
   padding-top: clamp(20px, 5vmin, 35px);
   background: transparent !important;
   box-shadow: none !important;
@@ -17,7 +16,6 @@
   position: absolute;
   top: 0;
   left: 0;
-  /* Bridging the fluid gap perfectly */
   width: calc(100% + var(--gap));
   height: 4px;
   background-color: var(--light-blue);
@@ -45,10 +43,9 @@
   content: '';
   position: absolute;
   top: 20px;
-  /* Corrected centering math: (24px - 3px) / 2 = 10.5px */
+  /* Corrected center math for the connector line */
   left: 10.5px;
   width: 3px;
-  /* Matched the padding-top vmin to keep the connection seamless */
   height: clamp(20px, 5vmin, 35px);
   background-color: var(--dark-blue);
   z-index: 1;
@@ -59,13 +56,11 @@
   transform: scale(1.2);
 }
 
-/* Overriding the standard track-item internals to give specific look */
 .timeline-card {
   background-color: var(--bg);
   border: 1px solid rgba(26, 86, 104, 0.1);
   border-top: 4px solid var(--dark-blue);
   border-radius: 8px;
-  /* Swapped vh for vmin for consistent internal padding */
   padding: clamp(1rem, 3vmin, 1.5rem);
   display: flex;
   flex-direction: column;

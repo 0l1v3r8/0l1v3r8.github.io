@@ -8,8 +8,7 @@
   --dark-red: #B30000;
 
   --max-width: 1200px;
-
-  /* Kept fluid padding, but relying on standard base rems */
+  /* Fluid padding and gaps unified with vmin to respect screen orientation */
   --padding: clamp(1rem, 3vmin, 2rem);
   --gap: clamp(1rem, 2vmin, 1.5rem);
 }
@@ -22,19 +21,18 @@
 html,
 body {
   height: 100dvh;
+  /* 100% prevents horizontal scrollbar blowout on Windows */
   width: 100%;
-  /* Changed from 100dvw to prevent horizontal overflow */
   margin: 0;
   padding: 0;
   overflow: hidden;
   /* ABSOLUTE NO VERTICAL PAGE SCROLL */
-
   background-color: var(--bg);
   color: #222;
   font-family: 'Lato', sans-serif;
 
-  /* Removed dynamic clamp here to stabilize the 'rem' unit */
-  font-size: 16px;
+  /* Gentle root scaling: locks at 16px on mobile, slowly grows on wide monitors */
+  font-size: clamp(16px, 1.2vw, 22px);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -47,10 +45,34 @@ body {
   padding: var(--padding);
 }
 
-/* ... Container styles remain the same ... */
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+}
+
+/* --- Shared Header & Nav --- */
+header.site-header {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.header-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
 
 .profile-portrait {
-  /* Switched dvh to vmin to handle landscape device rotations safely */
+  /* vmin keeps the circle perfectly round even when phones rotate */
   width: clamp(80px, 15vmin, 150px);
   height: clamp(80px, 15vmin, 150px);
   border-radius: 50%;
@@ -59,7 +81,6 @@ body {
   border: 3px solid var(--dark-blue);
 }
 
-/* Moved the text clamping directly to the text elements */
 .name-group h1 {
   color: var(--dark-blue);
   margin: 0;
@@ -73,4 +94,221 @@ body {
   font-size: clamp(1rem, 2vw, 1.15rem);
   color: var(--dark-blue);
   opacity: 0.85;
+}
+
+nav.navbar {
+  flex-shrink: 0;
+  background-color: var(--light-blue);
+  border-radius: 50px;
+  padding: 0.5rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.social-icons {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.social-icons img {
+  /* vw ensures icons don't randomly shrink/grow based on browser height */
+  width: clamp(24px, 2.5vw, 36px);
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.social-icons a:hover img {
+  transform: translateY(-3px);
+  opacity: 0.8;
+}
+
+/* --- Main Content App Frame --- */
+main.content {
+  flex-grow: 1;
+  min-height: 0;
+  background-color: var(--light-green);
+  border: 1px solid rgba(58, 87, 25, 0.15);
+  border-radius: 12px;
+  padding: var(--padding);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* --- Unified Filter System --- */
+.filter-wrapper {
+  flex-shrink: 0;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: var(--gap);
+  max-height: 15vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.filter-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.filter-label {
+  cursor: pointer;
+  font-size: clamp(0.75rem, 2.5vmin, 0.85rem);
+  font-weight: 900;
+  background: var(--bg);
+  color: var(--dark-red);
+  border: 1px solid var(--light-red);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.filter-label.active {
+  background: var(--dark-red);
+  color: var(--bg);
+}
+
+.filter-checkbox {
+  display: none;
+}
+
+/* --- Unified Horizontal Track System --- */
+.track-wrapper {
+  position: relative;
+  flex-grow: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.track-container {
+  display: flex;
+  gap: var(--gap);
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.5rem 0;
+}
+
+.track-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Unified Card Wrapper */
+.track-item {
+  flex: 0 0 auto;
+  /* Corrected desktop width mapping so cards aren't too narrow on large screens */
+  width: clamp(250px, 45vw, 480px);
+  height: 100%;
+  scroll-snap-align: center;
+  background-color: var(--bg);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.track-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(26, 86, 104, 0.15);
+}
+
+/* Localized Internal Card Scroll */
+.track-item-scrollable {
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  overscroll-behavior-y: contain;
+}
+
+.track-item-scrollable::-webkit-scrollbar {
+  display: none;
+}
+
+/* Unified Arrows */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: var(--bg);
+  color: var(--dark-green);
+  border: 2px solid var(--light-green);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.scroll-btn:hover {
+  background-color: var(--light-green);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.scroll-btn.blue-variant {
+  border-color: var(--light-blue);
+  color: var(--dark-blue);
+}
+
+.scroll-btn.blue-variant:hover {
+  background-color: var(--light-blue);
+}
+
+.left-btn {
+  left: -15px;
+}
+
+.right-btn {
+  right: -15px;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  header.site-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .header-link {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .scroll-btn {
+    display: none;
+  }
+
+  .track-container {
+    scroll-snap-type: x mandatory;
+  }
+
+  .track-item {
+    scroll-snap-align: start;
+  }
 }
