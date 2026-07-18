@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="images/OB.png" type="image/png"> <!--[cite: 1] -->
+    <title>Precipitation Risk | OB</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css"> <!--[cite: 1] -->
+    <style>
+        .profile-card {
+            padding: clamp(1rem, 3vmin, 1.5rem);
+            border-bottom: 4px solid var(--dark-green);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .profile-card.hero {
+            border-left: 6px solid var(--dark-blue);
+            border-bottom: none;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--light-blue) 100%);
+        }
+
+        .profile-card:hover:not(.hero) {
+            background-color: var(--light-red);
+            border-color: var(--dark-red);
+        }
+
+        .funnel-arrow {
+            margin-top: auto;
+            font-weight: 900;
+            color: var(--dark-red);
+            padding-top: 1rem;
+        }
+
+        .skill-tag {
+            background: var(--bg);
+            color: var(--dark-red);
+            border: 1px solid var(--light-red);
+            padding: 0.2rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 0.2rem;
+            display: inline-block;
+        }
+
+        /* CSS for the Toast Notification */
+        #copy-toast {
+            display: none;
+            opacity: 0;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--dark-green);
+            color: var(--bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header class="site-header">
+            <a href="index.html" class="header-link"> <!--[cite: 1] -->
+                <img src="images/OB.png" alt="Return to Home" class="profile-portrait"> <!--[cite: 1] -->
+            </a>
+            <div class="name-group">
+                <h2>Precipitation Risk & Catastrophe Modeling</h2>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="track-wrapper">
+                <button class="scroll-btn left-btn" id="scrollLeftBtn">❮</button>
+
+                <div class="track-container" id="profile-container">
+
+                    <!-- Card 2: Core Expertise -->
+                    <div class="track-item track-item-scrollable profile-card hero">
+                        <h3 style="color: var(--dark-blue); margin-top: 0;">Overview</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>IDF Curve Modeling</strong><br>
+                            <span style="font-size: 0.9rem; color: #444;">Updating Intensity-Duration-Frequency
+                                parameters for non-stationary climates.</span>
+                        </div>
+                        <div>
+                            <strong>Extreme Value Analysis</strong><br>
+                            <span style="font-size: 0.9rem; color: #444;">Statistical quantification of tail-risk
+                                precipitation events.</span>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <span class="skill-tag">CatMod</span>
+                            <span class="skill-tag">Flood Risk</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Interactive Visualizations -->
+                    <a href="#models" class="track-item track-item-scrollable profile-card">
+                        <h3 style="color: var(--dark-green); margin-top: 0;">Observations</h3>
+                        <p>Explore dynamic visualizations comparing updated IDF curves against historical baselines to
+                            identify shifting high-risk exposure zones.</p>
+                        <div style="margin-top: 1rem;">
+                            <span class="skill-tag">Data Visualization</span>
+                            <span class="skill-tag">Spatial Mapping</span>
+                        </div>
+                        <span class="funnel-arrow">View Models ➔</span>
+                    </a>
+
+                    <!-- Card 4: Methodology & Tooling -->
+                    <a href="#methodology" class="track-item track-item-scrollable profile-card">
+                        <h3 style="color: var(--dark-green); margin-top: 0;">Methodology & Tooling</h3>
+                        <p>Ingestion and processing of large-scale meteorological datasets using Generalized Extreme
+                            Value (GEV) and Peak-Over-Threshold (POT) methods.</p>
+                        <div style="margin-top: 1rem;">
+                            <span class="skill-tag">Python (SciPy, Pandas)</span>
+                            <span class="skill-tag">R (extRemes)</span>
+                            <span class="skill-tag">HPC</span>
+                        </div>
+                        <span class="funnel-arrow">See Tech Stack ➔</span>
+                    </a>
+
+                    <!-- Card 5: The Math / Deep Dive -->
+                    <a href="documents/Precipitation_Risk_Methodology.pdf" target="_blank"
+                        class="track-item track-item-scrollable profile-card">
+                        <h3 style="color: var(--dark-green); margin-top: 0;">Technical White Paper</h3>
+                        <p>A comprehensive breakdown of the mathematical proofs, non-standard dependencies, and rigorous
+                            models utilized in this research.</p>
+                        <div style="margin-top: 1rem;">
+                            <span class="skill-tag">Statistical Proofs</span>
+                            <span class="skill-tag">Methodology</span>
+                        </div>
+                        <span class="funnel-arrow">Download PDF ➔</span>
+                    </a>
+
+                    <!-- Card 6: Contact -->
+                    <div class="track-item track-item-scrollable profile-card">
+                        <a href="index.html" style="text-decoration: none; color: inherit;">
+                            <h3 style="color: var(--dark-green); margin-top: 0;">Contact Me</h3>
+                            <p>I am always open to new connections, collaborative projects, and discussing shared
+                                interests.</p>
+                            </p>
+                        </a>
+
+
+                        <div class="social-icons"
+                            style="margin-top: auto; padding-top: 1rem; justify-content: flex-start;">
+                            <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank"
+                                rel="noopener noreferrer">
+                                <img src="images/linkedin_logo.png" alt="LinkedIn"> <!--[cite: 1] -->
+                            </a>
+                            <a href="https://www.instagram.com/_oliverbrady_/" target="_blank"
+                                rel="noopener noreferrer">
+                                <img src="images/instagram_logo.png" alt="Instagram"> <!--[cite: 1] -->
+                            </a>
+                            <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')">
+                                <img src="images/email.png" alt="Email"> <!--[cite: 1] -->
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button class="scroll-btn right-btn" id="scrollRightBtn">❯</button>
+            </div>
+        </main>
+    </div>
+
+    <div id="copy-toast">Email copied to clipboard!</div>
+
+    <script>
+        const cont = document.getElementById('profile-container');
+        document.getElementById('scrollLeftBtn').addEventListener('click', () => cont.scrollBy({ left: -350, behavior: 'smooth' }));
+        document.getElementById('scrollRightBtn').addEventListener('click', () => cont.scrollBy({ left: 350, behavior: 'smooth' }));
+        cont.addEventListener('wheel', (e) => { e.preventDefault(); cont.scrollLeft += e.deltaY; });
+
+        // Toast copy script
+        function copyEmail(e, email) {
+            e.preventDefault();
+            navigator.clipboard.writeText(email).then(() => {
+                const t = document.getElementById('copy-toast');
+                t.style.display = 'block'; setTimeout(() => { t.style.opacity = '1'; }, 10);
+                setTimeout(() => { t.style.opacity = '0'; setTimeout(() => { t.style.display = 'none'; }, 300); }, 2500);
+            });
+        }
+    </script>
+</body>
+
+</html>

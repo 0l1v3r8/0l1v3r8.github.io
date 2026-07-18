@@ -1,7 +1,9 @@
 [
   {
     "title": "Placeholder",
-    "category": ["Academic"],
+    "category": [
+      "Academic"
+    ],
     "month": 7,
     "year": 2024,
     "type": "image",
@@ -10,16 +12,20 @@
   },
   {
     "title": "Placeholder",
-    "category": ["Athletic"],
+    "category": [
+      "Athletic"
+    ],
     "month": 4,
     "year": 2024,
     "type": "image",
     "source": "images/marathon.jpg",
     "description": "Placeholder"
   },
-{
+  {
     "title": "Notes",
-    "category": ["Academic"],
+    "category": [
+      "Academic"
+    ],
     "month": 12,
     "year": 2025,
     "type": "pdf",
@@ -28,7 +34,9 @@
   },
   {
     "title": "Placeholder",
-    "category": ["Academic"],
+    "category": [
+      "Academic"
+    ],
     "month": 5,
     "year": 2024,
     "type": "pdf",
@@ -37,7 +45,9 @@
   },
   {
     "title": "Placeholder",
-    "category": ["Artistic"],
+    "category": [
+      "Artistic"
+    ],
     "month": 12,
     "year": 2023,
     "type": "image",
@@ -46,7 +56,9 @@
   },
   {
     "title": "Placeholder",
-    "category": ["Athletic"],
+    "category": [
+      "Athletic"
+    ],
     "month": 11,
     "year": 2023,
     "type": "youtube",
@@ -55,10 +67,23 @@
   },
   {
     "title": "Placeholder",
-    "category": ["Artistic"],
+    "category": [
+      "Artistic"
+    ],
     "month": 10,
     "year": 2023,
     "type": "video",
+    "source": "videos/short-film.mp4",
+    "description": "Placeholder"
+  },
+  {
+    "title": "Extreme Precipitation: Risk & Modeling",
+    "category": [
+      "Academic"
+    ],
+    "month": 7,
+    "year": 2026,
+    "type": "website",
     "source": "videos/short-film.mp4",
     "description": "Placeholder"
   }

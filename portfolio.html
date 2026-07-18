@@ -104,6 +104,7 @@
         else if (item.type === 'video') media = `<video controls class="media-content"><source src="${item.source}" type="video/mp4"></video>`;
         else if (item.type === 'youtube') media = `<div class="video-responsive"><iframe src="${item.source}" frameborder="0" allowfullscreen></iframe></div>`;
         else if (item.type === 'pdf') media = `<div class="pdf-wrapper"><span>PDF Document</span><a href="${item.source}" target="_blank" class="pdf-btn">View</a></div>`;
+        else if (item.type === 'website') media = `<div class="website-wrapper"><span>Webpage</span><a href="${item.source}" target="_blank" class="website-btn">View</a></div>`;
 
         return `
           <div class="portfolio-item track-item track-item-scrollable" role="listitem">

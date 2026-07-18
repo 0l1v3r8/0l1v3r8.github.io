@@ -55,6 +55,37 @@
   transform: translateY(-2px);
 }
 
+.website-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  height: 100%;
+  background-color: var(--light-blue);
+  color: var(--dark-red);
+  font-weight: 900;
+  font-size: clamp(1rem, 2vmin, 1.2rem);
+}
+
+.website-btn {
+  font-size: 0.9rem;
+  padding: 0.4rem 1.2rem;
+  background-color: var(--bg);
+  border: 2px solid var(--dark-blue);
+  border-radius: 25px;
+  text-decoration: none;
+  color: var(--dark-blue);
+  transition: all 0.2s ease;
+}
+
+.website-btn:hover {
+  background-color: var(--dark-blue);
+  color: var(--bg);
+  transform: translateY(-2px);
+}
+
 .video-responsive {
   position: absolute;
   top: 0;
