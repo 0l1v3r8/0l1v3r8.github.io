@@ -4,22 +4,55 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="icon" href="images/OB.png" type="image/png"> <!--[cite: 1] -->
-    <title>Precipitation Risk | OB</title>
+    <link rel="icon" href="images/OB.png" type="image/png"> <!--[cite: 1]-->
+    <title>Precipitation Extremes | Oliver Brady</title>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"> <!--[cite: 1] -->
+    <link rel="stylesheet" href="style.css"> <!--[cite: 1]-->
     <style>
+        /* Search Bar Styles */
+        .search-wrapper {
+            margin: 1rem 0 2rem 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-family: 'Lato', sans-serif;
+            border: 2px solid var(--dark-green);
+            border-radius: 30px;
+            background-color: var(--bg);
+            color: #333;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--dark-blue);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Card Styles */
         .profile-card {
             padding: clamp(1rem, 3vmin, 1.5rem);
             border-bottom: 4px solid var(--dark-green);
             text-decoration: none;
             color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
         }
 
         .profile-card.hero {
             border-left: 6px solid var(--dark-blue);
             border-bottom: none;
-            background: linear-gradient(135deg, var(--bg) 0%, var(--light-blue) 100%);
+            background: white,
+                var(--light-blue) 100%);
         }
 
         .profile-card:hover:not(.hero) {
@@ -32,6 +65,13 @@
             font-weight: 900;
             color: var(--dark-red);
             padding-top: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+
+        .funnel-arrow:hover {
+            color: var(--dark-blue);
         }
 
         .skill-tag {
@@ -42,8 +82,16 @@
             border-radius: 15px;
             font-size: 0.8rem;
             font-weight: bold;
-            margin: 0.2rem;
+            margin: 0.2rem 0.2rem 0.2rem 0;
             display: inline-block;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .skill-tag:hover {
+            background: var(--light-red);
+            color: var(--dark-blue);
+            border-color: var(--dark-blue);
         }
 
         /* CSS for the Toast Notification */
@@ -71,99 +119,58 @@
 <body>
     <div class="container">
         <header class="site-header">
-            <a href="index.html" class="header-link"> <!--[cite: 1] -->
-                <img src="images/OB.png" alt="Return to Home" class="profile-portrait"> <!--[cite: 1] -->
+            <a href="index.html" class="header-link"> <!--[cite: 1]-->
+                <img src="images/OB.png" alt="Return to Home" class="profile-portrait"> <!--[cite: 1]-->
             </a>
             <div class="name-group">
-                <h2>Precipitation Risk & Catastrophe Modeling</h2>
+                <h2>Precipitation Extremes</h2>
+                <p>Methodology Database & Code Directory</p>
             </div>
         </header>
 
         <main class="content">
+            <!-- Search Bar -->
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-input"
+                    placeholder="Search topics, models, or tags (e.g., 'Spatial', 'GPD', 'Copulas')...">
+            </div>
+
             <div class="track-wrapper">
                 <button class="scroll-btn left-btn" id="scrollLeftBtn">❮</button>
 
                 <div class="track-container" id="profile-container">
 
-                    <!-- Card 2: Core Expertise -->
-                    <div class="track-item track-item-scrollable profile-card hero">
-                        <h3 style="color: var(--dark-blue); margin-top: 0;">Overview</h3>
-                        <div style="margin-bottom: 1rem;">
-                            <strong>IDF Curve Modeling</strong><br>
-                            <span style="font-size: 0.9rem; color: #444;">Updating Intensity-Duration-Frequency
-                                parameters for non-stationary climates.</span>
-                        </div>
-                        <div>
-                            <strong>Extreme Value Analysis</strong><br>
-                            <span style="font-size: 0.9rem; color: #444;">Statistical quantification of tail-risk
-                                precipitation events.</span>
-                        </div>
-                        <div style="margin-top: 1rem;">
-                            <span class="skill-tag">CatMod</span>
-                            <span class="skill-tag">Flood Risk</span>
-                        </div>
+                    <!-- Static Intro Card -->
+                    <div id="intro-card" class="track-item track-item-scrollable profile-card hero searchable-card">
+                        <h3 style="color: var(--dark-blue); margin-top: 0;">How to use this directory</h3>
+                        <p>Swipe or scroll to explore the methodologies utilized in my PhD research for quantifying
+                            catastrophe risk.</p>
+                        <p><strong>Interactive Filtering:</strong> Use the search bar above or click on any subtopic tag
+                            to instantly filter the cards and find related models.</p>
                     </div>
 
-                    <!-- Card 3: Interactive Visualizations -->
-                    <a href="#models" class="track-item track-item-scrollable profile-card">
-                        <h3 style="color: var(--dark-green); margin-top: 0;">Observations</h3>
-                        <p>Explore dynamic visualizations comparing updated IDF curves against historical baselines to
-                            identify shifting high-risk exposure zones.</p>
-                        <div style="margin-top: 1rem;">
-                            <span class="skill-tag">Data Visualization</span>
-                            <span class="skill-tag">Spatial Mapping</span>
-                        </div>
-                        <span class="funnel-arrow">View Models ➔</span>
-                    </a>
+                    <!-- DYNAMIC CARDS WILL BE INJECTED HERE -->
 
-                    <!-- Card 4: Methodology & Tooling -->
-                    <a href="#methodology" class="track-item track-item-scrollable profile-card">
-                        <h3 style="color: var(--dark-green); margin-top: 0;">Methods</h3>
-                        <p>Ingestion and processing of large-scale meteorological datasets using Generalized Extreme
-                            Value (GEV) and Peak-Over-Threshold (POT) methods.</p>
-                        <div style="margin-top: 1rem;">
-                            <span class="skill-tag">Python (SciPy, Pandas)</span>
-                            <span class="skill-tag">R (extRemes)</span>
-                            <span class="skill-tag">HPC</span>
-                        </div>
-                        <span class="funnel-arrow">See Tech Stack ➔</span>
-                    </a>
-
-                    <!-- Card 5: The Math / Deep Dive -->
-                    <a href="documents/Precipitation_Risk_Methodology.pdf" target="_blank"
-                        class="track-item track-item-scrollable profile-card">
-                        <h3 style="color: var(--dark-green); margin-top: 0;">Technical White Paper</h3>
-                        <p>A comprehensive breakdown of the mathematical proofs, non-standard dependencies, and rigorous
-                            models utilized in this research.</p>
-                        <div style="margin-top: 1rem;">
-                            <span class="skill-tag">Statistical Proofs</span>
-                            <span class="skill-tag">Methodology</span>
-                        </div>
-                        <span class="funnel-arrow">Download PDF ➔</span>
-                    </a>
-
-                    <!-- Card 6: Contact -->
-                    <div class="track-item track-item-scrollable profile-card">
-                        <a href="index.html" style="text-decoration: none; color: inherit;">
+                    <!-- Static Contact Card -->
+                    <div id="contact-card" class="track-item track-item-scrollable profile-card searchable-card">
+                        <a href="index.html" style="text-decoration: none; color: inherit;"> <!--[cite: 1]-->
                             <h3 style="color: var(--dark-green); margin-top: 0;">Contact Me</h3>
                             <p>I am always open to new connections, collaborative projects, and discussing shared
                                 interests.</p>
-                            </p>
                         </a>
-
 
                         <div class="social-icons"
                             style="margin-top: auto; padding-top: 1rem; justify-content: flex-start;">
                             <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank"
                                 rel="noopener noreferrer">
-                                <img src="images/linkedin_logo.png" alt="LinkedIn"> <!--[cite: 1] -->
+                                <img src="images/linkedin_logo.png" alt="LinkedIn"> <!--[cite: 1]-->
                             </a>
                             <a href="https://www.instagram.com/_oliverbrady_/" target="_blank"
                                 rel="noopener noreferrer">
-                                <img src="images/instagram_logo.png" alt="Instagram"> <!--[cite: 1] -->
+                                <img src="images/instagram_logo.png" alt="Instagram"> <!--[cite: 1]-->
                             </a>
                             <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')">
-                                <img src="images/email.png" alt="Email"> <!--[cite: 1] -->
+                                <img src="images/email.png" alt="Email"> <!--[cite: 1]-->
                             </a>
                         </div>
                     </div>
@@ -178,12 +185,108 @@
     <div id="copy-toast">Email copied to clipboard!</div>
 
     <script>
+        // --- 1. HORIZONTAL SCROLLING LOGIC ---
         const cont = document.getElementById('profile-container');
         document.getElementById('scrollLeftBtn').addEventListener('click', () => cont.scrollBy({ left: -350, behavior: 'smooth' }));
         document.getElementById('scrollRightBtn').addEventListener('click', () => cont.scrollBy({ left: 350, behavior: 'smooth' }));
         cont.addEventListener('wheel', (e) => { e.preventDefault(); cont.scrollLeft += e.deltaY; });
 
-        // Toast copy script
+
+        // --- 2. CSV PARSER & CARD GENERATOR ---
+
+        // A robust vanilla JS CSV parser that handles quotes properly
+        function parseCSV(str) {
+            const arr = [];
+            let quote = false;
+            let row = 0, col = 0;
+            for (let c = 0; c < str.length; c++) {
+                let cc = str[c], nc = str[c + 1];
+                arr[row] = arr[row] || [];
+                arr[row][col] = arr[row][col] || '';
+                if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+                if (cc == '"') { quote = !quote; continue; }
+                if (cc == ',' && !quote) { ++col; continue; }
+                if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
+                if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+                if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+                arr[row][col] += cc;
+            }
+            return arr;
+        }
+
+        // Fetch the CSV and build the cards
+        fetch('topics.csv')
+            .then(response => response.text())
+            .then(csvText => {
+                const data = parseCSV(csvText);
+                const contactCard = document.getElementById('contact-card');
+
+                // Skip the first row (headers) and iterate through the rest
+                for (let i = 1; i < data.length; i++) {
+                    const row = data[i];
+                    if (row.length < 4 || !row[0].trim()) continue; // Skip empty rows
+
+                    const title = row[0].trim();
+                    const description = row[1].trim();
+                    const tagsArray = row[2].split(';').map(tag => tag.trim()); // Split tags by semicolon
+                    const link = row[3].trim();
+
+                    // Generate the HTML for the tags
+                    let tagsHtml = '';
+                    tagsArray.forEach(tag => {
+                        if (tag) {
+                            tagsHtml += `<span class="skill-tag" onclick="filterByTag('${tag}')">${tag}</span>`;
+                        }
+                    });
+
+                    // Construct the full card HTML
+                    const cardHtml = `
+                        <div class="track-item track-item-scrollable profile-card searchable-card">
+                            <h3 style="color: var(--dark-green); margin-top: 0;">${title}</h3>
+                            <p>${description}</p>
+                            <div style="margin-top: 1rem;">
+                                ${tagsHtml}
+                            </div>
+                            <a href="${link}" class="funnel-arrow">Read Section ➔</a>
+                        </div>
+                    `;
+
+                    // Inject the new card right before the Contact Card
+                    contactCard.insertAdjacentHTML('beforebegin', cardHtml);
+                }
+            })
+            .catch(error => console.error('Error loading the CSV database:', error));
+
+
+        // --- 3. SEARCH AND FILTER LOGIC ---
+        const searchInput = document.getElementById('searchInput');
+
+        function performSearch() {
+            const filter = searchInput.value.toLowerCase();
+            // Re-select cards dynamically in case the CSV has just finished loading
+            const cards = document.querySelectorAll('.searchable-card');
+
+            cards.forEach(card => {
+                const cardText = card.textContent || card.innerText;
+                if (cardText.toLowerCase().indexOf(filter) > -1) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+
+            cont.scrollTo({ left: 0, behavior: 'smooth' });
+        }
+
+        searchInput.addEventListener('keyup', performSearch);
+
+        function filterByTag(tagWord) {
+            searchInput.value = tagWord;
+            performSearch();
+            searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // --- 4. TOAST COPY SCRIPT ---
         function copyEmail(e, email) {
             e.preventDefault();
             navigator.clipboard.writeText(email).then(() => {

@@ -1,0 +1,6 @@
+Topic,Description,Tags,Link
+Copulas,"Modeling complex dependency structures between multiple variables, allowing for the isolation of marginal distributions from their dependence framework.",Dependence;Multivariate;Spatial,copulas.html
+Peaks Over Threshold,"Focusing on high-magnitude events that exceed specific risk thresholds, utilizing the Generalized Pareto Distribution (GPD) for accurate tail-risk estimation.",GPD;Return Levels;Threshold,pot.html
+Extremal Index,"Quantifying the clustering of extreme precipitation events over time to adjust standard extreme value distributions for temporal dependence.",Dependence;Temporal;Declustering,extremal-index.html
+Hierarchical Bayesian Models,"Leveraging Bayes' theorem to borrow strength across different spatial locations, providing rigorous uncertainty quantification for parameter estimates.",Spatial;Uncertainty;MCMC,bayesian.html
+IDF Curves,"Updating Intensity-Duration-Frequency parameters for non-stationary climates to accurately predict the probability of future flood events.",Return Levels;Non-stationary;Flood Risk,idf.html
