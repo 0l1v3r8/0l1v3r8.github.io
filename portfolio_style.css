@@ -64,7 +64,7 @@
   width: 100%;
   height: 100%;
   background-color: var(--light-blue);
-  color: var(--dark-red);
+  color: var(--dark-blue);
   font-weight: 900;
   font-size: clamp(1rem, 2vmin, 1.2rem);
 }
