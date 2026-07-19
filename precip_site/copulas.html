@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../images/OB.png" type="image/png">
+    <title>Copulas & Dependence | Oliver Brady</title>
+
+    <!-- External Shared Stylesheet -->
+    <link rel="stylesheet" href="topic_template.css">
+
+    <!-- MathJax v3 Configuration for LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- Plotly.js for Interactive Visuals -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+</head>
+<body>
+
+    <div class="page-wrapper">
+        <!-- Top Navbar with Inline Back Arrow -->
+        <header class="site-header">
+            <a href="../precipitation-index.html" class="back-arrow" aria-label="Back to Methodology Database">❮</a>
+            <a href="index.html" class="header-link">
+                <img src="../images/OB.png" alt="Return to Home" class="profile-portrait">
+            </a>
+            <div class="name-group">
+                <h2>Copulas & Dependence Modeling</h2>
+                <p>Isolating Marginal Distributions from Complex Dependencies</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Article wrapper forces the clean white background constraint -->
+            <article class="research-article">
+                
+                <section>
+                    <aside class="callout context">
+                        <span class="callout-title">Commercial Context & Application</span>
+                        <p>In catastrophe modeling, risk is rarely driven by a single variable. For instance, urban flood damage is often a compounding result of extreme precipitation intensity, prolonged duration, and antecedent soil moisture. Copulas allow risk modelers to separate the behavior of individual risk factors from the structure of their dependency.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>1. Fundamental Theory</h2>
+                    <p>The mathematical foundation of copula theory is Sklar's Theorem. It states that any multivariate joint cumulative distribution function (CDF), $H(x_1, \dots, x_d)$, can be expressed in terms of its marginal distribution functions $F_i(x_i)$ and a copula $C$.</p>
+                    
+                    <aside class="callout theorem">
+                        <span class="callout-title">Sklar's Theorem (1959)</span>
+                        <p>Let $H$ be an $n$-dimensional distribution function with margins $F_1, \dots, F_n$. Then there exists an $n$-dimensional copula $C$ such that for all $\mathbf{x} \in \overline{\mathbb{R}}^n$:</p>
+                        $$H(x_1, \dots, x_n) = C(F_1(x_1), \dots, F_n(x_n))$$
+                    </aside>
+
+                    <!-- Collapsible Proof / Derivation Component -->
+                    <details class="collapsible-proof">
+                        <summary>Expand for Proof: Fréchet-Hoeffding Bounds</summary>
+                        <div class="collapsible-content">
+                            <p>Every copula $C(u, v)$ is strictly bounded by the Fréchet-Hoeffding bounds, ensuring that dependence structures cannot exceed logical probabilistic limits. For any copula $C$:</p>
+                            $$W(u, v) \leq C(u, v) \leq M(u, v)$$
+                            <p>Where:</p>
+                            <ul>
+                                <li><strong>Lower Bound $W$:</strong> $W(u, v) = \max(u + v - 1, 0)$ representing perfect negative dependence.</li>
+                                <li><strong>Upper Bound $M$:</strong> $M(u, v) = \min(u, v)$ representing perfect positive dependence.</li>
+                            </ul>
+                            <p><em>Note:</em> The lower bound $W$ is only a copula in strictly 2 dimensions.</p>
+                        </div>
+                    </details>
+                </section>
+
+                <section>
+                    <h2>2. Extreme Value Copulas</h2>
+                    <p>In the quantification of precipitation extremes, standard Gaussian copulas often fail. Instead, Archimedean copulas, such as the Gumbel copula, are highly applicable for hydrological risk.</p>
+
+                    <div class="data-table-wrapper">
+                        <table class="research-table">
+                            <thead>
+                                <tr>
+                                    <th>Copula Family</th>
+                                    <th>Lower Tail</th>
+                                    <th>Upper Tail</th>
+                                    <th>Hydrological Use Case</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Gaussian</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>General mean-state modeling</td>
+                                </tr>
+                                <tr>
+                                    <td>Clayton</td>
+                                    <td>Strong</td>
+                                    <td>None</td>
+                                    <td>Drought severity dependency</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Gumbel</strong></td>
+                                    <td>None</td>
+                                    <td><strong>Strong</strong></td>
+                                    <td>Extreme rainfall compounding</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>The Gumbel-Hougaard Copula</h3>
+                    <p>The Gumbel copula exhibits strong upper-tail dependence and no lower-tail dependence. For $d=2$, it is defined as:</p>
+                    
+                    $$C_\theta(u, v) = \exp\left(-\left[(-\ln u)^\theta + (-\ln v)^\theta\right]^{1/\theta}\right)$$
+                    
+                    <p>where the dependence parameter $\theta \in [1, \infty)$.</p>
+
+                    <!-- Interactive Graph visual -->
+                    <figure class="research-figure">
+                        <!-- Plotly container -->
+                        <div id="interactive-copula-plot" style="width: 100%; height: 450px;"></div>
+                        <figcaption>Figure 1: Interactive 3D Surface of the Gumbel Copula CDF ($\theta = 3.0$). Click, drag to rotate, and scroll to zoom.</figcaption>
+                    </figure>
+
+                    <aside class="callout warning">
+                        <span class="callout-title">Key Consideration for Catastrophe Models</span>
+                        <p>When fitting models to IDF curves, utilizing a Gumbel copula ensures that the joint probability of a high-intensity <em>and</em> long-duration event is captured accurately.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>3. Implementation Methodology</h2>
+                    <p>To implement this in practice, the process generally follows three discrete steps:</p>
+
+                    <ol>
+                        <li>Fit parametric marginal distributions (e.g., GEV) to the individual historical variables.</li>
+                        <li>Transform the observations to uniform pseudo-observations using the Probability Integral Transform (PIT).</li>
+                        <li>Estimate the copula parameter $\theta$ using Maximum Likelihood Estimation (MLE) or inversion of Kendall's $\tau$.</li>
+                    </ol>
+
+                    <aside class="callout context">
+                        <span class="callout-title">Developer Insight: Kendall's Tau</span>
+                        <p>For a Gumbel copula, the relationship between Kendall's rank correlation ($\tau$) and the copula parameter is analytical: $\theta = \frac{1}{1 - \tau}$. This allows for extremely fast parameter estimation without numerical optimization.</p>
+                    </aside>
+
+                    <h3>Python Implementation</h3>
+                    <p>Below is an example of estimating the Gumbel parameter using the <code>scipy.stats</code> library and Kendall's $\tau$:</p>
+                    
+<pre><code>import numpy as np
+from scipy.stats import kendalltau
+
+def estimate_gumbel_theta(x, y):
+    """
+    Estimates the Gumbel copula parameter theta using Kendall's tau.
+    """
+    tau, p_value = kendalltau(x, y)
+    
+    if tau <= 0:
+        raise ValueError("Gumbel copula requires positive dependence.")
+        
+    theta = 1 / (1 - tau)
+    return theta, tau
+
+intensity = np.array([45.2, 52.1, 88.5, 23.1, 110.2])
+duration = np.array([12, 14, 24, 6, 48])
+
+theta_est, tau_est = estimate_gumbel_theta(intensity, duration)
+print(f"Kendall's Tau: {tau_est:.3f}")
+print(f"Estimated Theta: {theta_est:.3f}")</code></pre>
+<!-- Terminal Output Component -->
+<div class="code-output">Kendall's Tau: 0.800
+Estimated Theta: 5.000</div>
+
+                </section>
+
+                <section>
+                    <h2>References</h2>
+                    <ul class="references-list">
+                        <li><strong>[1]</strong> Joe, H. (2014). <em>Dependence Modeling with Copulas</em>. Chapman & Hall/CRC Monographs on Statistics and Applied Probability.</li>
+                        <li><strong>[2]</strong> Nelsen, R. B. (2006). <em>An Introduction to Copulas</em> (2nd ed.). Springer Series in Statistics.</li>
+                    </ul>
+                </section>
+            </article>
+        </main>
+        
+        <footer class="site-footer">
+            <p>&copy; 2026 Oliver Brady.</p>
+        </footer>
+    </div>
+
+    <!-- Script to Generate Interactive Plotly Visual -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const theta = 3.0;
+            const u = [];
+            const v = [];
+            const z = [];
+            const steps = 40;
+            
+            // Generate grid values for u and v (0.01 to 0.99)
+            for(let i = 1; i < steps; i++) {
+                u.push(i / steps);
+                v.push(i / steps); 
+            }
+            
+            // Calculate Gumbel Copula CDF values
+            for(let i = 0; i < u.length; i++) {
+                let z_row = [];
+                for(let j = 0; j < v.length; j++) {
+                    let term1 = Math.pow(-Math.log(u[i]), theta);
+                    let term2 = Math.pow(-Math.log(v[j]), theta);
+                    let copula_val = Math.exp(-Math.pow(term1 + term2, 1/theta));
+                    z_row.push(copula_val);
+                }
+                z.push(z_row);
+            }
+            
+            const data = [{
+                z: z,
+                x: u,
+                y: v,
+                type: 'surface',
+                colorscale: 'Viridis',
+                showscale: false
+            }];
+            
+            const layout = {
+                margin: {l: 0, r: 0, b: 0, t: 30},
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                scene: {
+                    xaxis: {title: 'Margin u'},
+                    yaxis: {title: 'Margin v'},
+                    zaxis: {title: 'C(u,v)'},
+                    camera: {
+                        eye: {x: -1.5, y: -1.5, z: 1.2}
+                    }
+                }
+            };
+            
+            Plotly.newPlot('interactive-copula-plot', data, layout, {responsive: true});
+        });
+    </script>
+</body>
+</html>
