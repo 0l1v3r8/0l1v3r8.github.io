@@ -2,410 +2,299 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="../../images/OB.png" type="image/png">
-    <title>Copulas & Dependence | Oliver Brady</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="icon" href="../images/OB.png" type="image/png"> <!--[cite: 1]-->
+    <title>Precipitation Extremes | Oliver Brady</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css"> <!--[cite: 1]-->
+    <style>
+        /* Search Bar Styles */
+        .search-wrapper {
+            margin: 1rem 0 2rem 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
 
-    <!-- External Shared Stylesheet -->
-    <link rel="stylesheet" href="../topic_template.css">
+        .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            font-family: 'Lato', sans-serif;
+            border: 2px solid var(--dark-green);
+            border-radius: 30px;
+            background-color: var(--bg);
+            color: #333;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
 
-    <!-- MathJax v3 Configuration for LaTeX -->
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']],
-                tags: 'ams'
-            },
-            svg: {
-                fontCache: 'global'
-            }
-        };
-    </script>
-    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+        .search-input:focus {
+            outline: none;
+            border-color: var(--dark-blue);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        }
 
-    <!-- Plotly.js for Interactive Visuals -->
-    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+        /* Card Styles */
+        .profile-card {
+            padding: clamp(1rem, 3vmin, 1.5rem);
+            border-bottom: 4px solid var(--dark-green);
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
 
-    <!-- BibTeX Client-Side Parser -->
-    <script src="https://cdn.jsdelivr.net/gh/pcooksey/bibtex-js@1.0.0/src/bibtex_js.min.js"></script>
+        .profile-card.hero {
+            border-left: 6px solid var(--dark-blue);
+            border-bottom: none;
+            background: white,
+                var(--light-blue) 100%);
+        }
+
+        .profile-card:hover:not(.hero) {
+            background-color: var(--light-red);
+            border-color: var(--dark-red);
+        }
+
+        .funnel-arrow {
+            margin-top: auto;
+            font-weight: 900;
+            color: var(--dark-red);
+            padding-top: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+
+        .funnel-arrow:hover {
+            color: var(--dark-blue);
+        }
+
+        .skill-tag {
+            background: var(--bg);
+            color: var(--dark-red);
+            border: 1px solid var(--light-red);
+            padding: 0.2rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin: 0.2rem 0.2rem 0.2rem 0;
+            display: inline-block;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .skill-tag:hover {
+            background: var(--light-red);
+            color: var(--dark-blue);
+            border-color: var(--dark-blue);
+        }
+
+        /* CSS for the Toast Notification */
+        #copy-toast {
+            display: none;
+            opacity: 0;
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--dark-green);
+            color: var(--bg);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+        }
+    </style>
 </head>
 
 <body>
-
-    <div class="page-wrapper">
-        <!-- Top Navbar with Inline Back Arrow -->
+    <div class="container">
         <header class="site-header">
-            <a href="../../precipitation-index.html" class="back-arrow" aria-label="Back to Methodology Database">❮</a>
-            <a href="index.html" class="header-link">
-                <img src="../../images/OB.png" alt="Return to Home" class="profile-portrait">
+            <a href="../index.html" class="header-link"> <!--[cite: 1]-->
+                <img src="../images/OB.png" alt="Return to Home" class="profile-portrait"> <!--[cite: 1]-->
             </a>
             <div class="name-group">
-                <h2>Copulas & Dependence Modeling</h2>
-                <p>Isolating Marginal Distributions from Complex Dependencies</p>
+                <h2>Precipitation Extremes</h2>
+                <p>Methodology Database & Code Directory</p>
             </div>
         </header>
 
-        <main class="main-content">
-            <article class="research-article">
+        <main class="content">
+            <!-- Search Bar -->
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" class="search-input"
+                    placeholder="Search topics, models, or tags (e.g., 'Spatial', 'GPD', 'Copulas')...">
+            </div>
 
-                <section>
-                    <aside class="callout context">
-                        <span class="callout-title">Commercial Context & Application</span>
-                        <p>In catastrophe modeling, risk is rarely driven by a single variable. For instance, urban
-                            flood damage is often a compounding result of extreme precipitation intensity, prolonged
-                            duration, and antecedent soil moisture. Copulas allow risk modelers to separate the behavior
-                            of individual risk factors from the structure of their dependency.</p>
-                    </aside>
-                </section>
+            <div class="track-wrapper">
+                <button class="scroll-btn left-btn" id="scrollLeftBtn">❮</button>
 
-                <section>
-                    <h2>1. Fundamental Theory</h2>
-                    <p>The mathematical foundation of copula theory is Sklar's Theorem. It states that any multivariate
-                        joint cumulative distribution function (CDF), $H(x_1, \dots, x_d)$, can be expressed in terms of
-                        its marginal distribution functions $F_i(x_i)$ and a copula $C$.</p>
+                <div class="track-container" id="profile-container">
 
-                    <aside class="callout theorem">
-                        <span class="callout-title">Sklar's Theorem (1959)</span>
-                        <p>Let $H$ be an $n$-dimensional distribution function with margins $F_1, \dots, F_n$. Then
-                            there exists an $n$-dimensional copula $C$ such that for all $\mathbf{x} \in
-                            \overline{\mathbb{R}}^n$:</p>
-                        $$H(x_1, \dots, x_n) = C(F_1(x_1), \dots, F_n(x_n))$$
-                    </aside>
-
-                    <details class="collapsible-proof">
-                        <summary>Expand for Pedantic Proof: Fréchet-Hoeffding Bounds</summary>
-                        <div class="collapsible-content">
-                            <p>Every copula $C(u, v)$ is strictly bounded by the Fréchet-Hoeffding bounds, ensuring that
-                                dependence structures cannot exceed logical probabilistic limits. For any copula $C$:
-                            </p>
-                            $$W(u, v) \leq C(u, v) \leq M(u, v)$$
-                            <p>Where:</p>
-                            <ul>
-                                <li><strong>Lower Bound $W$:</strong> $W(u, v) = \max(u + v - 1, 0)$ representing
-                                    perfect negative dependence.</li>
-                                <li><strong>Upper Bound $M$:</strong> $M(u, v) = \min(u, v)$ representing perfect
-                                    positive dependence.</li>
-                            </ul>
-                            <p><em>Note:</em> The lower bound $W$ is only a copula in strictly 2 dimensions.</p>
-                        </div>
-                    </details>
-                </section>
-
-                <section>
-                    <h2>2. Extreme Value Copulas</h2>
-                    <p>In the quantification of precipitation extremes, standard Gaussian copulas often fail. Instead,
-                        Archimedean copulas, such as the Gumbel copula, are highly applicable for hydrological risk.</p>
-
-                    <div class="data-table-wrapper">
-                        <table class="research-table">
-                            <thead>
-                                <tr>
-                                    <th>Copula Family</th>
-                                    <th>Lower Tail</th>
-                                    <th>Upper Tail</th>
-                                    <th>Hydrological Use Case</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Gaussian</td>
-                                    <td>None</td>
-                                    <td>None</td>
-                                    <td>General mean-state modeling</td>
-                                </tr>
-                                <tr>
-                                    <td>Clayton</td>
-                                    <td>Strong</td>
-                                    <td>None</td>
-                                    <td>Drought severity dependency</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Gumbel</strong></td>
-                                    <td>None</td>
-                                    <td><strong>Strong</strong></td>
-                                    <td>Extreme rainfall compounding</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <!-- Static Intro Card -->
+                    <div id="intro-card" class="track-item track-item-scrollable profile-card hero searchable-card">
+                        <h3 style="color: var(--dark-blue); margin-top: 0;">How to use this directory</h3>
+                        <p>Swipe or scroll to explore the methodologies utilized in my PhD research for quantifying
+                            catastrophe risk.</p>
+                        <p><strong>Interactive Filtering:</strong> Use the search bar above or click on any subtopic tag
+                            to instantly filter the cards and find related models.</p>
                     </div>
 
-                    <h3>The Gumbel-Hougaard Copula</h3>
-                    <p>The Gumbel copula exhibits strong upper-tail dependence and no lower-tail dependence. For $d=2$,
-                        it is defined as:</p>
+                    <!-- DYNAMIC CARDS WILL BE INJECTED HERE -->
 
-                    $$C_\theta(u, v) = \exp\left(-\left[(-\ln u)^\theta + (-\ln v)^\theta\right]^{1/\theta}\right)$$
+                    <!-- Static Contact Card -->
+                    <div id="contact-card" class="track-item track-item-scrollable profile-card searchable-card">
+                        <a href="../index.html" style="text-decoration: none; color: inherit;"> <!--[cite: 1]-->
+                            <h3 style="color: var(--dark-green); margin-top: 0;">Contact Me</h3>
+                            <p>I am always open to new connections, collaborative projects, and discussing shared
+                                interests.</p>
+                        </a>
 
-                    <p>where the dependence parameter $\theta \in [1, \infty)$.</p>
-
-                    <figure class="research-figure">
-                        <div id="interactive-copula-plot" style="width: 100%; height: 450px;"></div>
-                        <figcaption>Figure 1: Interactive 3D Surface of the Gumbel Copula CDF ($\theta = 3.0$). Click,
-                            drag to rotate, and scroll to zoom.</figcaption>
-                    </figure>
-
-                    <aside class="callout warning">
-                        <span class="callout-title">Key Consideration for Catastrophe Models</span>
-                        <p>When fitting models to IDF curves, utilizing a Gumbel copula ensures that the joint
-                            probability of a high-intensity <em>and</em> long-duration event is captured accurately.</p>
-                    </aside>
-                </section>
-
-                <section>
-                    <h2>3. Implementation Methodology</h2>
-                    <p>To implement this in practice, the process generally follows three discrete steps:</p>
-
-                    <ol>
-                        <li>Fit parametric marginal distributions (e.g., GEV) to the individual historical variables.
-                        </li>
-                        <li>Transform the observations to uniform pseudo-observations using the Probability Integral
-                            Transform (PIT).</li>
-                        <li>Estimate the copula parameter $\theta$ using Maximum Likelihood Estimation (MLE) or
-                            inversion of Kendall's $\tau$.</li>
-                    </ol>
-
-                    <aside class="callout context">
-                        <span class="callout-title">Developer Insight: Kendall's Tau</span>
-                        <p>For a Gumbel copula, the relationship between Kendall's rank correlation ($\tau$) and the
-                            copula parameter is analytical: $\theta = \frac{1}{1 - \tau}$. This allows for extremely
-                            fast parameter estimation without numerical optimization.</p>
-                    </aside>
-
-                    <h3>Code Implementations</h3>
-                    <p>Select a language below to see how to calculate the Gumbel parameter $\theta$ from empirical
-                        data.</p>
-
-                    <!-- Multi-Language Code Switcher Component -->
-                    <div class="code-switcher">
-                        <!-- Navigation Tabs -->
-                        <div class="code-tabs">
-                            <button class="code-tab active" data-target="panel-python">Python</button>
-                            <button class="code-tab" data-target="panel-r">R</button>
-                            <button class="code-tab" data-target="panel-stan">Stan</button>
-                            <button class="code-tab" data-target="panel-cpp">C++</button>
+                        <div class="social-icons"
+                            style="margin-top: auto; padding-top: 1rem; justify-content: flex-start;">
+                            <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank"
+                                rel="noopener noreferrer">
+                                <img src="../images/linkedin_logo.png" alt="LinkedIn"> <!--[cite: 1]-->
+                            </a>
+                            <a href="https://www.instagram.com/_oliverbrady_/" target="_blank"
+                                rel="noopener noreferrer">
+                                <img src="../images/instagram_logo.png" alt="Instagram"> <!--[cite: 1]-->
+                            </a>
+                            <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')">
+                                <img src="../images/email.png" alt="Email"> <!--[cite: 1]-->
+                            </a>
                         </div>
-
-                        <!-- Python Panel -->
-                        <div class="code-panel active" id="panel-python">
-                            <pre><code>import numpy as np
-from scipy.stats import kendalltau
-
-def estimate_gumbel_theta(x, y):
-    """ Estimates Gumbel theta using Kendall's tau. """
-    tau, _ = kendalltau(x, y)
-    
-    if tau <= 0:
-        raise ValueError("Gumbel copula requires positive dependence.")
-        
-    theta = 1 / (1 - tau)
-    return theta, tau
-
-intensity = np.array([45.2, 52.1, 88.5, 23.1, 110.2])
-duration = np.array([12, 14, 24, 6, 48])
-
-theta_est, tau_est = estimate_gumbel_theta(intensity, duration)
-print(f"Kendall's Tau: {tau_est:.3f}")
-print(f"Estimated Theta: {theta_est:.3f}")</code></pre>
-                            <div class="code-output">Kendall's Tau: 0.800
-                                Estimated Theta: 5.000</div>
-                        </div>
-
-                        <!-- R Panel -->
-                        <div class="code-panel" id="panel-r">
-                            <pre><code>library(copula)
-
-estimate_gumbel_theta <- function(x, y) {
-  # Calculate empirical Kendall's tau
-  tau <- cor(x, y, method = "kendall")
-  
-  if (tau <= 0) {
-    stop("Gumbel copula requires positive dependence.")
-  }
-  
-  theta <- 1 / (1 - tau)
-  return(list(theta = theta, tau = tau))
-}
-
-intensity <- c(45.2, 52.1, 88.5, 23.1, 110.2)
-duration <- c(12, 14, 24, 6, 48)
-
-res <- estimate_gumbel_theta(intensity, duration)
-cat(sprintf("Kendall's Tau: %.3f\nEstimated Theta: %.3f\n", res$tau, res$theta))</code></pre>
-                            <div class="code-output">Kendall's Tau: 0.800
-                                Estimated Theta: 5.000</div>
-                        </div>
-
-                        <!-- Stan Panel -->
-                        <div class="code-panel" id="panel-stan">
-                            <pre><code>functions {
-  // Analytical log probability density for Gumbel Copula
-  real gumbel_copula_lpdf(real u, real v, real theta) {
-    real neg_ln_u = -log(u);
-    real neg_ln_v = -log(v);
-    real term = pow(neg_ln_u, theta) + pow(neg_ln_v, theta);
-    real copula_val = -pow(term, 1.0/theta);
-    // (Full derivative expansion omitted for brevity)
-    return copula_val; 
-  }
-}
-data {
-  int<lower=0> N;
-  vector<lower=0, upper=1>[N] u; // PIT transformed intensity
-  vector<lower=0, upper=1>[N] v; // PIT transformed duration
-}
-parameters {
-  real<lower=1> theta; // Gumbel theta bound
-}
-model {
-  theta ~ gamma(2, 0.5); // Weakly informative prior
-  for (n in 1:N) {
-    target += gumbel_copula_lpdf(u[n], v[n], theta);
-  }
-}</code></pre>
-                            <!-- Note: Stan compiles, so output isn't console text -->
-                            <div class="code-output">Model compiled successfully. Ready for MCMC sampling.</div>
-                        </div>
-
-                        <!-- C++ Panel -->
-                        <div class="code-panel" id="panel-cpp">
-                            <pre><code>#include &lt;iostream&gt;
-#include &lt;vector&gt;
-#include &lt;stdexcept&gt;
-
-// Assuming an empirical tau calculation function exists in a stats library
-double estimate_gumbel_theta(double tau) {
-    if (tau <= 0) {
-        throw std::invalid_argument("Gumbel requires positive dependence.");
-    }
-    return 1.0 / (1.0 - tau);
-}
-
-int main() {
-    double tau_est = 0.800; // Passed from empirical calculation
-    
-    try {
-        double theta_est = estimate_gumbel_theta(tau_est);
-        std::cout << "Kendall's Tau: " << tau_est << "\n";
-        std::cout << "Estimated Theta: " << theta_est << "\n";
-    } catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << "\n";
-    }
-    
-    return 0;
-}</code></pre>
-                            <div class="code-output">Kendall's Tau: 0.8
-                                Estimated Theta: 5</div>
-                        </div>
-
-                    </div> <!-- End Code Switcher -->
-
-                </section>
-
-                <section>
-                    <h2>References</h2>
-
-                    <!-- 1. Link to your local BibTeX file -->
-                    <bibtex src="references.bib"></bibtex>
-
-                    <!-- 2. Define the template for how each entry should look (Hidden from view) -->
-                    <div class="bibtex_template" style="display: none;">
-                        <li>
-                            <span class="if author"><span class="bibtexVar" extra="author"></span></span>
-                            <span class="if year">(<span class="bibtexVar" extra="year"></span>).</span>
-                            <span class="if title"><em><span class="bibtexVar" extra="title"></span></em>.</span>
-                            <span class="if journal"><span class="bibtexVar" extra="journal"></span><span
-                                    class="if volume">, <span class="bibtexVar" extra="volume"></span></span><span
-                                    class="if number">(<span class="bibtexVar" extra="number"></span>)</span>.</span>
-                            <span class="if publisher"><span class="bibtexVar" extra="publisher"></span>.</span>
-                        </li>
                     </div>
 
-                    <!-- 3. The empty list where the script will automatically generate the HTML -->
-                    <ul class="references-list" id="bibtex_display"></ul>
-                </section>
-            </article>
+                </div>
+
+                <button class="scroll-btn right-btn" id="scrollRightBtn">❯</button>
+            </div>
         </main>
-
-        <footer class="site-footer">
-            <p>&copy; 2026 Oliver Brady.</p>
-        </footer>
     </div>
 
-    <!-- Script for Tab Switching Logic -->
+    <div id="copy-toast">Email copied to clipboard!</div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Find all code tabs on the page
-            const tabs = document.querySelectorAll('.code-tab');
+        // --- 1. HORIZONTAL SCROLLING LOGIC ---
+        const cont = document.getElementById('profile-container');
+        document.getElementById('scrollLeftBtn').addEventListener('click', () => cont.scrollBy({ left: -350, behavior: 'smooth' }));
+        document.getElementById('scrollRightBtn').addEventListener('click', () => cont.scrollBy({ left: 350, behavior: 'smooth' }));
+        cont.addEventListener('wheel', (e) => { e.preventDefault(); cont.scrollLeft += e.deltaY; });
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    // Find the parent switcher component to isolate scope
-                    const switcher = tab.closest('.code-switcher');
 
-                    // Remove active state from all tabs and panels IN THIS switcher
-                    switcher.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
-                    switcher.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+        // --- 2. CSV PARSER & CARD GENERATOR ---
 
-                    // Activate the clicked tab and its corresponding panel
-                    tab.classList.add('active');
-                    const targetPanel = switcher.querySelector(`#${tab.dataset.target}`);
-                    if (targetPanel) {
-                        targetPanel.classList.add('active');
-                    }
-                });
+        // A robust vanilla JS CSV parser that handles quotes properly
+        function parseCSV(str) {
+            const arr = [];
+            let quote = false;
+            let row = 0, col = 0;
+            for (let c = 0; c < str.length; c++) {
+                let cc = str[c], nc = str[c + 1];
+                arr[row] = arr[row] || [];
+                arr[row][col] = arr[row][col] || '';
+                if (cc == '"' && quote && nc == '"') { arr[row][col] += cc; ++c; continue; }
+                if (cc == '"') { quote = !quote; continue; }
+                if (cc == ',' && !quote) { ++col; continue; }
+                if (cc == '\r' && nc == '\n' && !quote) { ++row; col = 0; ++c; continue; }
+                if (cc == '\n' && !quote) { ++row; col = 0; continue; }
+                if (cc == '\r' && !quote) { ++row; col = 0; continue; }
+                arr[row][col] += cc;
+            }
+            return arr;
+        }
+
+        // Fetch the CSV and build the cards
+        fetch('topics.csv')
+            .then(response => response.text())
+            .then(csvText => {
+                const data = parseCSV(csvText);
+                const contactCard = document.getElementById('contact-card');
+
+                // Skip the first row (headers) and iterate through the rest
+                for (let i = 1; i < data.length; i++) {
+                    const row = data[i];
+                    if (row.length < 4 || !row[0].trim()) continue; // Skip empty rows
+
+                    const title = row[0].trim();
+                    const description = row[1].trim();
+                    const tagsArray = row[2].split(';').map(tag => tag.trim()); // Split tags by semicolon
+                    const link = row[3].trim();
+
+                    // Generate the HTML for the tags
+                    let tagsHtml = '';
+                    tagsArray.forEach(tag => {
+                        if (tag) {
+                            tagsHtml += `<span class="skill-tag" onclick="filterByTag('${tag}')">${tag}</span>`;
+                        }
+                    });
+
+                    // Construct the full card HTML
+                    const cardHtml = `
+                        <div class="track-item track-item-scrollable profile-card searchable-card">
+                            <h3 style="color: var(--dark-green); margin-top: 0;">${title}</h3>
+                            <p>${description}</p>
+                            <div style="margin-top: 1rem;">
+                                ${tagsHtml}
+                            </div>
+                            <a href="${link}" class="funnel-arrow">Read Section ➔</a>
+                        </div>
+                    `;
+
+                    // Inject the new card right before the Contact Card
+                    contactCard.insertAdjacentHTML('beforebegin', cardHtml);
+                }
+            })
+            .catch(error => console.error('Error loading the CSV database:', error));
+
+
+        // --- 3. SEARCH AND FILTER LOGIC ---
+        const searchInput = document.getElementById('searchInput');
+
+        function performSearch() {
+            const filter = searchInput.value.toLowerCase();
+            // Re-select cards dynamically in case the CSV has just finished loading
+            const cards = document.querySelectorAll('.searchable-card');
+
+            cards.forEach(card => {
+                const cardText = card.textContent || card.innerText;
+                if (cardText.toLowerCase().indexOf(filter) > -1) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
             });
-        });
-    </script>
 
-    <!-- Script to Generate Interactive Plotly Visual -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const theta = 3.0;
-            const u = [];
-            const v = [];
-            const z = [];
-            const steps = 40;
+            cont.scrollTo({ left: 0, behavior: 'smooth' });
+        }
 
-            for (let i = 1; i < steps; i++) {
-                u.push(i / steps);
-                v.push(i / steps);
-            }
+        searchInput.addEventListener('keyup', performSearch);
 
-            for (let i = 0; i < u.length; i++) {
-                let z_row = [];
-                for (let j = 0; j < v.length; j++) {
-                    let term1 = Math.pow(-Math.log(u[i]), theta);
-                    let term2 = Math.pow(-Math.log(v[j]), theta);
-                    let copula_val = Math.exp(-Math.pow(term1 + term2, 1 / theta));
-                    z_row.push(copula_val);
-                }
-                z.push(z_row);
-            }
+        function filterByTag(tagWord) {
+            searchInput.value = tagWord;
+            performSearch();
+            searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
 
-            const data = [{
-                z: z,
-                x: u,
-                y: v,
-                type: 'surface',
-                colorscale: 'Viridis',
-                showscale: false
-            }];
-
-            const layout = {
-                margin: { l: 0, r: 0, b: 0, t: 30 },
-                paper_bgcolor: 'rgba(0,0,0,0)',
-                plot_bgcolor: 'rgba(0,0,0,0)',
-                scene: {
-                    xaxis: { title: 'Margin u' },
-                    yaxis: { title: 'Margin v' },
-                    zaxis: { title: 'C(u,v)' },
-                    camera: { eye: { x: -1.5, y: -1.5, z: 1.2 } }
-                }
-            };
-
-            Plotly.newPlot('interactive-copula-plot', data, layout, { responsive: true });
-        });
+        // --- 4. TOAST COPY SCRIPT ---
+        function copyEmail(e, email) {
+            e.preventDefault();
+            navigator.clipboard.writeText(email).then(() => {
+                const t = document.getElementById('copy-toast');
+                t.style.display = 'block'; setTimeout(() => { t.style.opacity = '1'; }, 10);
+                setTimeout(() => { t.style.opacity = '0'; setTimeout(() => { t.style.display = 'none'; }, 300); }, 2500);
+            });
+        }
     </script>
 </body>
 
