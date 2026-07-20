@@ -27,10 +27,12 @@
     flex-direction: column;
     margin: 0;
     padding: 0;
-    overflow-y: auto; 
+    overflow-y: auto;
 }
 
-.page-wrapper *, .page-wrapper *::before, .page-wrapper *::after {
+.page-wrapper *,
+.page-wrapper *::before,
+.page-wrapper *::after {
     box-sizing: inherit;
 }
 
@@ -101,7 +103,6 @@
     flex-grow: 1;
 }
 
-/* Forces a clean white background for all text reading areas */
 .research-article {
     background-color: #ffffff;
     color: var(--local-text);
@@ -131,9 +132,34 @@
     margin-bottom: 1.2em;
 }
 
-.research-article ul, .research-article ol {
+.research-article ul,
+.research-article ol {
     margin-bottom: 1.5rem;
     padding-left: 1.5rem;
+}
+
+/* --- Responsive MathJax Overflow Fix --- */
+mjx-container[display="true"] {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    padding: 0.5rem 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--local-border) transparent;
+}
+
+mjx-container[display="true"]::-webkit-scrollbar {
+    height: 6px;
+}
+
+mjx-container[display="true"]::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+mjx-container[display="true"]::-webkit-scrollbar-thumb {
+    background-color: var(--local-border);
+    border-radius: 4px;
 }
 
 /* --- Semantic Callouts --- */
@@ -143,7 +169,7 @@
     border-left: 5px solid;
     border-radius: 4px;
     background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .callout-title {
@@ -161,19 +187,28 @@
     border-color: var(--local-light-blue);
     background-color: #f0f9fb;
 }
-.callout.context .callout-title { color: var(--local-dark-blue); }
+
+.callout.context .callout-title {
+    color: var(--local-dark-blue);
+}
 
 .callout.theorem {
     border-color: var(--local-light-green);
     background-color: #f4f8ef;
 }
-.callout.theorem .callout-title { color: var(--local-dark-green); }
+
+.callout.theorem .callout-title {
+    color: var(--local-dark-green);
+}
 
 .callout.warning {
     border-color: var(--local-dark-red);
     background-color: #fdf3f2;
 }
-.callout.warning .callout-title { color: var(--local-dark-red); }
+
+.callout.warning .callout-title {
+    color: var(--local-dark-red);
+}
 
 /* --- Collapsible Proofs --- */
 details.collapsible-proof {
@@ -182,7 +217,7 @@ details.collapsible-proof {
     border-radius: 6px;
     background-color: #ffffff;
     overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 details.collapsible-proof summary {
@@ -210,7 +245,7 @@ details.collapsible-proof summary:hover {
     overflow-x: auto;
     margin: 2rem 0;
     border-radius: 6px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .research-table {
@@ -237,43 +272,6 @@ details.collapsible-proof summary:hover {
     background-color: #f8fafc;
 }
 
-/* --- Code & Output Blocks --- */
-pre {
-    background-color: #1e293b;
-    color: #f8fafc;
-    padding: 1.2rem;
-    border-radius: 6px 6px 0 0;
-    overflow-x: auto;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.9em;
-    margin-top: 1.5rem;
-    margin-bottom: 0;
-}
-
-.code-output {
-    background-color: #f1f5f9;
-    color: #334155;
-    padding: 1rem 1.2rem;
-    border-left: 4px solid var(--local-dark-blue);
-    border-radius: 0 0 6px 6px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 0.85em;
-    margin-bottom: 1.5rem;
-    white-space: pre-wrap;
-}
-
-code {
-    font-family: inherit;
-}
-
-p code, li code {
-    background-color: #f1f5f9;
-    color: var(--local-dark-red);
-    padding: 0.2em 0.4em;
-    border-radius: 4px;
-    font-size: 0.9em;
-}
-
 /* --- Figures --- */
 .research-figure {
     margin: 2.5rem 0;
@@ -281,7 +279,7 @@ p code, li code {
     background: #fff;
     padding: 1rem;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     border: 1px solid var(--local-border);
 }
 
@@ -312,5 +310,137 @@ p code, li code {
     text-align: center;
     font-size: 0.85em;
     color: var(--local-dark-gray);
-    padding: 1rem 20px 3rem 20px;
+    padding: 3rem 20px 2rem 20px;
+}
+
+/* ==========================================================================
+   Multi-Language Code Switcher Component
+   ========================================================================== */
+.code-switcher {
+    margin: 1.5rem 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #1e293b;
+    /* Base slate matching the pre block */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.code-tabs {
+    display: flex;
+    background-color: #0f172a;
+    /* Darker header bar */
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.code-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.code-tab {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.85rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, background-color 0.2s;
+    white-space: nowrap;
+}
+
+.code-tab:hover {
+    color: #cbd5e1;
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.code-tab.active {
+    color: #f8fafc;
+    background-color: #1e293b;
+    border-bottom-color: var(--local-light-blue);
+}
+
+.code-panel {
+    display: none;
+}
+
+.code-panel.active {
+    display: block;
+}
+
+/* Reset Pre/Code inside Switcher */
+.code-switcher pre {
+    background-color: #1e293b;
+    color: #f8fafc;
+    padding: 1.2rem;
+    margin: 0;
+    border-radius: 0;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+}
+
+.code-switcher code {
+    font-family: inherit;
+}
+
+/* Code Output Box attached to the bottom of a panel */
+.code-switcher .code-output {
+    background-color: #f1f5f9;
+    color: #334155;
+    padding: 1rem 1.2rem;
+    border-left: 4px solid var(--local-dark-blue);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85em;
+    margin: 0;
+    white-space: pre-wrap;
+    border-top: 1px solid #cbd5e1;
+}
+
+/* Inline code outside of switchers */
+p code,
+li code {
+    background-color: #f1f5f9;
+    color: var(--local-dark-red);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .research-article {
+        padding: 1.5rem;
+    }
+
+    .code-tab {
+        padding: 0.6rem 1rem;
+    }
+}
+
+/* --- Bibliography --- */
+.references-list {
+    padding-left: 0;
+    list-style: none;
+    counter-reset: bib-counter;
+    /* Initialize the counter */
+}
+
+.references-list li {
+    margin-bottom: 1rem;
+    padding-left: 2.5em;
+    text-indent: -2.5em;
+    font-size: 0.9em;
+    counter-increment: bib-counter;
+    /* Increment for each reference */
+}
+
+/* Automatically injects [1], [2], etc., before each list item */
+.references-list li::before {
+    content: "[" counter(bib-counter) "] ";
+    font-weight: 700;
+    color: var(--local-dark-blue);
 }

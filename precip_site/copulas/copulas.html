@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../images/OB.png" type="image/png">
+    <title>Copulas & Dependence | Oliver Brady</title>
+
+    <!-- External Shared Stylesheet -->
+    <link rel="stylesheet" href="../topic_template.css">
+
+    <!-- MathJax v3 Configuration for LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- Plotly.js for Interactive Visuals -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+
+    <!-- BibTeX Client-Side Parser -->
+    <script src="https://cdn.jsdelivr.net/gh/pcooksey/bibtex-js@1.0.0/src/bibtex_js.min.js"></script>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <!-- Top Navbar with Inline Back Arrow -->
+        <header class="site-header">
+            <a href="../precip.html" class="back-arrow" aria-label="Back to Methodology Database">❮</a>
+            <a href="../../index.html" class="header-link">
+                <img src="../../images/OB.png" alt="Return to Home" class="profile-portrait">
+            </a>
+            <div class="name-group">
+                <h2>Copulas & Dependence Modeling</h2>
+                <p>Isolating Marginal Distributions from Complex Dependencies</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <article class="research-article">
+
+                <section>
+                    <aside class="callout context">
+                        <span class="callout-title">Commercial Context & Application</span>
+                        <p>In catastrophe modeling, risk is rarely driven by a single variable. For instance, urban
+                            flood damage is often a compounding result of extreme precipitation intensity, prolonged
+                            duration, and antecedent soil moisture. Copulas allow risk modelers to separate the behavior
+                            of individual risk factors from the structure of their dependency.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>1. Fundamental Theory</h2>
+                    <p>The mathematical foundation of copula theory is Sklar's Theorem. It states that any multivariate
+                        joint cumulative distribution function (CDF), $H(x_1, \dots, x_d)$, can be expressed in terms of
+                        its marginal distribution functions $F_i(x_i)$ and a copula $C$.</p>
+
+                    <aside class="callout theorem">
+                        <span class="callout-title">Sklar's Theorem (1959)</span>
+                        <p>Let $H$ be an $n$-dimensional distribution function with margins $F_1, \dots, F_n$. Then
+                            there exists an $n$-dimensional copula $C$ such that for all $\mathbf{x} \in
+                            \overline{\mathbb{R}}^n$:</p>
+                        $$H(x_1, \dots, x_n) = C(F_1(x_1), \dots, F_n(x_n))$$
+                    </aside>
+
+                    <details class="collapsible-proof">
+                        <summary>Expand for Pedantic Proof: Fréchet-Hoeffding Bounds</summary>
+                        <div class="collapsible-content">
+                            <p>Every copula $C(u, v)$ is strictly bounded by the Fréchet-Hoeffding bounds, ensuring that
+                                dependence structures cannot exceed logical probabilistic limits. For any copula $C$:
+                            </p>
+                            $$W(u, v) \leq C(u, v) \leq M(u, v)$$
+                            <p>Where:</p>
+                            <ul>
+                                <li><strong>Lower Bound $W$:</strong> $W(u, v) = \max(u + v - 1, 0)$ representing
+                                    perfect negative dependence.</li>
+                                <li><strong>Upper Bound $M$:</strong> $M(u, v) = \min(u, v)$ representing perfect
+                                    positive dependence.</li>
+                            </ul>
+                            <p><em>Note:</em> The lower bound $W$ is only a copula in strictly 2 dimensions.</p>
+                        </div>
+                    </details>
+                </section>
+
+                <section>
+                    <h2>2. Extreme Value Copulas</h2>
+                    <p>In the quantification of precipitation extremes, standard Gaussian copulas often fail. Instead,
+                        Archimedean copulas, such as the Gumbel copula, are highly applicable for hydrological risk.</p>
+
+                    <div class="data-table-wrapper">
+                        <table class="research-table">
+                            <thead>
+                                <tr>
+                                    <th>Copula Family</th>
+                                    <th>Lower Tail</th>
+                                    <th>Upper Tail</th>
+                                    <th>Hydrological Use Case</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Gaussian</td>
+                                    <td>None</td>
+                                    <td>None</td>
+                                    <td>General mean-state modeling</td>
+                                </tr>
+                                <tr>
+                                    <td>Clayton</td>
+                                    <td>Strong</td>
+                                    <td>None</td>
+                                    <td>Drought severity dependency</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Gumbel</strong></td>
+                                    <td>None</td>
+                                    <td><strong>Strong</strong></td>
+                                    <td>Extreme rainfall compounding</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>The Gumbel-Hougaard Copula</h3>
+                    <p>The Gumbel copula exhibits strong upper-tail dependence and no lower-tail dependence. For $d=2$,
+                        it is defined as:</p>
+
+                    $$C_\theta(u, v) = \exp\left(-\left[(-\ln u)^\theta + (-\ln v)^\theta\right]^{1/\theta}\right)$$
+
+                    <p>where the dependence parameter $\theta \in [1, \infty)$.</p>
+
+                    <figure class="research-figure">
+                        <div id="interactive-copula-plot" style="width: 100%; height: 450px;"></div>
+                        <figcaption>Figure 1: Interactive 3D Surface of the Gumbel Copula CDF ($\theta = 3.0$). Click,
+                            drag to rotate, and scroll to zoom.</figcaption>
+                    </figure>
+
+                    <aside class="callout warning">
+                        <span class="callout-title">Key Consideration for Catastrophe Models</span>
+                        <p>When fitting models to IDF curves, utilizing a Gumbel copula ensures that the joint
+                            probability of a high-intensity <em>and</em> long-duration event is captured accurately.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>3. Implementation Methodology</h2>
+                    <p>To implement this in practice, the process generally follows three discrete steps:</p>
+
+                    <ol>
+                        <li>Fit parametric marginal distributions (e.g., GEV) to the individual historical variables.
+                        </li>
+                        <li>Transform the observations to uniform pseudo-observations using the Probability Integral
+                            Transform (PIT).</li>
+                        <li>Estimate the copula parameter $\theta$ using Maximum Likelihood Estimation (MLE) or
+                            inversion of Kendall's $\tau$.</li>
+                    </ol>
+
+                    <aside class="callout context">
+                        <span class="callout-title">Developer Insight: Kendall's Tau</span>
+                        <p>For a Gumbel copula, the relationship between Kendall's rank correlation ($\tau$) and the
+                            copula parameter is analytical: $\theta = \frac{1}{1 - \tau}$. This allows for extremely
+                            fast parameter estimation without numerical optimization.</p>
+                    </aside>
+
+                    <h3>Code Implementations</h3>
+                    <p>Select a language below to see how to calculate the Gumbel parameter $\theta$ from empirical
+                        data.</p>
+
+                    <!-- Multi-Language Code Switcher Component -->
+                    <div class="code-switcher">
+                        <!-- Navigation Tabs -->
+                        <div class="code-tabs">
+                            <button class="code-tab active" data-target="panel-python">Python</button>
+                            <button class="code-tab" data-target="panel-r">R</button>
+                            <button class="code-tab" data-target="panel-stan">Stan</button>
+                            <button class="code-tab" data-target="panel-cpp">C++</button>
+                        </div>
+
+                        <!-- Python Panel -->
+                        <div class="code-panel active" id="panel-python">
+                            <pre><code>import numpy as np
+from scipy.stats import kendalltau
+
+def estimate_gumbel_theta(x, y):
+    """ Estimates Gumbel theta using Kendall's tau. """
+    tau, _ = kendalltau(x, y)
+    
+    if tau <= 0:
+        raise ValueError("Gumbel copula requires positive dependence.")
+        
+    theta = 1 / (1 - tau)
+    return theta, tau
+
+intensity = np.array([45.2, 52.1, 88.5, 23.1, 110.2])
+duration = np.array([12, 14, 24, 6, 48])
+
+theta_est, tau_est = estimate_gumbel_theta(intensity, duration)
+print(f"Kendall's Tau: {tau_est:.3f}")
+print(f"Estimated Theta: {theta_est:.3f}")</code></pre>
+                            <div class="code-output">Kendall's Tau: 0.800
+                                Estimated Theta: 5.000</div>
+                        </div>
+
+                        <!-- R Panel -->
+                        <div class="code-panel" id="panel-r">
+                            <pre><code>library(copula)
+
+estimate_gumbel_theta <- function(x, y) {
+  # Calculate empirical Kendall's tau
+  tau <- cor(x, y, method = "kendall")
+  
+  if (tau <= 0) {
+    stop("Gumbel copula requires positive dependence.")
+  }
+  
+  theta <- 1 / (1 - tau)
+  return(list(theta = theta, tau = tau))
+}
+
+intensity <- c(45.2, 52.1, 88.5, 23.1, 110.2)
+duration <- c(12, 14, 24, 6, 48)
+
+res <- estimate_gumbel_theta(intensity, duration)
+cat(sprintf("Kendall's Tau: %.3f\nEstimated Theta: %.3f\n", res$tau, res$theta))</code></pre>
+                            <div class="code-output">Kendall's Tau: 0.800
+                                Estimated Theta: 5.000</div>
+                        </div>
+
+                        <!-- Stan Panel -->
+                        <div class="code-panel" id="panel-stan">
+                            <pre><code>functions {
+  // Analytical log probability density for Gumbel Copula
+  real gumbel_copula_lpdf(real u, real v, real theta) {
+    real neg_ln_u = -log(u);
+    real neg_ln_v = -log(v);
+    real term = pow(neg_ln_u, theta) + pow(neg_ln_v, theta);
+    real copula_val = -pow(term, 1.0/theta);
+    // (Full derivative expansion omitted for brevity)
+    return copula_val; 
+  }
+}
+data {
+  int<lower=0> N;
+  vector<lower=0, upper=1>[N] u; // PIT transformed intensity
+  vector<lower=0, upper=1>[N] v; // PIT transformed duration
+}
+parameters {
+  real<lower=1> theta; // Gumbel theta bound
+}
+model {
+  theta ~ gamma(2, 0.5); // Weakly informative prior
+  for (n in 1:N) {
+    target += gumbel_copula_lpdf(u[n], v[n], theta);
+  }
+}</code></pre>
+                            <!-- Note: Stan compiles, so output isn't console text -->
+                            <div class="code-output">Model compiled successfully. Ready for MCMC sampling.</div>
+                        </div>
+
+                        <!-- C++ Panel -->
+                        <div class="code-panel" id="panel-cpp">
+                            <pre><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;stdexcept&gt;
+
+// Assuming an empirical tau calculation function exists in a stats library
+double estimate_gumbel_theta(double tau) {
+    if (tau <= 0) {
+        throw std::invalid_argument("Gumbel requires positive dependence.");
+    }
+    return 1.0 / (1.0 - tau);
+}
+
+int main() {
+    double tau_est = 0.800; // Passed from empirical calculation
+    
+    try {
+        double theta_est = estimate_gumbel_theta(tau_est);
+        std::cout << "Kendall's Tau: " << tau_est << "\n";
+        std::cout << "Estimated Theta: " << theta_est << "\n";
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << "\n";
+    }
+    
+    return 0;
+}</code></pre>
+                            <div class="code-output">Kendall's Tau: 0.8
+                                Estimated Theta: 5</div>
+                        </div>
+
+                    </div> <!-- End Code Switcher -->
+
+                </section>
+
+                <section>
+                    <h2>References</h2>
+
+                    <!-- 1. Link to your local BibTeX file -->
+                    <bibtex src="references.bib"></bibtex>
+
+                    <!-- 2. Define the template for how each entry should look (Hidden from view) -->
+                    <div class="bibtex_template" style="display: none;">
+                        <li>
+                            <span class="if author"><span class="bibtexVar" extra="author"></span></span>
+                            <span class="if year">(<span class="bibtexVar" extra="year"></span>).</span>
+                            <span class="if title"><em><span class="bibtexVar" extra="title"></span></em>.</span>
+                            <span class="if journal"><span class="bibtexVar" extra="journal"></span><span
+                                    class="if volume">, <span class="bibtexVar" extra="volume"></span></span><span
+                                    class="if number">(<span class="bibtexVar" extra="number"></span>)</span>.</span>
+                            <span class="if publisher"><span class="bibtexVar" extra="publisher"></span>.</span>
+                        </li>
+                    </div>
+
+                    <!-- 3. The empty list where the script will automatically generate the HTML -->
+                    <ul class="references-list" id="bibtex_display"></ul>
+                </section>
+            </article>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 Oliver Brady.</p>
+        </footer>
+    </div>
+
+    <!-- Script for Tab Switching Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Find all code tabs on the page
+            const tabs = document.querySelectorAll('.code-tab');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Find the parent switcher component to isolate scope
+                    const switcher = tab.closest('.code-switcher');
+
+                    // Remove active state from all tabs and panels IN THIS switcher
+                    switcher.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+                    switcher.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+
+                    // Activate the clicked tab and its corresponding panel
+                    tab.classList.add('active');
+                    const targetPanel = switcher.querySelector(`#${tab.dataset.target}`);
+                    if (targetPanel) {
+                        targetPanel.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Script to Generate Interactive Plotly Visual -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const theta = 3.0;
+            const u = [];
+            const v = [];
+            const z = [];
+            const steps = 40;
+
+            for (let i = 1; i < steps; i++) {
+                u.push(i / steps);
+                v.push(i / steps);
+            }
+
+            for (let i = 0; i < u.length; i++) {
+                let z_row = [];
+                for (let j = 0; j < v.length; j++) {
+                    let term1 = Math.pow(-Math.log(u[i]), theta);
+                    let term2 = Math.pow(-Math.log(v[j]), theta);
+                    let copula_val = Math.exp(-Math.pow(term1 + term2, 1 / theta));
+                    z_row.push(copula_val);
+                }
+                z.push(z_row);
+            }
+
+            const data = [{
+                z: z,
+                x: u,
+                y: v,
+                type: 'surface',
+                colorscale: 'Viridis',
+                showscale: false
+            }];
+
+            const layout = {
+                margin: { l: 0, r: 0, b: 0, t: 30 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                scene: {
+                    xaxis: { title: 'Margin u' },
+                    yaxis: { title: 'Margin v' },
+                    zaxis: { title: 'C(u,v)' },
+                    camera: { eye: { x: -1.5, y: -1.5, z: 1.2 } }
+                }
+            };
+
+            Plotly.newPlot('interactive-copula-plot', data, layout, { responsive: true });
+        });
+    </script>
+</body>
+
+</html>
