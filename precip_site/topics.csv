@@ -7,3 +7,5 @@ IDF Curves,Updating Intensity-Duration-Frequency parameters for non-stationary c
 WRF,,Physical Modelling,wrf.html
 Stocastic Rainfall Generators,,SDE;,srg.html
 Declustering,,GPD;POT,declustering/declustering.html
+Generalized Least Squares,,Regression,gls/gls.html
+Intensity Scaling,Describing the relationship between precipitation intensity and duration,Scaling,scaling/scaling.html

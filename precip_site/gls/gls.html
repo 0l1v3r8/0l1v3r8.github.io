@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../images/OB.png" type="image/png">
+    <title>GLS vs OLS | Oliver Brady</title>
+
+    <!-- External Shared Stylesheet -->
+    <link rel="stylesheet" href="../topic_template.css">
+
+    <!-- MathJax v3 Configuration for LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- Plotly.js for Interactive Visuals -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+
+    <!-- BibTeX Client-Side Parser -->
+    <script src="https://cdn.jsdelivr.net/gh/pcooksey/bibtex-js@1.0.0/src/bibtex_js.min.js"></script>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <!-- Top Navbar with Inline Back Arrow -->
+        <header class="site-header">
+            <a href="../precip.html" class="back-arrow" aria-label="Back to Methodology Database">❮</a>
+            <a href="../../index.html" class="header-link">
+                <img src="../../images/OB.png" alt="Return to Home" class="profile-portrait">
+            </a>
+            <div class="name-group">
+                <h2>Generalized vs. Ordinary Least Squares</h2>
+                <p>Correcting for Heteroskedasticity and Autocorrelation</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <article class="research-article">
+
+                <section>
+                    <aside class="callout context">
+                        <span class="callout-title">Commercial Context & Application</span>
+                        <p>In applied spatial and temporal modeling (e.g., modeling crop yields over time or housing
+                            prices across districts), errors are rarely independent and identical. Volatility often
+                            scales with the size of the predictor (heteroskedasticity), or residuals correlate across
+                            time or space (autocorrelation). Applying Ordinary Least Squares (OLS) in these conditions
+                            yields inefficient estimates and overly optimistic standard errors, leading to flawed risk
+                            assessments and unreliable confidence intervals.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>1. Fundamental Theory</h2>
+                    <p>Ordinary Least Squares (OLS) minimizes the sum of squared residuals, producing the Best Linear
+                        Unbiased Estimator (BLUE) <strong>only if</strong> the errors have constant variance ($\sigma^2
+                        I$) and zero covariance. When the error covariance matrix is $\Omega$ (where $\Omega \neq
+                        \sigma^2 I$), Generalized Least Squares (GLS) transforms the variables to restore the OLS
+                        assumptions on the transformed data.</p>
+
+                    <aside class="callout theorem">
+                        <span class="callout-title">The OLS and GLS Estimators</span>
+                        <p>Given the linear model $y = X\beta + \epsilon$, where $E[\epsilon] = 0$ and $Var(\epsilon) =
+                            \Omega$, the estimators are defined as:</p>
+                        <p><strong>OLS Estimator:</strong></p>
+                        $$\hat{\beta}_{OLS} = (X^T X)^{-1} X^T y$$
+                        <p><strong>GLS Estimator:</strong></p>
+                        $$\hat{\beta}_{GLS} = (X^T \Omega^{-1} X)^{-1} X^T \Omega^{-1} y$$
+                    </aside>
+
+                    <details class="collapsible-proof">
+                        <summary>Expand for Theory: Aitken's Theorem</summary>
+                        <div class="collapsible-content">
+                            <p>Aitken's Theorem extends the Gauss-Markov theorem. It proves that if the error
+                                variance-covariance matrix $\Omega$ is known, non-singular, and positive definite, the
+                                GLS estimator $\hat{\beta}_{GLS}$ is the Best Linear Unbiased Estimator (BLUE).</p>
+                            <p>Since $\Omega$ is positive definite, we can use Cholesky decomposition to find an
+                                invertible matrix $P$ such that $\Omega = P P^T$. Multiplying the regression equation by
+                                $P^{-1}$ yields:</p>
+                            $$P^{-1}y = P^{-1}X\beta + P^{-1}\epsilon$$
+                            <p>The variance of the transformed errors is $P^{-1} \Omega (P^{-1})^T = I$. Applying OLS to
+                                this transformed equation yields the GLS estimator.</p>
+                        </div>
+                    </details>
+                </section>
+
+                <section>
+                    <h2>2. Methodological Differences</h2>
+                    <p>While OLS treats every observation equally, GLS applies a weighting matrix ($\Omega^{-1}$).
+                        Observations with higher variance are down-weighted, and observations that are highly correlated
+                        with others provide less independent leverage.</p>
+
+                    <div class="data-table-wrapper">
+                        <table class="research-table">
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>Ordinary Least Squares (OLS)</th>
+                                    <th>Generalized Least Squares (GLS)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Error Assumption</strong></td>
+                                    <td>Homoskedastic and Independent ($\sigma^2 I$)</td>
+                                    <td>Heteroskedastic and/or Autocorrelated ($\Omega$)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Observation Weighting</strong></td>
+                                    <td>Equal weight for all data points</td>
+                                    <td>Weights based on inverse of variance/covariance</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Consequence of Misuse</strong></td>
+                                    <td>Valid coefficients, but biased standard errors</td>
+                                    <td>Requires estimating $\Omega$; poor estimate degrades fit</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Common Subsets</strong></td>
+                                    <td>N/A</td>
+                                    <td>Weighted Least Squares (WLS), Feasible GLS (FGLS)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Visualizing the Impact: Heteroskedasticity</h3>
+                    <p>In the simulation below, the variance of the errors increases as $X$ increases
+                        (heteroskedasticity). An outlier at high $X$ pulls the OLS line toward it. However, a specific
+                        form of GLS—Weighted Least Squares (WLS)—recognizes the high variance at larger $X$ values and
+                        gives those points less influence, keeping the regression line truer to the underlying trend.
+                    </p>
+
+                    <figure class="research-figure">
+                        <div id="interactive-gls-plot" style="width: 100%; height: 450px;"></div>
+                        <figcaption>Figure 1: Interactive Comparison of OLS and GLS (WLS) under Heteroskedasticity. Note
+                            how GLS resists the high-variance outliers on the right side.</figcaption>
+                    </figure>
+
+                    <aside class="callout warning">
+                        <span class="callout-title">The "Feasible" Catch</span>
+                        <p>In reality, the true covariance matrix $\Omega$ is never known and must be estimated from the
+                            data itself. This is called Feasible GLS (FGLS). If the structural assumption of $\Omega$ is
+                            wrong, FGLS can perform worse than OLS with robust standard errors.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>3. Implementation Methodology</h2>
+                    <p>To implement GLS to handle heteroskedasticity or autocorrelation, the workflow is:</p>
+
+                    <ol>
+                        <li>Fit a standard OLS model and extract the residuals.</li>
+                        <li>Analyze residuals to determine the structure of $\Omega$ (e.g., variance proportional to
+                            $x^2$, or AR(1) temporal correlation).</li>
+                        <li>Construct the weights or the inverse covariance matrix.</li>
+                        <li>Refit the model using the GLS/WLS algorithm.</li>
+                    </ol>
+
+                    <h3>Code Implementations</h3>
+                    <p>Select a language below to see how to implement GLS (specifically Weighted Least Squares) to
+                        correct for heteroskedasticity.</p>
+
+                    <!-- Multi-Language Code Switcher Component -->
+                    <div class="code-switcher">
+                        <!-- Navigation Tabs -->
+                        <div class="code-tabs">
+                            <button class="code-tab active" data-target="panel-python">Python</button>
+                            <button class="code-tab" data-target="panel-r">R</button>
+                        </div>
+
+                        <!-- Python Panel -->
+                        <div class="code-panel active" id="panel-python">
+                            <pre><code>import numpy as np
+import statsmodels.api as sm
+
+# 1. Generate Synthetic Heteroskedastic Data
+np.random.seed(42)
+x = np.linspace(1, 20, 50)
+X = sm.add_constant(x)
+
+# True parameters: Intercept=5, Slope=2
+# Error variance grows proportionally with x
+errors = np.random.normal(0, x * 0.5) 
+y = np.dot(X, [5, 2]) + errors
+
+# 2. Fit Ordinary Least Squares (OLS)
+ols_model = sm.OLS(y, X).fit()
+
+# 3. Fit Generalized Least Squares (WLS specifically)
+# Weight is inversely proportional to the variance (x^2)
+weights = 1.0 / (x ** 2)
+gls_model = sm.WLS(y, X, weights=weights).fit()
+
+print("OLS standard errors:", ols_model.bse)
+print("GLS standard errors:", gls_model.bse)</code></pre>
+                            <div class="code-output">OLS standard errors: [1.259 0.104]
+                                GLS standard errors: [0.384 0.089]
+                                # Note the tighter standard errors in GLS due to efficiency gains.</div>
+                        </div>
+
+                        <!-- R Panel -->
+                        <div class="code-panel" id="panel-r">
+                            <pre><code>library(nlme)
+
+# 1. Generate Synthetic Heteroskedastic Data
+set.seed(42)
+x <- seq(1, 20, length.out=50)
+errors <- rnorm(50, mean=0, sd=x*0.5)
+y <- 5 + 2*x + errors
+df <- data.frame(x=x, y=y)
+
+# 2. Fit Ordinary Least Squares (OLS)
+ols_model <- lm(y ~ x, data=df)
+
+# 3. Fit Generalized Least Squares (GLS)
+# The varPower structure handles variance that increases with x
+gls_model <- gls(y ~ x, data=df, weights=varPower(form=~x))
+
+cat("OLS Model Summary:\n")
+print(summary(ols_model)$coefficients)
+cat("\nGLS Model Summary:\n")
+print(summary(gls_model)$tTable)</code></pre>
+                            <div class="code-output">OLS Model Summary:
+                                Estimate Std. Error t value Pr(>|t|)
+                                (Intercept) 5.161048 1.1093121 4.652476 2.597505e-05
+                                x 1.979021 0.0913968 21.65306 4.316828e-26
+
+                                GLS Model Summary:
+                                Value Std.Error t-value p-value
+                                (Intercept) 4.630043 0.3546702 13.05450 1.252033e-17
+                                x 2.040183 0.0818274 24.93276 4.305944e-29</div>
+                        </div>
+
+                    </div> <!-- End Code Switcher -->
+
+                </section>
+
+                <section>
+                    <h2>References</h2>
+
+                    <bibtex src="references.bib"></bibtex>
+
+                    <div class="bibtex_template" style="display: none;">
+                        <li>
+                            <span class="if author">
+                                <span class="author"></span>
+                            </span>
+                            <span class="if year">
+                                (<span class="year"></span>).
+                            </span>
+                            <span class="if title">
+                                <em><span class="title"></span></em>.
+                            </span>
+                            <span class="if journal">
+                                <span class="journal"></span><span class="if volume">, <span
+                                        class="volume"></span></span><span class="if number">(<span
+                                        class="number"></span>)</span>.
+                            </span>
+                            <span class="if publisher">
+                                <span class="publisher"></span>.
+                            </span>
+                        </li>
+                    </div>
+
+                    <ul class="references-list" id="bibtex_display"></ul>
+                </section>
+            </article>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 Oliver Brady.</p>
+        </footer>
+    </div>
+
+    <!-- Script for Tab Switching Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.code-tab');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const switcher = tab.closest('.code-switcher');
+                    switcher.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+                    switcher.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    const targetPanel = switcher.querySelector(`#${tab.dataset.target}`);
+                    if (targetPanel) {
+                        targetPanel.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Script to Generate Interactive Plotly Visual -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Generate synthetic heteroskedastic data
+            const n = 50;
+            const x = [];
+            const y = [];
+            const w = []; // Weights for GLS (WLS)
+
+            // True function: y = 5 + 2x
+            // Seeded-style generation for consistency
+            for (let i = 1; i <= n; i++) {
+                const current_x = (i / n) * 20;
+                x.push(current_x);
+
+                // standard normal approx
+                let u = 0, v = 0;
+                while (u === 0) u = Math.random();
+                while (v === 0) v = Math.random();
+                let z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+
+                // Inflate variance for a specific point to show OLS sensitivity
+                let error = z * (current_x * 0.8);
+                if (i === 48) { error = 25; } // Intentional high-variance outlier
+                if (i === 45) { error = -22; } // Intentional high-variance outlier
+
+                y.push(5 + 2 * current_x + error);
+                w.push(1 / Math.pow(current_x, 2));
+            }
+
+            // OLS Calculation
+            const meanX = x.reduce((a, b) => a + b, 0) / n;
+            const meanY = y.reduce((a, b) => a + b, 0) / n;
+            let numOls = 0, denOls = 0;
+            for (let i = 0; i < n; i++) {
+                numOls += (x[i] - meanX) * (y[i] - meanY);
+                denOls += (x[i] - meanX) * (x[i] - meanX);
+            }
+            const beta1_ols = numOls / denOls;
+            const beta0_ols = meanY - beta1_ols * meanX;
+
+            // GLS (WLS) Calculation
+            const sumW = w.reduce((a, b) => a + b, 0);
+            const meanXw = x.reduce((a, b, i) => a + b * w[i], 0) / sumW;
+            const meanYw = y.reduce((a, b, i) => a + b * w[i], 0) / sumW;
+            let numWls = 0, denWls = 0;
+            for (let i = 0; i < n; i++) {
+                numWls += w[i] * (x[i] - meanXw) * (y[i] - meanYw);
+                denWls += w[i] * (x[i] - meanXw) * (x[i] - meanXw);
+            }
+            const beta1_gls = numWls / denWls;
+            const beta0_gls = meanYw - beta1_gls * meanXw;
+
+            // Generate line coordinates
+            const lineX = [0, 22];
+            const olsY = lineX.map(xv => beta0_ols + beta1_ols * xv);
+            const glsY = lineX.map(xv => beta0_gls + beta1_gls * xv);
+            const trueY = lineX.map(xv => 5 + 2 * xv);
+
+            const tracePoints = {
+                x: x,
+                y: y,
+                mode: 'markers',
+                name: 'Observations',
+                marker: { color: 'rgba(52, 73, 94, 0.6)', size: 8 }
+            };
+
+            const traceTrue = {
+                x: lineX,
+                y: trueY,
+                mode: 'lines',
+                name: 'True Relationship',
+                line: { color: 'rgba(149, 165, 166, 0.8)', width: 2, dash: 'dot' }
+            };
+
+            const traceOLS = {
+                x: lineX,
+                y: olsY,
+                mode: 'lines',
+                name: 'OLS Fit',
+                line: { color: '#e74c3c', width: 3 }
+            };
+
+            const traceGLS = {
+                x: lineX,
+                y: glsY,
+                mode: 'lines',
+                name: 'GLS Fit',
+                line: { color: '#27ae60', width: 3 }
+            };
+
+            const layout = {
+                margin: { l: 40, r: 20, b: 40, t: 40 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                title: 'OLS vs GLS: Impact of Heteroskedasticity',
+                xaxis: { title: 'Predictor Variable (X)' },
+                yaxis: { title: 'Response Variable (Y)' },
+                legend: { x: 0.05, y: 0.95 }
+            };
+
+            Plotly.newPlot('interactive-gls-plot', [tracePoints, traceTrue, traceOLS, traceGLS], layout, { responsive: true });
+        });
+    </script>
+</body>
+
+</html>

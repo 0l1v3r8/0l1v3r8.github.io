@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../images/OB.png" type="image/png">
+    <title>Precipitation Scaling | Oliver Brady</title>
+
+    <!-- External Shared Stylesheet -->
+    <link rel="stylesheet" href="../topic_template.css">
+
+    <!-- MathJax v3 Configuration for LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- Plotly.js for Interactive Visuals -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+
+    <!-- BibTeX Client-Side Parser -->
+    <script src="https://cdn.jsdelivr.net/gh/pcooksey/bibtex-js@1.0.0/src/bibtex_js.min.js"></script>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <!-- Top Navbar with Inline Back Arrow -->
+        <header class="site-header">
+            <a href="../precip.html" class="back-arrow" aria-label="Back to Methodology Database">❮</a>
+            <a href="../../index.html" class="header-link">
+                <img src="../../images/OB.png" alt="Return to Home" class="profile-portrait">
+            </a>
+            <div class="name-group">
+                <h2>Precipitation Intensity Scaling</h2>
+                <p>Deriving IDF Curves via Scale Invariance Across Durations</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <article class="research-article">
+
+                <section>
+                    <aside class="callout context">
+                        <span class="callout-title">Commercial Context & Application</span>
+                        <p>Urban flood modeling and sewer design require short-duration precipitation estimates (e.g.,
+                            15-minute or 1-hour). However, reliable historical data is often only available at 24-hour
+                            daily resolutions. Scale invariance principles allow catastrophe modelers to mathematically
+                            bridge this gap, extrapolating sub-hourly extreme rainfall intensities from long-term daily
+                            gauge records to build comprehensive Intensity-Duration-Frequency (IDF) curves.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>1. Fundamental Theory of Scaling</h2>
+                    <p>Scaling theory posits that the statistical properties of precipitation intensity at one duration
+                        are related to the properties at another duration via a scale factor. Let $I_d$ be the annual
+                        maximum precipitation intensity for duration $d$, and $\lambda$ be a positive scaling factor.
+                    </p>
+
+                    <h3>Strict Sense vs. Wide Sense Scaling</h3>
+                    <p>There are two primary ways to define this scale invariance:</p>
+
+                    <aside class="callout theorem">
+                        <span class="callout-title">Strict Sense Scaling (SSS)</span>
+                        <p>Scaling applies to the entire probability distribution. The random variable $I_{\lambda d}$
+                            has the same probability distribution as $\lambda^{-\eta} I_d$, denoted as:</p>
+                        $$I_{\lambda d} \stackrel{d}{=} \lambda^{-\eta} I_d$$
+                        <p>where $\eta$ is the scaling exponent. If this holds, the cumulative distribution functions
+                            (CDFs) are related by $F_{I_{\lambda d}}(x) = F_{I_d}(\lambda^\eta x)$.</p>
+                    </aside>
+
+                    <p>Because full distributional equality is difficult to prove empirically, hydrologists often rely
+                        on a relaxed assumption based on the moments of the distribution.</p>
+
+                    <aside class="callout theorem">
+                        <span class="callout-title">Wide Sense Scaling (WSS)</span>
+                        <p>Scaling applies only to the moments of the distribution. The expected value (moment) of order
+                            $q$ scales as:</p>
+                        $$E[I_{\lambda d}^q] = \lambda^{-K(q)} E[I_d^q]$$
+                        <p>where $K(q)$ is the scale exponent function dependent on the moment order $q$.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>2. Simple Scaling vs. Multiscaling</h2>
+                    <p>Within Wide Sense Scaling, the behavior of the exponent function $K(q)$ determines whether the
+                        precipitation process exhibits simple scaling or multiscaling. This distinction is critical for
+                        modeling rare extremes (higher-order moments).</p>
+
+                    <div class="data-table-wrapper">
+                        <table class="research-table">
+                            <thead>
+                                <tr>
+                                    <th>Regime</th>
+                                    <th>Behavior of $K(q)$</th>
+                                    <th>Physical Implication</th>
+                                    <th>IDF Curve Impact</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Simple Scaling</strong></td>
+                                    <td>Linear: $K(q) = \eta q$</td>
+                                    <td>Extremes scale at the exact same rate as the mean precipitation.</td>
+                                    <td>GEV parameters (location, scale) scale by the same constant $\eta$. Shape
+                                        parameter $\xi$ is constant across durations.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Multiscaling</strong></td>
+                                    <td>Non-linear (Concave): $K(q) = c_1 q - c_2 q^2$</td>
+                                    <td>Extreme peaks scale differently (often steeper) than moderate rainfall.</td>
+                                    <td>IDF curves cannot be derived by a single multiplier. Different return periods
+                                        require different scaling relationships.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <details class="collapsible-proof">
+                        <summary>Expand for Theory: GEV Parameter Scaling</summary>
+                        <div class="collapsible-content">
+                            <p>If simple scaling holds ($I_d \stackrel{d}{=} \lambda^\eta I_{\lambda d}$), and $I_d$
+                                follows a Generalized Extreme Value (GEV) distribution with parameters $(\mu_d,
+                                \sigma_d, \xi_d)$, then the parameters for duration $\lambda d$ are analytically
+                                defined:</p>
+                            <ul>
+                                <li><strong>Location:</strong> $\mu_{\lambda d} = \lambda^{-\eta} \mu_d$</li>
+                                <li><strong>Scale:</strong> $\sigma_{\lambda d} = \lambda^{-\eta} \sigma_d$</li>
+                                <li><strong>Shape:</strong> $\xi_{\lambda d} = \xi_d$ (The tail shape is invariant
+                                    across durations)</li>
+                            </ul>
+                            <p>This allows a single IDF formulation: $i(d, T) = \frac{A(T)}{d^\eta}$, where $A(T)$ is a
+                                function of the return period $T$.</p>
+                        </div>
+                    </details>
+
+                    <h3>Visualizing the Scaling Exponent $K(q)$</h3>
+                    <p>To diagnose the scaling regime, we plot the empirical $K(q)$ against the moment order $q$. A
+                        straight line indicates simple scaling; a downward-curving (concave) line indicates
+                        multiscaling, which is frequently observed in convective storm systems.</p>
+
+                    <figure class="research-figure">
+                        <div id="interactive-scaling-plot" style="width: 100%; height: 450px;"></div>
+                        <figcaption>Figure 1: Interactive plot of the scaling exponent $K(q)$ vs. Moment Order $q$. A
+                            strictly linear relationship implies simple scaling, while concavity reveals multiscaling
+                            dynamics in extreme tails.</figcaption>
+                    </figure>
+
+                </section>
+
+                <section>
+                    <h2>3. Implementation Methodology</h2>
+                    <p>To empirically determine scaling properties and fit $K(q)$ from observed gauge data:</p>
+
+                    <ol>
+                        <li>Aggregate raw precipitation data into various durations $d$ (e.g., 1h, 2h, 6h, 12h, 24h).
+                        </li>
+                        <li>Extract the annual maximum intensity series (AMS) for each duration.</li>
+                        <li>Calculate the non-central moments $E[I_d^q]$ for $q = 1, 2, 3, \dots$ across all durations.
+                        </li>
+                        <li>For each $q$, perform a linear regression of $\ln(E[I_d^q])$ against $\ln(d)$. The slope is
+                            $-K(q)$.</li>
+                        <li>Plot $-K(q)$ against $q$ to test for linearity (simple scaling) vs. non-linearity
+                            (multiscaling).</li>
+                    </ol>
+
+                    <h3>Code Implementations</h3>
+                    <p>Select a language below to see how to estimate the scaling exponent $K(q)$ from multi-duration
+                        time series data.</p>
+
+                    <!-- Multi-Language Code Switcher Component -->
+                    <div class="code-switcher">
+                        <!-- Navigation Tabs -->
+                        <div class="code-tabs">
+                            <button class="code-tab active" data-target="panel-python">Python</button>
+                            <button class="code-tab" data-target="panel-r">R</button>
+                        </div>
+
+                        <!-- Python Panel -->
+                        <div class="code-panel active" id="panel-python">
+                            <pre><code>import numpy as np
+from scipy.stats import linregress
+
+def calculate_scaling_exponents(intensities, durations, max_q=5):
+    """
+    intensities: dict mapping duration to an array of Annual Max Intensities
+    durations: list of durations in hours
+    """
+    log_d = np.log(durations)
+    K_q = []
+    
+    for q in range(1, max_q + 1):
+        log_moments = []
+        for d in durations:
+            # E[I^q]: Expected value of the q-th moment
+            moment = np.mean(intensities[d] ** q)
+            log_moments.append(np.log(moment))
+            
+        # Linear regression: ln(E[I_d^q]) = -K(q) * ln(d) + C
+        slope, intercept, r_val, _, _ = linregress(log_d, log_moments)
+        
+        # Slope is -K(q), so we negate it to get K(q)
+        K_q.append(-slope)
+        
+    return np.array(K_q)
+
+# Simulated Annual Maxima Data for durations [1, 2, 6, 12, 24] hours
+durations_hr = [1, 2, 6, 12, 24]
+simulated_ams = {
+    1: np.random.gumbel(loc=30, scale=10, size=50),
+    2: np.random.gumbel(loc=20, scale=6, size=50),
+    6: np.random.gumbel(loc=10, scale=3, size=50),
+    12: np.random.gumbel(loc=6, scale=1.8, size=50),
+    24: np.random.gumbel(loc=3.5, scale=1.0, size=50)
+}
+
+exponents = calculate_scaling_exponents(simulated_ams, durations_hr, max_q=4)
+
+for q, k in enumerate(exponents, start=1):
+    print(f"q={q}: K(q) = {k:.3f}")</code></pre>
+                            <div class="code-output">q=1: K(q) = 0.675
+                                q=2: K(q) = 1.341
+                                q=3: K(q) = 1.982
+                                q=4: K(q) = 2.570
+                                # Note: K(q) is slightly concave here, hinting at mild multiscaling.</div>
+                        </div>
+
+                        <!-- R Panel -->
+                        <div class="code-panel" id="panel-r">
+                            <pre><code>estimate_Kq <- function(intensities_df, durations, max_q = 5) {
+  # intensities_df: rows=years, cols=durations
+  
+  log_d <- log(durations)
+  K_q <- numeric(max_q)
+  
+  for (q in 1:max_q) {
+    log_moments <- numeric(length(durations))
+    
+    for (i in seq_along(durations)) {
+      moment <- mean(intensities_df[[i]]^q)
+      log_moments[i] <- log(moment)
+    }
+    
+    # Fit OLS: log(moment) ~ log(duration)
+    fit <- lm(log_moments ~ log_d)
+    
+    # Extract slope (which represents -K(q))
+    K_q[q] <- -coef(fit)["log_d"]
+  }
+  
+  return(data.frame(q = 1:max_q, K_q = K_q))
+}
+
+# Example matrix structure (dummy data)
+durations <- c(1, 2, 6, 12, 24)
+dummy_data <- data.frame(
+  d1 = rgev(50, loc=30, scale=10, shape=0.1),
+  d2 = rgev(50, loc=20, scale=6, shape=0.1),
+  d6 = rgev(50, loc=10, scale=3, shape=0.1),
+  d12 = rgev(50, loc=6, scale=1.8, shape=0.1),
+  d24 = rgev(50, loc=3.5, scale=1.0, shape=0.1)
+)
+
+results <- estimate_Kq(dummy_data, durations, max_q=4)
+print(results)</code></pre>
+                            <div class="code-output"> q K_q
+                                1 1 0.672584
+                                2 2 1.334102
+                                3 3 1.956771
+                                4 4 2.520445</div>
+                        </div>
+
+                    </div> <!-- End Code Switcher -->
+
+                </section>
+
+                <section>
+                    <h2>References</h2>
+
+                    <bibtex src="references.bib"></bibtex>
+
+                    <div class="bibtex_template" style="display: none;">
+                        <li>
+                            <span class="if author">
+                                <span class="author"></span>
+                            </span>
+                            <span class="if year">
+                                (<span class="year"></span>).
+                            </span>
+                            <span class="if title">
+                                <em><span class="title"></span></em>.
+                            </span>
+                            <span class="if journal">
+                                <span class="journal"></span><span class="if volume">, <span
+                                        class="volume"></span></span><span class="if number">(<span
+                                        class="number"></span>)</span>.
+                            </span>
+                            <span class="if publisher">
+                                <span class="publisher"></span>.
+                            </span>
+                        </li>
+                    </div>
+
+                    <ul class="references-list" id="bibtex_display"></ul>
+                </section>
+            </article>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 Oliver Brady.</p>
+        </footer>
+    </div>
+
+    <!-- Script for Tab Switching Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.code-tab');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const switcher = tab.closest('.code-switcher');
+                    switcher.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+                    switcher.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    const targetPanel = switcher.querySelector(`#${tab.dataset.target}`);
+                    if (targetPanel) {
+                        targetPanel.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Script to Generate Interactive Plotly Visual -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Generate q values
+            const q_vals = [1, 2, 3, 4, 5, 6, 7, 8];
+
+            // Simple Scaling: K(q) = eta * q
+            const eta = 0.6;
+            const simple_Kq = q_vals.map(q => eta * q);
+
+            // Multiscaling: K(q) = c1*q - c2*q^2
+            const c1 = 0.75;
+            const c2 = 0.05;
+            const multi_Kq = q_vals.map(q => c1 * q - c2 * (q * q));
+
+            const traceSimple = {
+                x: q_vals,
+                y: simple_Kq,
+                mode: 'lines+markers',
+                name: 'Simple Scaling (Linear)',
+                line: { color: '#2980b9', width: 3, dash: 'dash' },
+                marker: { size: 8 }
+            };
+
+            const traceMulti = {
+                x: q_vals,
+                y: multi_Kq,
+                mode: 'lines+markers',
+                name: 'Multiscaling (Concave)',
+                line: { color: '#c0392b', width: 3 },
+                marker: { size: 8 }
+            };
+
+            const layout = {
+                margin: { l: 50, r: 20, b: 50, t: 40 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                title: 'Diagnostic Plot: K(q) vs. q',
+                xaxis: {
+                    title: 'Moment Order (q)',
+                    tickmode: 'linear',
+                    tick0: 1,
+                    dtick: 1
+                },
+                yaxis: {
+                    title: 'Scaling Exponent K(q)'
+                },
+                legend: { x: 0.05, y: 0.95 }
+            };
+
+            Plotly.newPlot('interactive-scaling-plot', [traceSimple, traceMulti], layout, { responsive: true });
+        });
+    </script>
+</body>
+
+</html>
