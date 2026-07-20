@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../images/OB.png" type="image/png">
+    <title>Data Assimilation | Oliver Brady</title>
+
+    <!-- External Shared Stylesheet -->
+    <link rel="stylesheet" href="../topic_template.css">
+
+    <!-- MathJax v3 Configuration for LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- Plotly.js for Interactive Visuals -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+
+    <!-- BibTeX Client-Side Parser -->
+    <script src="https://cdn.jsdelivr.net/gh/pcooksey/bibtex-js@1.0.0/src/bibtex_js.min.js"></script>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <!-- Top Navbar with Inline Back Arrow -->
+        <header class="site-header">
+            <a href="../modeling.html" class="back-arrow" aria-label="Back to Methodology Database">❮</a>
+            <a href="../../index.html" class="header-link">
+                <img src="../../images/OB.png" alt="Return to Home" class="profile-portrait">
+            </a>
+            <div class="name-group">
+                <h2>Data Assimilation</h2>
+                <p>Integrating Imperfect Observations with Dynamic Models</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <article class="research-article">
+
+                <section>
+                    <aside class="callout context">
+                        <span class="callout-title">Commercial Context & Application</span>
+                        <p>In Numerical Weather Prediction (NWP), oceanography, and hydrological forecasting,
+                            physics-based models drift rapidly into chaos due to the "butterfly effect" (sensitive
+                            dependence on initial conditions). Data Assimilation (DA) continuously corrects the model's
+                            trajectory by fusing its physical forecasts with incoming satellite, radar, and gauge
+                            observations. It mathematically weights the model's physical constraints against the
+                            real-world measurements based on their respective uncertainties.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>1. Fundamental Theory</h2>
+                    <p>At its core, Data Assimilation is an application of Bayesian inference. We want to find the most
+                        probable state of a system given our prior knowledge (the model's forecast) and our new evidence
+                        (the observations).</p>
+
+                    <aside class="callout theorem">
+                        <span class="callout-title">The DA State Variables</span>
+                        <ul>
+                            <li><strong>Background $x_b$:</strong> The prior state estimate from the physical model.
+                            </li>
+                            <li><strong>Observation $y$:</strong> The vector of real-world measurements.</li>
+                            <li><strong>Analysis $x_a$:</strong> The posterior, optimal state estimate.</li>
+                            <li><strong>Observation Operator $H$:</strong> A mapping function that converts the model
+                                state space into observation space (e.g., converting model temperature/humidity into
+                                synthetic satellite radiances).</li>
+                        </ul>
+                    </aside>
+
+                    <p>Mathematically, we seek the analysis state $x_a$ that minimizes a cost function $J(x)$, which
+                        penalizes the distance from both the background forecast and the observations, weighted by their
+                        respective error covariance matrices ($B$ and $R$).</p>
+
+                    <details class="collapsible-proof">
+                        <summary>Expand for Theory: The 3D-Var Cost Function</summary>
+                        <div class="collapsible-content">
+                            <p>In Three-Dimensional Variational assimilation (3D-Var), the optimal state $x_a$ minimizes
+                                the scalar cost function $J(x)$:</p>
+                            $$J(x) = \frac{1}{2}(x - x_b)^T B^{-1} (x - x_b) + \frac{1}{2}(y - H(x))^T R^{-1} (y -
+                            H(x))$$
+                            <p>Where:</p>
+                            <ul>
+                                <li>$B$ is the Background Error Covariance matrix (how much we trust the model, and how
+                                    errors are spatially correlated).</li>
+                                <li>$R$ is the Observation Error Covariance matrix (instrument noise and representation
+                                    error).</li>
+                            </ul>
+                            <p>Taking the gradient $\nabla J(x) = 0$ yields the analytical solution for linear $H$.</p>
+                        </div>
+                    </details>
+                </section>
+
+                <section>
+                    <h2>2. Methodological Families</h2>
+                    <p>Data assimilation techniques are broadly split into two philosophical camps: sequential methods
+                        (which update the state iteratively) and variational methods (which minimize a cost function
+                        globally over space and/or time).</p>
+
+                    <div class="data-table-wrapper">
+                        <table class="research-table">
+                            <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>Type</th>
+                                    <th>Mechanism</th>
+                                    <th>Strengths & Weaknesses</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>3D-Var</strong></td>
+                                    <td>Variational</td>
+                                    <td>Minimizes spatial cost function at a single analysis time. Assumes static $B$
+                                        matrix.</td>
+                                    <td>Computationally cheap. Fails to account for how errors evolve dynamically over
+                                        time.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>4D-Var</strong></td>
+                                    <td>Variational</td>
+                                    <td>Minimizes cost function over a time window using the tangent linear and adjoint
+                                        models.</td>
+                                    <td>Gold standard for NWP (e.g., ECMWF). Extremely computationally expensive to
+                                        maintain adjoint codes.</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>EnKF</strong> (Ensemble Kalman Filter)</td>
+                                    <td>Sequential</td>
+                                    <td>Runs an ensemble of models to dynamically estimate the background error
+                                        covariance $B$.</td>
+                                    <td>Flow-dependent errors; easy to implement without adjoint models. Prone to
+                                        sampling error (requires covariance localization).</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Visualizing the Analysis Update</h3>
+                    <p>In a 1D scalar case, DA is the multiplication of two Gaussian probability distributions: the
+                        Background (blue) and the Observation (red). The resulting Analysis (green) represents our
+                        updated belief. Notice that the Analysis is narrower (more certain) than both the model and the
+                        observation.</p>
+
+                    <figure class="research-figure">
+                        <div id="interactive-da-plot" style="width: 100%; height: 450px;"></div>
+                        <figcaption>Figure 1: 1D Gaussian Data Assimilation. The Analysis curve represents the optimal
+                            estimate, balancing the Background and the Observation based on their variances.
+                        </figcaption>
+                    </figure>
+
+                    <aside class="callout warning">
+                        <span class="callout-title">The Danger of "Perfect" Observations</span>
+                        <p>If we assume an observation has zero error ($R \to 0$), the model state will perfectly match
+                            the observation. While this sounds good, inserting a discontinuous shock into a dynamic
+                            fluid model creates violent, unphysical gravity waves that destroy the forecast. The $B$
+                            matrix prevents this by ensuring updates respect physical balance and spatial smoothness.
+                        </p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>3. Implementation Methodology</h2>
+                    <p>In linear regimes, the minimum of the cost function is equivalent to the Kalman Filter update
+                        equation. The update depends heavily on the <strong>Kalman Gain</strong> ($K$), which decides
+                        how much weight to give the new observation.</p>
+
+                    $$K = B H^T (H B H^T + R)^{-1}$$
+                    $$x_a = x_b + K(y - H x_b)$$
+
+                    <h3>Code Implementations</h3>
+                    <p>Select a language below to see a 1D scalar implementation of the Analysis update step.</p>
+
+                    <!-- Multi-Language Code Switcher Component -->
+                    <div class="code-switcher">
+                        <!-- Navigation Tabs -->
+                        <div class="code-tabs">
+                            <button class="code-tab active" data-target="panel-python">Python</button>
+                            <button class="code-tab" data-target="panel-r">R</button>
+                        </div>
+
+                        <!-- Python Panel -->
+                        <div class="code-panel active" id="panel-python">
+                            <pre><code>import numpy as np
+
+def kalman_analysis_update(x_b, B, y, R, H=1.0):
+    """
+    Performs a 1D Data Assimilation Analysis update.
+    
+    Parameters:
+    x_b : float : Background state estimate
+    B   : float : Background error variance
+    y   : float : Observation
+    R   : float : Observation error variance
+    H   : float : Observation operator (default linear 1:1)
+    """
+    # 1. Calculate the Innovation (Observation minus Background)
+    innovation = y - (H * x_b)
+    
+    # 2. Calculate the Kalman Gain
+    # K = B * H^T * (H * B * H^T + R)^-1
+    K = (B * H) / ((H * B * H) + R)
+    
+    # 3. Calculate Analysis State
+    x_a = x_b + (K * innovation)
+    
+    # 4. Calculate Analysis Error Variance
+    # P_a = (I - K * H) * B
+    P_a = (1.0 - K * H) * B
+    
+    return x_a, P_a, K
+
+# Scenario:
+# Model predicts temperature is 20.0 C (Var = 2.0)
+# Thermometer reads 22.0 C (Var = 0.5)
+x_b, B = 20.0, 2.0
+y, R = 22.0, 0.5
+
+x_a, P_a, K = kalman_analysis_update(x_b, B, y, R)
+
+print(f"Kalman Gain: {K:.3f}")
+print(f"Analysis State (x_a): {x_a:.2f} °C")
+print(f"Analysis Variance (P_a): {P_a:.3f}")</code></pre>
+                            <div class="code-output">Kalman Gain: 0.800
+                                Analysis State (x_a): 21.60 °C
+                                Analysis Variance (P_a): 0.400
+                                # Notice the variance drops below both B (2.0) and R (0.5), to 0.400.</div>
+                        </div>
+
+                        <!-- R Panel -->
+                        <div class="code-panel" id="panel-r">
+                            <pre><code>kalman_analysis_update <- function(x_b, B, y, R, H = 1.0) {
+  
+  # 1. Calculate the Innovation
+  innovation <- y - (H * x_b)
+  
+  # 2. Calculate the Kalman Gain
+  K <- (B * H) / ((H * B * H) + R)
+  
+  # 3. Calculate Analysis State
+  x_a <- x_b + (K * innovation)
+  
+  # 4. Calculate Analysis Error Variance
+  P_a <- (1.0 - K * H) * B
+  
+  return(list(x_a = x_a, P_a = P_a, K = K))
+}
+
+# Scenario:
+# Model predicts temperature is 20.0 C (Var = 2.0)
+# Thermometer reads 22.0 C (Var = 0.5)
+res <- kalman_analysis_update(x_b = 20.0, B = 2.0, y = 22.0, R = 0.5)
+
+cat(sprintf("Kalman Gain: %.3f\n", res$K))
+cat(sprintf("Analysis State (x_a): %.2f °C\n", res$x_a))
+cat(sprintf("Analysis Variance (P_a): %.3f\n", res$P_a))</code></pre>
+                            <div class="code-output">Kalman Gain: 0.800
+                                Analysis State (x_a): 21.60 °C
+                                Analysis Variance (P_a): 0.400</div>
+                        </div>
+
+                    </div> <!-- End Code Switcher -->
+
+                </section>
+
+                <section>
+                    <h2>References</h2>
+
+                    <bibtex src="references.bib"></bibtex>
+
+                    <div class="bibtex_template" style="display: none;">
+                        <li>
+                            <span class="if author">
+                                <span class="author"></span>
+                            </span>
+                            <span class="if year">
+                                (<span class="year"></span>).
+                            </span>
+                            <span class="if title">
+                                <em><span class="title"></span></em>.
+                            </span>
+                            <span class="if journal">
+                                <span class="journal"></span><span class="if volume">, <span
+                                        class="volume"></span></span><span class="if number">(<span
+                                        class="number"></span>)</span>.
+                            </span>
+                            <span class="if publisher">
+                                <span class="publisher"></span>.
+                            </span>
+                        </li>
+                    </div>
+
+                    <ul class="references-list" id="bibtex_display"></ul>
+                </section>
+            </article>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 Oliver Brady.</p>
+        </footer>
+    </div>
+
+    <!-- Script for Tab Switching Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.code-tab');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const switcher = tab.closest('.code-switcher');
+                    switcher.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+                    switcher.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    const targetPanel = switcher.querySelector(`#${tab.dataset.target}`);
+                    if (targetPanel) {
+                        targetPanel.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Script to Generate Interactive Plotly Visual -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Gaussian probability density function
+            function gaussian(x, mu, sigma) {
+                const coeff = 1.0 / (sigma * Math.sqrt(2 * Math.PI));
+                const exponent = -Math.pow(x - mu, 2) / (2 * Math.pow(sigma, 2));
+                return coeff * Math.exp(exponent);
+            }
+
+            // Setup parameters
+            const mu_b = 20.0;    // Background mean
+            const var_b = 2.0;    // Background variance
+            const sig_b = Math.sqrt(var_b);
+
+            const mu_o = 22.0;    // Observation mean
+            const var_o = 0.5;    // Observation variance
+            const sig_o = Math.sqrt(var_o);
+
+            // Calculate Analysis Parameters (Optimal Estimate)
+            // K = B / (B + R)
+            const K = var_b / (var_b + var_o);
+            const mu_a = mu_b + K * (mu_o - mu_b);
+            const var_a = (1 - K) * var_b;
+            const sig_a = Math.sqrt(var_a);
+
+            // Generate Data Arrays
+            const x_vals = [];
+            const y_b = [];
+            const y_o = [];
+            const y_a = [];
+
+            for (let i = 15; i <= 25; i += 0.05) {
+                x_vals.push(i);
+                y_b.push(gaussian(i, mu_b, sig_b));
+                y_o.push(gaussian(i, mu_o, sig_o));
+                y_a.push(gaussian(i, mu_a, sig_a));
+            }
+
+            const traceBackground = {
+                x: x_vals,
+                y: y_b,
+                mode: 'lines',
+                name: 'Background (Model)',
+                line: { color: '#2980b9', width: 3 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(41, 128, 185, 0.1)'
+            };
+
+            const traceObservation = {
+                x: x_vals,
+                y: y_o,
+                mode: 'lines',
+                name: 'Observation',
+                line: { color: '#c0392b', width: 3 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(192, 57, 43, 0.1)'
+            };
+
+            const traceAnalysis = {
+                x: x_vals,
+                y: y_a,
+                mode: 'lines',
+                name: 'Analysis (Updated State)',
+                line: { color: '#27ae60', width: 4 },
+                fill: 'tozeroy',
+                fillcolor: 'rgba(39, 174, 96, 0.3)'
+            };
+
+            const layout = {
+                margin: { l: 40, r: 20, b: 40, t: 40 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                title: 'Data Assimilation: Combining Probabilities',
+                xaxis: { title: 'State Variable (e.g., Temperature °C)' },
+                yaxis: { title: 'Probability Density', showticklabels: false },
+                legend: { x: 0.05, y: 0.95 },
+                hovermode: 'x unified'
+            };
+
+            Plotly.newPlot('interactive-da-plot', [traceBackground, traceObservation, traceAnalysis], layout, { responsive: true });
+        });
+    </script>
+</body>
+
+</html>

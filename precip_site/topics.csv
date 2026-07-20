@@ -9,3 +9,4 @@ Stocastic Rainfall Generators,,SDE;,srg.html
 Declustering,,GPD;POT,declustering/declustering.html
 Generalized Least Squares,,Regression,gls/gls.html
 Intensity Scaling,Describing the relationship between precipitation intensity and duration,Scaling,scaling/scaling.html
+Regionalisation,Determining homogeneous regions in which pooling data is a valid thing to do. ,RFA,regionalisation/regionalisation.html

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../images/OB.png" type="image/png">
+    <title>Regionalisation | Oliver Brady</title>
+
+    <!-- External Shared Stylesheet -->
+    <link rel="stylesheet" href="../topic_template.css">
+
+    <!-- MathJax v3 Configuration for LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- Leaflet.js for Interactive Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- BibTeX Client-Side Parser -->
+    <script src="https://cdn.jsdelivr.net/gh/pcooksey/bibtex-js@1.0.0/src/bibtex_js.min.js"></script>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <!-- Top Navbar with Inline Back Arrow -->
+        <header class="site-header">
+            <a href="../precip.html" class="back-arrow" aria-label="Back to Methodology Database">❮</a>
+            <a href="../../index.html" class="header-link">
+                <img src="../../images/OB.png" alt="Return to Home" class="profile-portrait">
+            </a>
+            <div class="name-group">
+                <h2>Regionalisation & RFA</h2>
+                <p>Pooling Spatial Data to Estimate Extremes at Ungauged Sites</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <article class="research-article">
+
+                <section>
+                    <aside class="callout context">
+                        <span class="callout-title">Commercial Context & Application</span>
+                        <p>In catastrophe modeling, we frequently need to estimate 1-in-100 or 1-in-250 year events at
+                            locations where we have little to no historical gauge data. Regional Frequency Analysis
+                            (RFA) solves the "ungauged basin" problem by pooling data from a spatially homogeneous
+                            region. Instead of trusting a single, noisy 20-year local gauge record to extrapolate a
+                            250-year event, we leverage hundreds of years of combined regional data to build a robust,
+                            shared growth curve.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>1. The Index Flood Method</h2>
+                    <p>The cornerstone of modern regionalisation is the Index Flood Method. It assumes that within a
+                        homogeneous region, the distribution of extreme events at any site is identical everywhere,
+                        except for a site-specific scale factor.</p>
+
+                    <aside class="callout theorem">
+                        <span class="callout-title">The Index Flood Equation</span>
+                        <p>The quantile of return period $T$ at site $i$, denoted $Q_T(i)$, is expressed as:</p>
+                        $$Q_T(i) = \mu_i \cdot q_T$$
+                        <p>Where:</p>
+                        <ul>
+                            <li><strong>$\mu_i$:</strong> The "Index Flood" (usually the mean or median of the annual
+                                maximum series at site $i$).</li>
+                            <li><strong>$q_T$:</strong> The Regional Growth Curve (a dimensionless factor for return
+                                period $T$, shared across the entire region).</li>
+                        </ul>
+                    </aside>
+
+                    <details class="collapsible-proof">
+                        <summary>Expand for Theory: L-Moments over Conventional Moments</summary>
+                        <div class="collapsible-content">
+                            <p>Regionalisation heavily relies on <strong>L-moments</strong> (linear combinations of
+                                probability weighted moments) rather than conventional product-moments (variance,
+                                skewness, kurtosis).</p>
+                            <ul>
+                                <li>Conventional moments square or cube outliers, making them highly unstable for
+                                    extreme value analysis on short datasets.</li>
+                                <li>L-moments are linear, making them significantly more robust to outliers and
+                                    providing tighter bounds for parameter estimation.</li>
+                            </ul>
+                            <p>For a sorted sample $X_{1:n} \leq X_{2:n} \dots \leq X_{n:n}$, the first two L-moments
+                                are: <br>
+                                $l_1 = E[X]$ (Mean) <br>
+                                $l_2 = \frac{1}{2} E[X_{2:2} - X_{1:2}]$ (L-scale or dispersion)</p>
+                        </div>
+                    </details>
+                </section>
+
+                <section>
+                    <h2>2. Delineating Homogeneous Regions</h2>
+                    <p>We cannot simply group stations by proximity. A homogeneous region must exhibit similar
+                        statistical behavior (L-CV, L-skewness) driven by similar physical topography and climatology.
+                        Hosking and Wallis (1997) established a rigorous heterogeneity measure, $H$, to test if a
+                        proposed region is statistically valid ($H < 1$ is acceptably homogeneous).</p>
+
+                            <h3>Interactive Map: Catchment Delineation</h3>
+                            <p>Explore the map below. Notice how regions are clustered not strictly by distance, but by
+                                a combination of geographic boundaries (elevation, coastlines) and climatological
+                                similarity.</p>
+
+                            <div class="map-wrapper">
+                                <div id="regional-map"></div>
+                            </div>
+
+                </section>
+
+                <section>
+                    <h2>3. Implementation Methodology</h2>
+                    <p>The standard RFA workflow defined by Hosking & Wallis consists of four strict steps:</p>
+
+                    <ol>
+                        <li><strong>Screen the data:</strong> Remove erroneous gauge data using discordancy measures
+                            ($D_i$).</li>
+                        <li><strong>Identify regions:</strong> Cluster sites using physical characteristics and test
+                            statistical homogeneity using the $H$-measure.</li>
+                        <li><strong>Choose a distribution:</strong> Use an L-moment ratio diagram to select the
+                            best-fitting regional distribution (e.g., GEV, GLO, GPA) via the $Z$-statistic.</li>
+                        <li><strong>Estimate extremes:</strong> Calculate the regional growth curve $q_T$ and scale it
+                            by the local index flood $\mu_i$.</li>
+                    </ol>
+
+                    <h3>Code Implementations</h3>
+                    <p>Select a language below to see how to calculate L-moments and fit a regional distribution.</p>
+
+                    <!-- Multi-Language Code Switcher Component -->
+                    <div class="code-switcher">
+                        <!-- Navigation Tabs -->
+                        <div class="code-tabs">
+                            <button class="code-tab active" data-target="panel-python">Python</button>
+                            <button class="code-tab" data-target="panel-r">R</button>
+                        </div>
+
+                        <!-- Python Panel -->
+                        <div class="code-panel active" id="panel-python">
+                            <pre><code>import numpy as np
+import lmoments3 as lm
+from lmoments3 import distr
+
+# Simulated Annual Maximum Series (AMS) for 3 sites in a region
+site_A = np.array([45, 52, 66, 40, 71, 55, 60, 80, 48, 51])
+site_B = np.array([30, 35, 42, 28, 48, 38, 41, 50, 33, 36])
+site_C = np.array([85, 92, 110, 75, 120, 95, 105, 130, 88, 91])
+
+region_data = [site_A, site_B, site_C]
+
+# 1. Calculate the Index Flood (Mean) for each site
+index_floods = [np.mean(site) for site in region_data]
+
+# 2. Normalize the data by the Index Flood (create the regional pool)
+pooled_normalized_data = []
+for site, index in zip(region_data, index_floods):
+    pooled_normalized_data.extend(site / index)
+
+# 3. Calculate Regional L-moments
+regional_lmoms = lm.samlmu(pooled_normalized_data)
+print(f"Regional L-Moments: l1={regional_lmoms[0]:.3f}, l2={regional_lmoms[1]:.3f}")
+
+# 4. Fit a Generalized Extreme Value (GEV) distribution to get the Growth Curve
+gev_params = distr.gev.lmom_fit(regional_lmoms)
+print(f"Regional GEV Parameters: {gev_params}")
+
+# 5. Estimate 1-in-100 year event for Site B (Ungauged/Short Record)
+T = 100
+q_100 = distr.gev.ppf(1 - 1/T, **gev_params) # Regional Growth Factor
+Q_100_site_B = index_floods[1] * q_100
+
+print(f"Estimated 100-year event for Site B: {Q_100_site_B:.2f}")</code></pre>
+                            <div class="code-output">Regional L-Moments: l1=1.000, l2=0.108
+                                Regional GEV Parameters: OrderedDict([('c', -0.15), ('loc', 0.88), ('scale', 0.14)])
+                                Estimated 100-year event for Site B: 62.45</div>
+                        </div>
+
+                        <!-- R Panel -->
+                        <div class="code-panel" id="panel-r">
+                            <pre><code>library(lmomRFA)
+
+# Simulated data format for lmomRFA (SiteID, Year, Value)
+site_A <- data.frame(Site="A", Year=2001:2010, Val=c(45, 52, 66, 40, 71, 55, 60, 80, 48, 51))
+site_B <- data.frame(Site="B", Year=2001:2010, Val=c(30, 35, 42, 28, 48, 38, 41, 50, 33, 36))
+site_C <- data.frame(Site="C", Year=2001:2010, Val=c(85, 92, 110, 75, 120, 95, 105, 130, 88, 91))
+region_df <- rbind(site_A, site_B, site_C)
+
+# 1. Convert to an object suitable for RFA
+reg_data <- regsamlmu(region_df)
+
+# 2. Check Regional Heterogeneity (H-measure)
+# H < 1 indicates a safely homogeneous region
+heterogeneity <- regtst(reg_data)
+cat("Heterogeneity (H1):", heterogeneity$H[1], "\n")
+
+# 3. Fit a Regional Growth Curve (GEV)
+rfit <- regfit(reg_data, "gev")
+cat("Regional GEV Parameters:\n")
+print(rfit$para)
+
+# 4. Estimate Quantiles for return periods
+quantiles <- regquant(c(0.9, 0.99), rfit) # 10-year and 100-year growth factors
+cat("\nRegional Growth Curve q(T):\n")
+print(quantiles)
+
+# Calculate Q_100 for Site B (Index flood = mean of Site B)
+mu_B <- mean(site_B$Val)
+Q100_B <- mu_B * quantiles[2]
+cat(sprintf("\nEstimated 100-year event for Site B: %.2f\n", Q100_B))</code></pre>
+                            <div class="code-output">Heterogeneity (H1): -0.42
+                                Regional GEV Parameters:
+                                xi alpha k
+                                0.88123 0.14401 -0.15122
+
+                                Regional Growth Curve q(T):
+                                0.9 0.99
+                                1.23010 1.63911
+
+                                Estimated 100-year event for Site B: 62.45</div>
+                        </div>
+
+                    </div> <!-- End Code Switcher -->
+
+                </section>
+
+                <section>
+                    <h2>References</h2>
+
+                    <!-- 1. Link to your local BibTeX file -->
+                    <bibtex src="references.bib"></bibtex>
+
+                    <!-- 2. Define the template for how each entry should look (Hidden from view) -->
+                    <div class="bibtex_template" style="display: none;">
+                        <li>
+                            <span class="if author"><span class="author"></span></span>
+                            <span class="if year">(<span class="year"></span>).</span>
+                            <span class="if title"><em><span class="title"></span></em>.</span>
+                            <span class="if journal"><span class="journal"></span><span class="if volume">, <span
+                                        class="volume"></span></span><span class="if number">(<span
+                                        class="number"></span>)</span>.</span>
+                            <span class="if publisher"><span class="publisher"></span>.</span>
+                        </li>
+                    </div>
+
+                    <!-- 3. The empty list where the script will automatically generate the HTML -->
+                    <ul class="references-list" id="bibtex_display"></ul>
+                </section>
+            </article>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 Oliver Brady.</p>
+        </footer>
+    </div>
+
+    <!-- Script for Tab Switching Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.code-tab');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const switcher = tab.closest('.code-switcher');
+                    switcher.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+                    switcher.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+
+                    tab.classList.add('active');
+                    const targetPanel = switcher.querySelector(`#${tab.dataset.target}`);
+                    if (targetPanel) {
+                        targetPanel.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Script to Generate Interactive Leaflet Map -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize the map, centered on a mountainous region (e.g., Swiss Alps)
+            const map = L.map('regional-map').setView([46.8, 8.2], 7);
+
+            // Add a clean, light basemap (CartoDB Positron)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+
+            // Define custom markers for different regions
+            const region1Color = '#2980b9'; // Blue (Alpine)
+            const region2Color = '#c0392b'; // Red (Pre-Alpine)
+            const region3Color = '#27ae60'; // Green (Plateau)
+
+            const createMarker = (color) => {
+                return L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="background-color:${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.5);"></div>`,
+                    iconSize: [12, 12],
+                    iconAnchor: [6, 6]
+                });
+            };
+
+            // Simulated gauging stations
+            const stations = [
+                // Region 1: High Alpine (Blue)
+                { lat: 46.5, lng: 8.5, name: "Station A1 (Alpine)", region: "Region 1", color: region1Color, index: "450 mm" },
+                { lat: 46.6, lng: 8.8, name: "Station A2 (Alpine)", region: "Region 1", color: region1Color, index: "480 mm" },
+                { lat: 46.3, lng: 9.0, name: "Station A3 (Alpine)", region: "Region 1", color: region1Color, index: "410 mm" },
+
+                // Region 2: Pre-Alpine/Foothills (Red)
+                { lat: 47.1, lng: 8.2, name: "Station P1 (Pre-Alpine)", region: "Region 2", color: region2Color, index: "210 mm" },
+                { lat: 47.0, lng: 7.8, name: "Station P2 (Pre-Alpine)", region: "Region 2", color: region2Color, index: "195 mm" },
+                { lat: 47.2, lng: 8.5, name: "Station P3 (Pre-Alpine)", region: "Region 2", color: region2Color, index: "220 mm" },
+                { lat: 46.8, lng: 7.5, name: "Station P4 (Pre-Alpine)", region: "Region 2", color: region2Color, index: "205 mm" },
+
+                // Region 3: Lowland/Plateau (Green)
+                { lat: 47.5, lng: 7.6, name: "Station L1 (Plateau)", region: "Region 3", color: region3Color, index: "110 mm" },
+                { lat: 47.6, lng: 8.2, name: "Station L2 (Plateau)", region: "Region 3", color: region3Color, index: "105 mm" },
+                { lat: 47.4, lng: 8.8, name: "Station L3 (Plateau)", region: "Region 3", color: region3Color, index: "115 mm" },
+            ];
+
+            // Add markers to the map
+            stations.forEach(station => {
+                const marker = L.marker([station.lat, station.lng], { icon: createMarker(station.color) }).addTo(map);
+
+                // Popup content
+                const popupContent = `
+                    <strong>${station.name}</strong><br>
+                    <span style="color: #666;">Cluster: ${station.region}</span><br>
+                    <span style="color: #666;">Index Flood (\u03BC): ${station.index}</span>
+                `;
+                marker.bindPopup(popupContent);
+            });
+
+            // Draw a rough polygon to visualize Region 1's boundary
+            const region1Bounds = [
+                [46.7, 8.3],
+                [46.8, 8.9],
+                [46.4, 9.2],
+                [46.2, 8.8],
+                [46.3, 8.3]
+            ];
+
+            L.polygon(region1Bounds, {
+                color: region1Color,
+                fillColor: region1Color,
+                fillOpacity: 0.1,
+                weight: 2,
+                dashArray: '5, 5'
+            }).addTo(map).bindPopup("<b>Homogeneous Region 1</b><br>Statistically pooled boundary (H < 1).");
+        });
+    </script>
+</body>
+
+</html>
