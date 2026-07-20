@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../../images/OB.png" type="image/png">
+    <title>Declustering | Oliver Brady</title>
+
+    <!-- External Shared Stylesheet -->
+    <link rel="stylesheet" href="../topic_template.css">
+
+    <!-- MathJax v3 Configuration for LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                tags: 'ams'
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+    <!-- Plotly.js for Interactive Visuals -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+
+    <!-- BibTeX Client-Side Parser -->
+    <script src="https://cdn.jsdelivr.net/gh/pcooksey/bibtex-js@1.0.0/src/bibtex_js.min.js"></script>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <!-- Top Navbar with Inline Back Arrow -->
+        <header class="site-header">
+            <a href="../precip.html" class="back-arrow" aria-label="Back to Methodology Database">❮</a>
+            <a href="../../index.html" class="header-link">
+                <img src="../../images/OB.png" alt="Return to Home" class="profile-portrait">
+            </a>
+            <div class="name-group">
+                <h2>Declustering</h2>
+                <p>Identifying Independent Extremes in Time Series Data</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <article class="research-article">
+
+                <section>
+                    <aside class="callout context">
+                        <span class="callout-title">Commercial Context & Application</span>
+                        <p>In catastrophe modeling, extreme events like windstorms or floods rarely happen in isolation.
+                            A single slow-moving frontal system might cause heavy rainfall across several consecutive
+                            days. If we apply Extreme Value Theory (EVT) to every daily exceedance, we violate the
+                            foundational assumption that our data points are independent and identically distributed
+                            (i.i.d.). Declustering algorithms filter these dependent temporal clusters into single,
+                            independent peak events.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>1. Fundamental Theory</h2>
+                    <p>The Peaks Over Threshold (POT) approach involves selecting a high threshold $u$ and modeling the
+                        exceedances above this threshold. According to the Pickands-Balkema-de Haan theorem, as the
+                        threshold approaches the absolute maximum, the distribution of these exceedances converges to
+                        the Generalized Pareto Distribution (GPD).</p>
+
+                    <aside class="callout theorem">
+                        <span class="callout-title">The Generalized Pareto Distribution (GPD)</span>
+                        <p>For a random variable $X$ and a high threshold $u$, the conditional excess distribution
+                            $F_u(x) = P(X - u \leq x \mid X > u)$ can be approximated by the GPD:</p>
+                        $$G(x) = 1 - \left(1 + \frac{\xi x}{\sigma}\right)^{-1/\xi}$$
+                        <p>Where $x \geq 0$, $\sigma > 0$ is the scale parameter, and $\xi$ is the shape parameter
+                            dictating the tail behavior.</p>
+                    </aside>
+
+                    <details class="collapsible-proof">
+                        <summary>Expand for Theory: The Extremal Index ($\theta$)</summary>
+                        <div class="collapsible-content">
+                            <p>To quantify the degree of temporal clustering in a time series, extreme value theory
+                                relies on the <em>extremal index</em>, denoted as $\theta$. It is defined on the
+                                interval $\theta \in (0, 1]$.</p>
+                            <ul>
+                                <li><strong>$\theta = 1$:</strong> Indicates perfectly independent extremes (no
+                                    clustering).</li>
+                                <li><strong>$\theta < 1$:</strong> Indicates clustering. The reciprocal $1/\theta$
+                                            approximately represents the mean cluster size.</li>
+                            </ul>
+                            <p>For a sequence of dependent random variables, the probability of the maximum being below
+                                a threshold $z$ is $P(M_n \leq z) \approx [F(z)]^{n\theta}$, linking the marginal
+                                distribution $F(z)$ to the extreme behavior of the clustered process.</p>
+                        </div>
+                    </details>
+                </section>
+
+                <section>
+                    <h2>2. Identifying Independent Peaks</h2>
+                    <p>To satisfy the i.i.d. requirement for fitting the GPD, we must "decluster" the data. The most
+                        common algorithmic approach in hydrology and meteorology is the <em>Runs Method</em>, which
+                        defines a cluster as a series of exceedances separated by fewer than $r$ consecutive
+                        non-exceedances.</p>
+
+                    <div class="data-table-wrapper">
+                        <table class="research-table">
+                            <thead>
+                                <tr>
+                                    <th>Declustering Method</th>
+                                    <th>Core Mechanism</th>
+                                    <th>Advantages</th>
+                                    <th>Disadvantages</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Runs Method</strong></td>
+                                    <td>Groups exceedances separated by fewer than $r$ observations below the threshold
+                                        $u$.</td>
+                                    <td>Simple to implement; widely accepted in hydrology.</td>
+                                    <td>Highly sensitive to the subjective choice of the run length $r$.</td>
+                                </tr>
+                                <tr>
+                                    <td>Blocks Method</td>
+                                    <td>Splits data into contiguous temporal blocks and extracts the maximum from each.
+                                    </td>
+                                    <td>Avoids defining a run length; easier statistical inference.</td>
+                                    <td>Can miss multiple true extremes if they fall within the same block.</td>
+                                </tr>
+                                <tr>
+                                    <td>Physical Tracking</td>
+                                    <td>Uses meteorological parameters (e.g., storm footprints) to isolate events.</td>
+                                    <td>Physically robust; eliminates statistical guesswork.</td>
+                                    <td>Requires complex, multidimensional covariate data.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h3>Visualizing the Runs Method</h3>
+                    <p>Below is a simulation of a time series with temporal clustering. Exceedances belonging to the
+                        same weather event are grouped, and only the maximum value (the peak) of each cluster is
+                        retained for the GPD fit.</p>
+
+                    <figure class="research-figure">
+                        <div id="interactive-declustering-plot" style="width: 100%; height: 450px;"></div>
+                        <figcaption>Figure 1: Interactive Time Series showing Threshold Exceedances and Declustered
+                            Peaks (Runs Method). Scroll to zoom, click and drag to pan.</figcaption>
+                    </figure>
+
+                    <aside class="callout warning">
+                        <span class="callout-title">Key Consideration for Catastrophe Models</span>
+                        <p>Setting the run length $r$ too low will treat a single sprawling storm as multiple
+                            independent events, artificially inflating the modeled frequency of extremes. Setting it too
+                            high will erase distinct storms that happen to strike in close succession.</p>
+                    </aside>
+                </section>
+
+                <section>
+                    <h2>3. Implementation Methodology</h2>
+                    <p>To implement POT declustering in practice, the process generally follows these discrete steps:
+                    </p>
+
+                    <ol>
+                        <li>Determine an appropriate threshold $u$ using mean residual life plots or threshold stability
+                            plots.</li>
+                        <li>Apply a declustering algorithm (like the Runs Method) with a domain-appropriate gap length
+                            $r$.</li>
+                        <li>Extract the maximum value from each identified cluster.</li>
+                        <li>Fit the Generalized Pareto Distribution (GPD) to the remaining independent peaks via Maximum
+                            Likelihood Estimation (MLE) or Probability Weighted Moments (PWM).</li>
+                    </ol>
+
+                    <h3>Code Implementations</h3>
+                    <p>Select a language below to see how to execute a runs declustering algorithm to isolate
+                        independent peaks.</p>
+
+                    <!-- Multi-Language Code Switcher Component -->
+                    <div class="code-switcher">
+                        <!-- Navigation Tabs -->
+                        <div class="code-tabs">
+                            <button class="code-tab active" data-target="panel-python">Python</button>
+                            <button class="code-tab" data-target="panel-r">R</button>
+                        </div>
+
+                        <!-- Python Panel -->
+                        <div class="code-panel active" id="panel-python">
+                            <pre><code>import numpy as np
+import pandas as pd
+
+def runs_decluster(series, threshold, run_length):
+    """ Declusters a time series using the runs method. """
+    is_exceedance = series > threshold
+    clusters = []
+    current_cluster = []
+    gap = 0
+    
+    for i, (val, exceed) in enumerate(zip(series, is_exceedance)):
+        if exceed:
+            current_cluster.append((i, val))
+            gap = 0
+        else:
+            gap += 1
+            if gap >= run_length and current_cluster:
+                clusters.append(current_cluster)
+                current_cluster = []
+                
+    if current_cluster:
+        clusters.append(current_cluster)
+        
+    # Extract the peak (max value) from each cluster
+    peaks = [max(cluster, key=lambda x: x[1]) for cluster in clusters]
+    return peaks
+
+# Simulated daily precipitation data
+rainfall = np.array([5, 12, 45, 52, 48, 10, 2, 0, 60, 65, 12, 4])
+
+# Apply runs method: Threshold=40, run_length=2 days
+independent_peaks = runs_decluster(rainfall, threshold=40, run_length=2)
+
+print("Declustered Peaks (Index, Value):")
+for idx, val in independent_peaks:
+    print(f"Day {idx}: {val}mm")</code></pre>
+                            <div class="code-output">Declustered Peaks (Index, Value):
+                                Day 3: 52mm
+                                Day 9: 65mm</div>
+                        </div>
+
+                        <!-- R Panel -->
+                        <div class="code-panel" id="panel-r">
+                            <pre><code>library(extRemes)
+
+# Simulated daily precipitation data
+rainfall <- c(5, 12, 45, 52, 48, 10, 2, 0, 60, 65, 12, 4)
+dates <- seq(as.Date("2026-01-01"), by="day", length.out=length(rainfall))
+df <- data.frame(Date=dates, Rain=rainfall)
+
+# Apply runs declustering using extRemes package
+# r is the run length (gap size) to separate clusters
+declustered_data <- decluster(df$Rain, threshold = 40, r = 2)
+
+# extRemes returns an object containing cluster identifiers and peaks
+cat("Identified Independent Peaks:\n")
+print(declustered_data)
+
+# Fit GPD to the declustered peaks
+# fit <- fevd(x = declustered_data, threshold = 40, type = "GP")</code></pre>
+                            <div class="code-output">Identified Independent Peaks:
+                                [1] 52 65
+                                attr(,"clusters")
+                                [1] 0 0 1 1 1 0 0 0 2 2 0 0</div>
+                        </div>
+
+                    </div> <!-- End Code Switcher -->
+
+                </section>
+
+                <section>
+                    <h2>References</h2>
+
+                    <!-- 1. Link to your local BibTeX file -->
+                    <bibtex src="references.bib"></bibtex>
+
+                    <!-- 2. Define the template for how each entry should look (Hidden from view) -->
+                    <div class="bibtex_template" style="display: none;">
+                        <li>
+                            <span class="if author">
+                                <span class="author"></span>
+                            </span>
+                            <span class="if year">
+                                (<span class="year"></span>).
+                            </span>
+                            <span class="if title">
+                                <em><span class="title"></span></em>.
+                            </span>
+                            <span class="if journal">
+                                <span class="journal"></span><span class="if volume">, <span
+                                        class="volume"></span></span><span class="if number">(<span
+                                        class="number"></span>)</span>.
+                            </span>
+                            <span class="if publisher">
+                                <span class="publisher"></span>.
+                            </span>
+                        </li>
+                    </div>
+
+                    <!-- 3. The empty list where the script will automatically generate the HTML -->
+                    <ul class="references-list" id="bibtex_display"></ul>
+                </section>
+            </article>
+        </main>
+
+        <footer class="site-footer">
+            <p>&copy; 2026 Oliver Brady.</p>
+        </footer>
+    </div>
+
+    <!-- Script for Tab Switching Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Find all code tabs on the page
+            const tabs = document.querySelectorAll('.code-tab');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Find the parent switcher component to isolate scope
+                    const switcher = tab.closest('.code-switcher');
+
+                    // Remove active state from all tabs and panels IN THIS switcher
+                    switcher.querySelectorAll('.code-tab').forEach(t => t.classList.remove('active'));
+                    switcher.querySelectorAll('.code-panel').forEach(p => p.classList.remove('active'));
+
+                    // Activate the clicked tab and its corresponding panel
+                    tab.classList.add('active');
+                    const targetPanel = switcher.querySelector(`#${tab.dataset.target}`);
+                    if (targetPanel) {
+                        targetPanel.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Script to Generate Interactive Plotly Visual -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Generate synthetic time series data with two distinct clusters
+            const n = 100;
+            const time = Array.from({ length: n }, (_, i) => i);
+            const threshold = 35;
+
+            const values = time.map(t => {
+                let base = Math.abs(Math.sin(t / 4) * 15) + Math.random() * 10;
+                // Add Cluster 1
+                if (t >= 20 && t <= 28) base += 30 * Math.sin((t - 20) / 8 * Math.PI);
+                // Add Cluster 2
+                if (t >= 65 && t <= 75) base += 40 * Math.sin((t - 65) / 10 * Math.PI);
+                return base;
+            });
+
+            // Extract peaks manually for the visualization
+            const peak1_x = 24;
+            const peak1_y = Math.max(...values.slice(20, 29));
+            const peak2_x = 70;
+            const peak2_y = Math.max(...values.slice(65, 76));
+
+            const traceTimeSeries = {
+                x: time,
+                y: values,
+                mode: 'lines',
+                name: 'Observations',
+                line: { color: '#888888', width: 2 }
+            };
+
+            const tracePeaks = {
+                x: [peak1_x, peak2_x],
+                y: [peak1_y, peak2_y],
+                mode: 'markers',
+                name: 'Declustered Peaks',
+                marker: {
+                    color: '#e74c3c',
+                    size: 10,
+                    symbol: 'star',
+                    line: {
+                        color: '#c0392b',
+                        width: 2
+                    }
+                }
+            };
+
+            const layout = {
+                margin: { l: 40, r: 20, b: 40, t: 40 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                title: 'Time Series Extremes and Declustered Peaks',
+                xaxis: { title: 'Time (Days)' },
+                yaxis: { title: 'Magnitude' },
+                shapes: [
+                    {
+                        type: 'line',
+                        xref: 'paper',
+                        x0: 0,
+                        x1: 1,
+                        yref: 'y',
+                        y0: threshold,
+                        y1: threshold,
+                        line: {
+                            color: '#2980b9',
+                            width: 2,
+                            dash: 'dash'
+                        }
+                    }
+                ],
+                annotations: [
+                    {
+                        xref: 'paper',
+                        yref: 'y',
+                        x: 0.05,
+                        y: threshold + 3,
+                        text: 'Threshold u',
+                        showarrow: false,
+                        font: { color: '#2980b9' }
+                    }
+                ]
+            };
+
+            Plotly.newPlot('interactive-declustering-plot', [traceTimeSeries, tracePeaks], layout, { responsive: true });
+        });
+    </script>
+</body>
+
+</html>

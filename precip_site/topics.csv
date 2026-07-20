@@ -6,3 +6,4 @@ Hierarchical Bayesian Models,"Leveraging Bayes' theorem to borrow strength acros
 IDF Curves,Updating Intensity-Duration-Frequency parameters for non-stationary climates to accurately predict the probability of future flood events.,Return Levels;Non-stationary;Flood Risk,idf.html
 WRF,,Physical Modelling,wrf.html
 Stocastic Rainfall Generators,,SDE;,srg.html
+Declustering,,GPD;POT,declustering/declustering.html
