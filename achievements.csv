@@ -1,19 +1,29 @@
 month,year,event,category,description,link
-7,2025,Masters of Natural Sciences (Mnatsci),Academic,Graduated with a first class masters degree and best overall performance,https://www.linkedin.com/in/oliver-brady-60729a12a/
-8,2025,Surfing Introduction,Athletic|Adventure,5 days learning to surf in Peniche-Portugal,https://www.instagram.com/p/DOY9AguDdxA/?utm_source=ig_web_copy_link&igsh=MXNuNDM2MmZld3hkYw== 
-9,2025,Weymouth 70.3,Athletic,"A competetive performance at Ironman 70.3 Weymouth, 8th in my age category",https://www.instagram.com/p/DOpAnP1iJf4/?utm_source=ig_web_copy_link&igsh=MXdraGd4ZzVocXdwcA== 
-10,2025,Yorkshire Marathon,Athletic,Completed the Yorkshire Marathon,https://www.instagram.com/p/DQECx5hDVVj/?utm_source=ig_web_copy_link&igsh=Zzc5a2QwaGt2Yzl1 
+4,2019,"Swimming Teacher, Assistant & Lifeguard at SLL",Athletic|Academic,Developed customer service skills and tailored training plans.,https://www.linkedin.com/in/oliver-brady-60729a12a/
+9,2021,Started Master of Natural Sciences at UEA,Academic,"Began interdisciplinary degree developing quantitative skills in university-level mathematics, problem-solving, and statistical data science principles.",https://www.linkedin.com/in/oliver-brady-60729a12a/
+6,2022,Physics & Maths Teaching Intern at Redborne Upper School,Academic,Conducted science workshops and organised classroom activities.,https://www.linkedin.com/in/oliver-brady-60729a12a/
+9,2022,President of UEA Natural Sciences Society,Academic,Managed risk assessments and event organisation. Provided direction for the society.,https://www.linkedin.com/in/oliver-brady-60729a12a/
+12,2022,Mathematics Specialist at Kumon,Academic,Supported students and marked work within a team environment.,https://www.linkedin.com/in/oliver-brady-60729a12a/
+7,2023,Research Experience Placement at British Antarctic Survey,Academic,Conducted Earth-observation research on the Antarctic cryosphere using CloudSat data. Focused on remote-sensing retrieval methodologies to identify instances of rain and mixed-phase precipitation.,https://www.linkedin.com/in/oliver-brady-60729a12a/
+7,2023,Machine Learning Intern at WeatherQuest,Academic,Improved significant wave height forecasts and developed a lightning risk model handling an imbalanced dataset.,https://www.linkedin.com/in/oliver-brady-60729a12a/
+1,2024,Data Scientist/Analyst at WeatherQuest,Academic,Started role applying machine learning and statistical techniques to post-process point-location forecasts. Built models to address operational challenges.,https://www.linkedin.com/in/oliver-brady-60729a12a/
+7,2025,Masters of Natural Sciences (Mnatsci),Academic,Graduated with a first class masters degree and best overall performance. Research project: Investigated the use of the Ornstein-Uhlenbeck process to probabilistically model short-term wind speed and velocity.,https://www.linkedin.com/in/oliver-brady-60729a12a/
+8,2025,Surfing Introduction,Athletic|Adventure,5 days learning to surf in Peniche-Portugal,https://www.instagram.com/p/DOY9AguDdxA/?utm_source=ig_web_copy_link&igsh=MXNuNDM2MmZld3hkYw== 
 8,2025,Data scientist at Weatherquest,Academic,Leaving weatherquest after working with them for around 2 years,https://www.linkedin.com/in/oliver-brady-60729a12a/
+9,2025,Weymouth 70.3,Athletic,"A competetive performance at Ironman 70.3 Weymouth, 8th in my age category",https://www.instagram.com/p/DOpAnP1iJf4/?utm_source=ig_web_copy_link&igsh=MXdraGd4ZzVocXdwcA== 
+9,2025,Started PhD at University of Bath (SAMBa),Academic,"Began PhD focusing on advanced statistical approaches, including the development of methods for generating future Intensity-Duration-Frequency (IDF) curves.",https://www.oliverbrady.uk
+10,2025,Yorkshire Marathon,Athletic,Completed the Yorkshire Marathon,https://www.instagram.com/p/DQECx5hDVVj/?utm_source=ig_web_copy_link&igsh=Zzc5a2QwaGt2Yzl1 
+10,2025,Programming for data science (MA12005),Academic,"University of Bath, Tutoring the programming lab for semester 1 (Data Science).",
+11,2025,Norwich Half Marathon,Athletic,Achieved a PB:  1:31:53,
 12,2025,Enhancing the Benefits of Mathematical Analysis in Hydrological and Industry Modelling,Academic,"Attended a workshop exploring how theoretical analysis can provide insights about the behaviour, calibration and robustness of rainfall-runoff models.",http://www.ptrinh.com/bathhydrology2025
-11,2025,Norwich Half Marathon,Athletic, Achieved a PB:  1:31:53,
-10,2025,Programming for data science (MA12005),Academic,"University of Bath, Tutoring the programming lab for semester 1",
-2,2026,Programming for mathematics (MA12002),Academic,"University of Bath, Tutoring the programming lab for semester 2",
 1,2026,Integrative Think Tank 23,Academic,BT Project: Working on statistical approaches for identifying non-stationarity in a time series of channel (H) matrices,
+2,2026,Programming for mathematics (MA12002),Academic,"University of Bath, Tutoring the programming lab for semester 2 (Mathematical Programming).",
 2,2026,Winter Mountain Skills Course,Adventure,"Prep & Safety: Kit requirements, route planning, and avalanche risk assessment. Technical Skills: Crampon and microspike techniques, plus ice axe self-arrest.",https://www.instagram.com/p/DVIhQMPDf8m/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==
 3,2026,Completed the Learn to Ski Programme,Adventure,I completed the learn to ski 4 star programme at the Mendip Activity Centre over the past couple of months,
 4,2026,Backyard Ultramarathon 50km,Athletic,I participated in the BUMC backyard ultramarathon raising money for search and rescue. I completed around 50km.,
 5,2026,German A2,Academic,I passed the A2 German language exam concluding a year of evening classes,
-6,2026,Group Project: Nonstationary Extremes,Academic,A group project focusing on methods for modelling nonstationary extreme values in a hydrological setting,
-6,2026,Personal Project: Clustering Time Series based on Extremal Dependence ,Academic,,
 5,2026,Bristol Half Marathon,Athletic,A new PB: 1:29:03,
-6,2026,Integrative Think Tank 24,Academic,,
+6,2026,Group Project: Nonstationary Extremes,Academic,A group project focusing on methods for modelling nonstationary extreme values in a hydrological setting,
+6,2026,Personal Project: Clustering Time Series based on Extremal Dependence ,Academic,Investigated clustering time series based on extremal dependence.,
+6,2026,Integrative Think Tank 24,Academic,Devised a method for increasing knowledge of low voltage electricity demand across the UK using limited observational data.,
+7,2026,ABRSM Grade 5 Music Theory,Academic,Merit,
