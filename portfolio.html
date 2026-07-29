@@ -61,7 +61,11 @@
           portfolioContainer.innerHTML = `<p style="text-align: center; color: var(--dark-red); width: 100%;">Unable to load portfolio.</p>`;
         });
 
-      portfolioContainer.addEventListener('wheel', (e) => { e.preventDefault(); portfolioContainer.scrollLeft += e.deltaY; });
+      // New code
+      portfolioContainer.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        portfolioContainer.scrollLeft += (e.deltaY * 2.5);
+      });
       scrollLeftBtn.addEventListener('click', () => portfolioContainer.scrollBy({ left: -350, behavior: 'smooth' }));
       scrollRightBtn.addEventListener('click', () => portfolioContainer.scrollBy({ left: 350, behavior: 'smooth' }));
       portfolioContainer.addEventListener('scroll', updateArrowVisibility);

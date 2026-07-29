@@ -45,7 +45,11 @@
     const scrollLeftBtn = document.getElementById('scrollLeftBtn');
     const scrollRightBtn = document.getElementById('scrollRightBtn');
 
-    timelineContainer.addEventListener('wheel', (e) => { e.preventDefault(); timelineContainer.scrollLeft += e.deltaY; });
+    // New code
+    timelineContainer.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      cont.scrollLeft += (e.deltaY * 2.5);
+    });
     scrollLeftBtn.addEventListener('click', () => timelineContainer.scrollBy({ left: -350, behavior: 'smooth' }));
     scrollRightBtn.addEventListener('click', () => timelineContainer.scrollBy({ left: 350, behavior: 'smooth' }));
     timelineContainer.addEventListener('scroll', updateArrowVisibility);
