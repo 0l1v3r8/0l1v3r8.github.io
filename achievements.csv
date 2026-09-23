@@ -11,7 +11,7 @@ month,year,event,category,description,link
 8,2025,Surfing Introduction,Athletic|Adventure,5 days learning to surf in Peniche-Portugal,https://www.instagram.com/p/DOY9AguDdxA/?utm_source=ig_web_copy_link&igsh=MXNuNDM2MmZld3hkYw== 
 8,2025,Data scientist at Weatherquest,Academic,Leaving weatherquest after working with them for around 2 years,https://www.linkedin.com/in/oliver-brady-60729a12a/
 9,2025,Weymouth 70.3,Athletic,"A competetive performance at Ironman 70.3 Weymouth, 8th in my age category",https://www.instagram.com/p/DOpAnP1iJf4/?utm_source=ig_web_copy_link&igsh=MXdraGd4ZzVocXdwcA== 
-9,2025,Started PhD at University of Bath (SAMBa),Academic,Began PhD training year,https://www.oliverbrady.uk
+9,2025,Started PhD at University of Bath (SAMBa),Academic,"Began PhD training year including taught courses in Numerical Analysis, Traditional Statistical Methods (GLMs) and Advanced Machine Learning",https://www.oliverbrady.uk
 10,2025,Yorkshire Marathon,Athletic,Completed the Yorkshire Marathon,https://www.instagram.com/p/DQECx5hDVVj/?utm_source=ig_web_copy_link&igsh=Zzc5a2QwaGt2Yzl1 
 10,2025,Programming for data science (MA12005),Academic,"University of Bath, Tutoring the programming lab for semester 1 (Data Science).",
 11,2025,Norwich Half Marathon,Athletic,Achieved a PB:  1:31:53,
@@ -27,5 +27,5 @@ month,year,event,category,description,link
 6,2026,Personal Project: Clustering Time Series based on Extremal Dependence ,Academic,Investigated clustering time series based on extremal dependence.,
 6,2026,Integrative Think Tank 24,Academic,Devised a method for increasing knowledge of low voltage electricity demand across the UK using limited observational data.,
 7,2026,ABRSM Grade 5 Music Theory,Academic|Artistic,Merit,
-8,2026,Completed SAMBa training year and progressed to the research phase,Academic,My PhD focus will be on constructing IDF curves for future rainfall. This is a broad thematic project which will enable me to explore a wide range of promising methodological avenues.,
+8,2026,Completed SAMBa training year and progressed to the research phase,Academic,My PhD focus will consider the problems surrounding the construction of IDF curves for rainfall in a future climate. This is a broad thematic project which will enable me to explore a wide range of promising methodological avenues.,
 9,2026,Ironman Wales,Athletic,Completed my first full Ironman,
