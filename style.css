@@ -64,6 +64,10 @@ header.site-header {
   gap: 1.5rem;
 }
 
+.site-header:hover .profile-portrait {
+  content: url("images/OB_white_circle.png");
+}
+
 .header-link {
   text-decoration: none;
   display: flex;
@@ -226,7 +230,6 @@ main.content {
   height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -340,5 +343,12 @@ main.content {
 
   .track-item {
     scroll-snap-align: start;
+  }
+}
+
+/* Disable scroll snapping on desktop to allow free-scrolling with a mouse */
+@media (min-width: 769px) {
+  .track-container {
+    scroll-snap-type: none;
   }
 }
