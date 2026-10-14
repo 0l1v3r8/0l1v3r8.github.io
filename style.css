@@ -167,7 +167,8 @@ nav.navbar {
 
 /* --- Main Content Frame --- */
 main.content {
-  flex: 1 1 0;
+  flex-grow: 1;
+  height: 100%;
   min-height: 0;
   width: 100%;
   background-color: var(--light-green);
@@ -247,7 +248,8 @@ main.content {
 /* --- Horizontal Track System --- */
 .track-wrapper {
   position: relative;
-  flex: 1 1 0;
+  flex-grow: 1;
+  height: 100%;
   min-height: 0;
   width: 100%;
   display: flex;
@@ -256,9 +258,11 @@ main.content {
 
 .track-container {
   display: flex;
+  align-items: stretch;
   gap: var(--gap);
   width: 100%;
   height: 100%;
+  min-height: 0;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
@@ -272,13 +276,14 @@ main.content {
   display: none;
 }
 
-/* Guaranteed Non-Shrinking Card Widths */
+/* Guaranteed Non-Shrinking Card Widths & Full Stretched Height */
 .track-item {
   flex: 0 0 auto;
   flex-shrink: 0 !important;
   width: calc(100% - 1rem);
   max-width: 560px;
   height: 100%;
+  min-height: 0;
   scroll-snap-align: center;
   background-color: var(--bg);
   border-radius: var(--radius-sm);
@@ -294,19 +299,15 @@ main.content {
   box-shadow: var(--shadow-hover);
 }
 
-/* Internal Card Scroll (Only grows vertically when nested inside a card) */
+/* Internal Card Scroll: uses flex-grow: 1 (auto basis) so mobile browsers never collapse it to 0px */
 .track-item-scrollable {
+  flex-grow: 1;
+  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: rgba(26, 86, 104, 0.2) transparent;
   overscroll-behavior-y: contain;
-}
-
-/* When .track-item-scrollable is a child container (e.g. inside .timeline-item), fill remaining vertical height */
-.track-item>.track-item-scrollable {
-  flex: 1 1 0;
-  min-height: 0;
 }
 
 .track-item-scrollable::-webkit-scrollbar {
@@ -430,7 +431,7 @@ main.content {
 
 /* --- Page 1: Index Grid --- */
 .index-grid {
-  flex: 1 1 0;
+  flex-grow: 1;
   width: 100%;
   height: 100%;
   min-height: 0;
@@ -788,9 +789,10 @@ main.content {
   transform: translateY(-2px);
 }
 
-/* Timeline Card Container (Fills full available height and scrolls internally without squishing) */
+/* Timeline Card Container: Explicitly fills remaining height below the 48px axis */
 .timeline-card {
-  flex: 1 1 0;
+  flex: 1 1 auto;
+  height: calc(100% - 48px);
   width: 100%;
   min-height: 0;
   background-color: var(--bg);
@@ -800,7 +802,6 @@ main.content {
   border-radius: var(--radius-sm);
   padding: clamp(1rem, 3vmin, 1.4rem);
   display: block;
-  /* Block layout prevents flex-column from compressing child entries */
   position: relative;
   z-index: 3;
   box-shadow: var(--shadow-sm);
@@ -897,7 +898,6 @@ main.content {
     scroll-snap-type: x mandatory;
   }
 
-  /* Force both regular cards and timeline cards to span almost 100% of the mobile frame */
   .track-item,
   .timeline-item {
     width: calc(100% - 0.5rem);
@@ -919,8 +919,8 @@ main.content {
   }
 }
 
-/* Short Viewport & Landscape Escape Hatch so Cards Never Squish */
-@media (max-height: 640px) {
+/* Short Viewport & Landscape Escape Hatch */
+@media (max-height: 540px) {
 
   html,
   body {
@@ -930,6 +930,10 @@ main.content {
   }
 
   main.content {
-    min-height: 440px;
+    min-height: 420px;
+  }
+
+  .timeline-card {
+    min-height: 280px;
   }
 }
