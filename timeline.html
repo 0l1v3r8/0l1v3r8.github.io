@@ -54,46 +54,81 @@
 
       let allEvents = [];
 
+      /**
+       * Groups chronologically sorted events that share the exact same year and month
+       * so they attach to a single point on the timeline axis.
+       * @param {Array} events
+       * @returns {Array<{year: number, month: number, items: Array}>}
+       */
+      function groupEventsByDate(events) {
+        const groups = [];
+        for (const event of events) {
+          const lastGroup = groups[groups.length - 1];
+          if (lastGroup && lastGroup.year === event.year && lastGroup.month === event.month) {
+            lastGroup.items.push(event);
+          } else {
+            groups.push({
+              year: event.year,
+              month: event.month,
+              items: [event]
+            });
+          }
+        }
+        return groups;
+      }
+
       function renderTimelineEvents(selectedCategories = []) {
-        const events = selectedCategories.length === 0
+        const filteredEvents = selectedCategories.length === 0
           ? allEvents
           : allEvents.filter((e) => e.category.some((cat) => selectedCategories.includes(cat)));
 
-        if (events.length === 0) {
+        if (filteredEvents.length === 0) {
           timelineContainer.innerHTML = `<p class="status-message error">No achievements match the selected filters.</p>`;
           track.updateArrows();
           return;
         }
 
+        const dateGroups = groupEventsByDate(filteredEvents);
         let previousYear = null;
 
-        timelineContainer.innerHTML = events
-          .map((event) => {
-            const isNewYear = event.year !== previousYear;
-            previousYear = event.year;
+        timelineContainer.innerHTML = dateGroups
+          .map((group) => {
+            const isNewYear = group.year !== previousYear;
+            previousYear = group.year;
 
             const yearStartClass = isNewYear ? "year-start" : "";
-            const formattedDate = formatMonthYear(event.month, event.year);
-            const titleText = escapeHtml(event.event);
-            const titleMarkup = event.link
-              ? `<a href="${escapeHtml(event.link)}" target="_blank" rel="noopener noreferrer">${titleText} ↗</a>`
-              : titleText;
-            const tagsMarkup = event.category
-              .map((cat) => `<span class="tag">${escapeHtml(cat)}</span>`)
+            const formattedDate = formatMonthYear(group.month, group.year);
+
+            const entriesMarkup = group.items
+              .map((event) => {
+                const titleText = escapeHtml(event.event);
+                const titleMarkup = event.link
+                  ? `<a href="${escapeHtml(event.link)}" target="_blank" rel="noopener noreferrer">${titleText} ↗</a>`
+                  : titleText;
+                const tagsMarkup = event.category
+                  .map((cat) => `<span class="tag">${escapeHtml(cat)}</span>`)
+                  .join("");
+
+                return `
+                  <div class="timeline-event-entry">
+                    <h3>${titleMarkup}</h3>
+                    <div class="tags-group">${tagsMarkup}</div>
+                    <p>${escapeHtml(event.description)}</p>
+                  </div>
+                `;
+              })
               .join("");
 
             return `
               <article class="timeline-item track-item ${yearStartClass}" role="listitem">
                 <div class="timeline-axis">
-                  <time class="timeline-date-pill" datetime="${event.year}-${String(event.month).padStart(2, '0')}">
+                  <time class="timeline-date-pill" datetime="${group.year}-${String(group.month).padStart(2, '0')}">
                     ${formattedDate}
                   </time>
                   <div class="timeline-dot" aria-hidden="true"></div>
                 </div>
                 <div class="timeline-card track-item-scrollable">
-                  <h3>${titleMarkup}</h3>
-                  <div class="tags-group">${tagsMarkup}</div>
-                  <p>${escapeHtml(event.description)}</p>
+                  ${entriesMarkup}
                 </div>
               </article>
             `;
