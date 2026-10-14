@@ -65,25 +65,33 @@
           return;
         }
 
+        let previousYear = null;
+
         timelineContainer.innerHTML = events
           .map((event) => {
+            const isNewYear = event.year !== previousYear;
+            previousYear = event.year;
+
+            const yearStartClass = isNewYear ? "year-start" : "";
             const formattedDate = formatMonthYear(event.month, event.year);
             const titleText = escapeHtml(event.event);
             const titleMarkup = event.link
-              ? `<a href="${escapeHtml(event.link)}" target="_blank" rel="noopener noreferrer">${titleText}</a>`
+              ? `<a href="${escapeHtml(event.link)}" target="_blank" rel="noopener noreferrer">${titleText} ↗</a>`
               : titleText;
             const tagsMarkup = event.category
               .map((cat) => `<span class="tag">${escapeHtml(cat)}</span>`)
               .join("");
 
             return `
-              <article class="timeline-item track-item" role="listitem">
-                <div class="timeline-date-badge">${formattedDate}</div>
-                <div class="timeline-marker" aria-hidden="true"></div>
+              <article class="timeline-item track-item ${yearStartClass}" role="listitem">
+                <div class="timeline-axis">
+                  <time class="timeline-date-pill" datetime="${event.year}-${String(event.month).padStart(2, '0')}">
+                    ${formattedDate}
+                  </time>
+                  <div class="timeline-dot" aria-hidden="true"></div>
+                </div>
                 <div class="timeline-card track-item-scrollable">
-                  <div class="timeline-card-header">
-                    <h3>${titleMarkup}</h3>
-                  </div>
+                  <h3>${titleMarkup}</h3>
                   <div class="tags-group">${tagsMarkup}</div>
                   <p>${escapeHtml(event.description)}</p>
                 </div>
