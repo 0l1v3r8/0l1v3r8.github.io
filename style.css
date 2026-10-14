@@ -272,10 +272,12 @@ main.content {
   display: none;
 }
 
-/* Restored Generous Widths for Profile & Portfolio Cards */
+/* Guaranteed Non-Shrinking Card Widths */
 .track-item {
   flex: 0 0 auto;
-  width: clamp(290px, 86vw, 480px);
+  flex-shrink: 0 !important;
+  width: calc(100% - 1rem);
+  max-width: 560px;
   height: 100%;
   scroll-snap-align: center;
   background-color: var(--bg);
@@ -292,14 +294,19 @@ main.content {
   box-shadow: var(--shadow-hover);
 }
 
+/* Internal Card Scroll (Only grows vertically when nested inside a card) */
 .track-item-scrollable {
-  flex: 1 1 0;
-  min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: rgba(26, 86, 104, 0.2) transparent;
   overscroll-behavior-y: contain;
+}
+
+/* When .track-item-scrollable is a child container (e.g. inside .timeline-item), fill remaining vertical height */
+.track-item>.track-item-scrollable {
+  flex: 1 1 0;
+  min-height: 0;
 }
 
 .track-item-scrollable::-webkit-scrollbar {
@@ -465,7 +472,7 @@ main.content {
 
 /* --- Page 2: Profile Cards --- */
 .profile-card {
-  padding: clamp(1rem, 3vmin, 1.5rem);
+  padding: clamp(1.1rem, 3vmin, 1.65rem);
   border-bottom: 4px solid var(--dark-green);
   text-decoration: none;
   color: inherit;
@@ -520,7 +527,7 @@ main.content {
 }
 
 .portfolio-header {
-  padding: clamp(0.9rem, 2.5vmin, 1.35rem);
+  padding: clamp(0.95rem, 2.5vmin, 1.4rem);
   padding-bottom: 0.65rem;
   text-align: left;
   flex-shrink: 0;
@@ -550,7 +557,7 @@ main.content {
 .portfolio-media {
   flex-shrink: 0;
   width: 100%;
-  height: clamp(135px, 22vmin, 200px);
+  height: clamp(145px, 23vmin, 215px);
   background-color: var(--surface-muted);
   border-top: 2px solid var(--light-green);
   border-bottom: 2px solid var(--light-green);
@@ -634,7 +641,7 @@ main.content {
 }
 
 .portfolio-body {
-  padding: clamp(0.9rem, 2.5vmin, 1.35rem);
+  padding: clamp(0.95rem, 2.5vmin, 1.4rem);
   padding-top: 0.75rem;
   text-align: left;
   display: flex;
@@ -652,7 +659,9 @@ main.content {
 /* --- Page 4: Grouped Chronological Timeline --- */
 .timeline-item {
   flex: 0 0 auto;
-  width: clamp(285px, 86vw, 440px);
+  flex-shrink: 0 !important;
+  width: calc(100% - 1rem);
+  max-width: 500px;
   height: 100%;
   background: transparent !important;
   box-shadow: none !important;
@@ -844,19 +853,18 @@ main.content {
     scroll-snap-type: none;
   }
 
-  /* Matches your original wider desktop card proportions */
+  /* Fits 2 generous, wide cards across the desktop container */
   .track-item {
-    width: clamp(340px, 44vw, 480px);
+    width: clamp(420px, calc(50% - (var(--gap) * 0.5)), 600px);
   }
 
   .timeline-item {
-    width: clamp(320px, 38vw, 430px);
+    width: clamp(380px, calc(46% - (var(--gap) * 0.5)), 520px);
   }
 }
 
 @media (max-width: 768px) {
 
-  /* Keep header horizontal on mobile to maximize vertical room for cards */
   header.site-header,
   .header-link {
     flex-direction: row;
