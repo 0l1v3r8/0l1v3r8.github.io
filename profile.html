@@ -3,77 +3,21 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="images/OB.png" type="image/png">
   <title>Oliver Brady - Profile</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    .profile-card {
-      padding: clamp(1rem, 3vmin, 1.5rem);
-      border-bottom: 4px solid var(--dark-green);
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .profile-card.hero {
-      border-left: 6px solid var(--dark-blue);
-      border-bottom: none;
-      background: white;
-    }
-
-    .profile-card:hover:not(.hero) {
-      background-color: var(--light-red);
-      border-color: var(--dark-red);
-    }
-
-    .funnel-arrow {
-      margin-top: auto;
-      font-weight: 900;
-      color: var(--dark-red);
-      padding-top: 1rem;
-    }
-
-    .skill-tag {
-      background: var(--bg);
-      color: var(--dark-red);
-      border: 1px solid var(--light-red);
-      padding: 0.2rem 0.6rem;
-      border-radius: 15px;
-      font-size: 0.8rem;
-      font-weight: bold;
-      margin: 0.2rem;
-      display: inline-block;
-    }
-
-    /* CSS for the Toast Notification */
-    #copy-toast {
-      display: none;
-      opacity: 0;
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: var(--dark-green);
-      color: var(--bg);
-      padding: 0.75rem 1.5rem;
-      border-radius: 25px;
-      font-weight: bold;
-      font-size: 0.9rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-      transition: opacity 0.3s ease;
-      z-index: 1000;
-      pointer-events: none;
-      /* Prevents it from blocking clicks */
-    }
-  </style>
 </head>
 
 <body>
   <div class="container">
     <header class="site-header">
       <a href="index.html" class="header-link">
-        <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
+        <div class="portrait-wrapper">
+          <img src="images/Portrait.JPG" alt="Oliver Brady Portrait" class="portrait-default">
+          <img src="images/OB_white_circle.png" alt="Oliver Brady Logo" class="portrait-hover">
+        </div>
         <div class="name-group">
           <h1>Oliver Brady</h1>
           <p>Learning More • Going Further</p>
@@ -83,37 +27,37 @@
 
     <main class="content">
       <div class="track-wrapper">
-        <button class="scroll-btn left-btn" id="scrollLeftBtn">❮</button>
+        <button class="scroll-btn left-btn" id="scrollLeftBtn" aria-label="Scroll Left">❮</button>
 
-        <div class="track-container" id="profile-container">
-
-          <div class="track-item track-item-scrollable profile-card hero">
-            <h2 style="color: var(--dark-blue); margin-top: 0;">Hi, I'm Oliver.</h2>
-            <p>I enjoy the challenge of turning theory into practice. I am motivated by the full implementation of
-              approaches—seeing how mathematical methodologies can genuinely impact the real world. I bring this same
+        <div class="track-container" id="profile-container" role="list">
+          <div class="track-item track-item-scrollable profile-card hero" role="listitem">
+            <h2>Hi, I'm Oliver.</h2>
+            <p>
+              I enjoy the challenge of turning theory into practice. I am motivated by the full implementation of
+              approaches, seeing how mathematical methodologies can genuinely impact the real world. I bring this same
               active mindset to my personal life, constantly pushing my limits through endurance sports and exploration.
             </p>
           </div>
 
-          <div class="track-item track-item-scrollable profile-card hero">
-            <h3 style="color: var(--dark-blue); margin-top: 0;">Current Positions</h3>
-            <div style="margin-bottom: 1rem;">
+          <div class="track-item track-item-scrollable profile-card hero" role="listitem">
+            <h3>Current Positions</h3>
+            <div class="role-item">
               <strong>Primary Role Title</strong><br>
-              <span style="font-size: 0.9rem; color: #444;">Organization / Institution Name</span>
+              <span class="role-org">Organisation / Institution Name</span>
             </div>
-            <div>
+            <div class="role-item">
               <strong>Secondary Role Title</strong><br>
-              <span style="font-size: 0.9rem; color: #444;">Organization / Institution Name</span>
+              <span class="role-org">Organisation / Institution Name</span>
             </div>
-            <div style="margin-top: 1rem;">
+            <div class="tags-group" style="margin-top: auto;">
               <span class="skill-tag">Active</span>
               <span class="skill-tag">2026</span>
             </div>
           </div>
 
-          <a href="portfolio.html" class="track-item track-item-scrollable profile-card">
-            <h3 style="color: var(--dark-green); margin-top: 0;">Academic</h3>
-            <div>
+          <a href="portfolio.html" class="track-item track-item-scrollable profile-card" role="listitem">
+            <h3>Academic</h3>
+            <div class="tags-group">
               <span class="skill-tag">Mathematical Modelling</span>
               <span class="skill-tag">Interdisciplinary Research</span>
               <span class="skill-tag">Data Analysis</span>
@@ -121,9 +65,9 @@
             <span class="funnel-arrow">View Portfolio ➔</span>
           </a>
 
-          <a href="timeline.html" class="track-item track-item-scrollable profile-card">
-            <h3 style="color: var(--dark-green); margin-top: 0;">Athletic & Adventure</h3>
-            <div>
+          <a href="timeline.html" class="track-item track-item-scrollable profile-card" role="listitem">
+            <h3>Athletic &amp; Adventure</h3>
+            <div class="tags-group">
               <span class="skill-tag">Triathlon</span>
               <span class="skill-tag">Yoga</span>
               <span class="skill-tag">Hiking</span>
@@ -131,9 +75,9 @@
             <span class="funnel-arrow">Explore Timeline ➔</span>
           </a>
 
-          <a href="portfolio.html" class="track-item track-item-scrollable profile-card">
-            <h3 style="color: var(--dark-green); margin-top: 0;">Artistic</h3>
-            <div>
+          <a href="portfolio.html" class="track-item track-item-scrollable profile-card" role="listitem">
+            <h3>Artistic</h3>
+            <div class="tags-group">
               <span class="skill-tag">Music</span>
               <span class="skill-tag">Photography</span>
               <span class="skill-tag">Poetry</span>
@@ -141,50 +85,48 @@
             <span class="funnel-arrow">View Portfolio ➔</span>
           </a>
 
-          <div class="track-item track-item-scrollable profile-card">
-            <h3 style="color: var(--dark-green); margin-top: 0;">Contact Me</h3>
+          <div class="track-item track-item-scrollable profile-card contact-card" role="listitem">
+            <h3>Contact Me</h3>
             <p>I am always open to new connections, collaborative projects, and discussing shared interests.</p>
-
-            <div class="social-icons" style="margin-top: auto; padding-top: 1rem; justify-content: flex-start;">
-              <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer">
+            <div class="social-icons" style="margin-top: auto; padding-top: 1rem;">
+              <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer"
+                aria-label="LinkedIn">
                 <img src="images/linkedin_logo.png" alt="LinkedIn">
               </a>
-              <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer"
+                aria-label="Instagram">
                 <img src="images/instagram_logo.png" alt="Instagram">
               </a>
-              <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')">
+              <a href="mailto:contact@oliverbrady.uk" id="copy-email-btn" aria-label="Copy Email Address">
                 <img src="images/email.png" alt="Email">
               </a>
             </div>
           </div>
-
         </div>
 
-        <button class="scroll-btn right-btn" id="scrollRightBtn">❯</button>
+        <button class="scroll-btn right-btn" id="scrollRightBtn" aria-label="Scroll Right">❯</button>
       </div>
     </main>
   </div>
 
-  <div id="copy-toast">Email copied to clipboard!</div>
+  <div id="copy-toast" class="copy-toast" role="status" aria-live="polite">
+    Email copied to clipboard!
+  </div>
 
+  <script src="app.js"></script>
   <script>
-    const cont = document.getElementById('profile-container');
-    document.getElementById('scrollLeftBtn').addEventListener('click', () => cont.scrollBy({ left: -350, behavior: 'smooth' }));
-    document.getElementById('scrollRightBtn').addEventListener('click', () => cont.scrollBy({ left: 350, behavior: 'smooth' }));
-    cont.addEventListener('wheel', (e) => {
-      e.preventDefault();
-      cont.scrollLeft += (e.deltaY * 2.5);
-    });
-
-    // Your exact toast copy script
-    function copyEmail(e, email) {
-      e.preventDefault();
-      navigator.clipboard.writeText(email).then(() => {
-        const t = document.getElementById('copy-toast');
-        t.style.display = 'block'; setTimeout(() => { t.style.opacity = '1'; }, 10);
-        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => { t.style.display = 'none'; }, 300); }, 2500);
+    document.addEventListener("DOMContentLoaded", () => {
+      new TrackController({
+        container: document.getElementById("profile-container"),
+        leftBtn: document.getElementById("scrollLeftBtn"),
+        rightBtn: document.getElementById("scrollRightBtn")
       });
-    }
+
+      const clipboard = new ClipboardService("copy-toast");
+      document.getElementById("copy-email-btn").addEventListener("click", (e) => {
+        clipboard.copyEmail(e, "contact@oliverbrady.uk");
+      });
+    });
   </script>
 </body>
 

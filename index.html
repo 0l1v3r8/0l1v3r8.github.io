@@ -1,109 +1,43 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="images/OB_white_circle.png" type="image/png">
   <title>Oliver Brady</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <style>
-    .index-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      gap: var(--gap);
-      height: 100%;
-      min-height: 0;
-    }
-
-    .index-card {
-      background-color: var(--bg);
-      border-radius: 8px;
-      border-bottom: 4px solid var(--dark-green);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      width: 100%;
-
-      /* Removed the strict min-height so the boxes can shrink naturally */
-
-      text-decoration: none;
-      color: var(--dark-green);
-      /* Bumped up text size slightly so the words don't get swallowed by the box */
-      font-size: clamp(1.4rem, 4vmin, 2rem);
-      font-weight: 900;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
-    }
-
-    .index-card:hover {
-      background-color: var(--light-red);
-      border-bottom-color: var(--dark-red);
-      color: var(--dark-red);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 15px rgba(26, 86, 104, 0.15);
-    }
-
-    .index-card:last-child:nth-child(odd) {
-      grid-column: 1 / -1;
-    }
-
-    /* The Mobile Escape Hatch */
-    @media (max-width: 600px) {
-      .index-grid {
-        display: flex;
-        flex-direction: column;
-        /* Shrinking the gap slightly on mobile gives the boxes more breathing room */
-        gap: 0.75rem;
-      }
-
-      .index-card {
-        /* This magic line forces the 3 boxes to evenly divide EXACTLY whatever height is left on the screen */
-        flex: 1 1 0;
-        min-height: 0;
-      }
-    }
-  </style>
 </head>
 
 <body>
   <div class="container">
-    <header class="site-header"
-      onmouseover="document.querySelector('.profile-portrait').src='images/OB_white_circle.png'"
-      onmouseout="document.querySelector('.profile-portrait').src='images/Portrait.JPG'">
-      <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
+    <header class="site-header">
+      <div class="portrait-wrapper">
+        <img src="images/Portrait.JPG" alt="Oliver Brady Portrait" class="portrait-default">
+        <img src="images/OB_white_circle.png" alt="Oliver Brady Logo" class="portrait-hover">
+      </div>
       <div class="name-group">
         <h1>Oliver Brady</h1>
         <p>Learning More • Going Further</p>
       </div>
     </header>
 
-    <nav class="navbar">
+    <nav class="navbar" aria-label="Social Links">
       <div class="social-icons">
-        <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer"><img
-            src="images/linkedin_logo.png" alt="LinkedIn"></a>
-        <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer"><img
-            src="images/instagram_logo.png" alt="Instagram"></a>
-        <a href="#" onclick="copyEmail(event, 'contact@oliverbrady.uk')"><img src="images/email.png" alt="Email"></a>
+        <a href="https://www.linkedin.com/in/oliver-brady-60729a12a/" target="_blank" rel="noopener noreferrer"
+          aria-label="LinkedIn">
+          <img src="images/linkedin_logo.png" alt="LinkedIn">
+        </a>
+        <a href="https://www.instagram.com/_oliverbrady_/" target="_blank" rel="noopener noreferrer"
+          aria-label="Instagram">
+          <img src="images/instagram_logo.png" alt="Instagram">
+        </a>
+        <a href="mailto:contact@oliverbrady.uk" id="copy-email-btn" aria-label="Copy Email Address">
+          <img src="images/email.png" alt="Email">
+        </a>
       </div>
     </nav>
-
-    <div id="copy-toast"
-      style="display: none; position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background-color: var(--dark-blue); color: var(--bg); padding: 0.75rem 1.5rem; border-radius: 25px; z-index: 1000; opacity: 0; transition: opacity 0.3s ease; font-weight: bold; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
-      Email copied!</div>
-    <script>
-      function copyEmail(e, email) {
-        e.preventDefault();
-        navigator.clipboard.writeText(email).then(() => {
-          const t = document.getElementById('copy-toast');
-          t.style.display = 'block'; setTimeout(() => { t.style.opacity = '1'; }, 10);
-          setTimeout(() => { t.style.opacity = '0'; setTimeout(() => { t.style.display = 'none'; }, 300); }, 2500);
-        });
-      }
-    </script>
 
     <main class="content">
       <div class="index-grid">
@@ -113,6 +47,19 @@
       </div>
     </main>
   </div>
+
+  <div id="copy-toast" class="copy-toast" role="status" aria-live="polite">
+    Email copied to clipboard!
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const clipboard = new ClipboardService("copy-toast");
+      const emailBtn = document.getElementById("copy-email-btn");
+      emailBtn.addEventListener("click", (e) => clipboard.copyEmail(e, "contact@oliverbrady.uk"));
+    });
+  </script>
 </body>
 
 </html>

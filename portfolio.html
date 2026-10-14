@@ -3,19 +3,21 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="images/OB.png" type="image/png">
   <title>Oliver Brady - Portfolio</title>
   <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="portfolio_style.css">
 </head>
 
 <body>
   <div class="container">
     <header class="site-header">
       <a href="index.html" class="header-link">
-        <img src="images/Portrait.JPG" alt="My Portrait" class="profile-portrait">
+        <div class="portrait-wrapper">
+          <img src="images/Portrait.JPG" alt="Oliver Brady Portrait" class="portrait-default">
+          <img src="images/OB_white_circle.png" alt="Oliver Brady Logo" class="portrait-hover">
+        </div>
         <div class="name-group">
           <h1>Oliver Brady</h1>
           <p>Learning More • Going Further</p>
@@ -24,14 +26,13 @@
     </header>
 
     <main class="content">
-      <div class="filter-wrapper" id="filter-container"></div>
+      <div class="filter-wrapper" id="filter-container" role="group" aria-label="Portfolio Category Filters"></div>
 
       <div class="track-wrapper">
         <button class="scroll-btn left-btn" id="scrollLeftBtn" aria-label="Scroll Left">❮</button>
 
         <div class="track-container" id="portfolio-container" role="list">
-          <p style="text-align: center; width: 100%; color: var(--dark-green); font-weight: bold;">Loading portfolio...
-          </p>
+          <p class="status-message">Loading portfolio...</p>
         </div>
 
         <button class="scroll-btn right-btn" id="scrollRightBtn" aria-label="Scroll Right">❯</button>
@@ -39,100 +40,98 @@
     </main>
   </div>
 
+  <script src="app.js"></script>
   <script>
-    const jsonPath = 'portfolio.json';
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    let portfolioData = [];
+    document.addEventListener("DOMContentLoaded", () => {
+      const portfolioContainer = document.getElementById("portfolio-container");
+      const filterContainer = document.getElementById("filter-container");
 
-    const portfolioContainer = document.getElementById('portfolio-container');
-    const filterContainer = document.getElementById('filter-container');
-    const scrollLeftBtn = document.getElementById('scrollLeftBtn');
-    const scrollRightBtn = document.getElementById('scrollRightBtn');
-
-    document.addEventListener('DOMContentLoaded', () => {
-      fetch(jsonPath)
-        .then(response => response.json())
-        .then(data => {
-          portfolioData = data.sort((a, b) => b.year !== a.year ? b.year - a.year : b.month - a.month);
-          createCategoryFilters([...new Set(portfolioData.flatMap(item => item.category))].sort());
-          filterAndDisplayItems();
-        })
-        .catch(error => {
-          portfolioContainer.innerHTML = `<p style="text-align: center; color: var(--dark-red); width: 100%;">Unable to load portfolio.</p>`;
-        });
-
-      // New code
-      portfolioContainer.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        portfolioContainer.scrollLeft += (e.deltaY * 2.5);
+      const track = new TrackController({
+        container: portfolioContainer,
+        leftBtn: document.getElementById("scrollLeftBtn"),
+        rightBtn: document.getElementById("scrollRightBtn")
       });
-      scrollLeftBtn.addEventListener('click', () => portfolioContainer.scrollBy({ left: -350, behavior: 'smooth' }));
-      scrollRightBtn.addEventListener('click', () => portfolioContainer.scrollBy({ left: 350, behavior: 'smooth' }));
-      portfolioContainer.addEventListener('scroll', updateArrowVisibility);
-      window.addEventListener('resize', updateArrowVisibility);
-    });
 
-    function updateArrowVisibility() {
-      scrollLeftBtn.style.opacity = portfolioContainer.scrollLeft <= 0 ? '0.3' : '1';
-      scrollRightBtn.style.opacity = portfolioContainer.scrollLeft + portfolioContainer.clientWidth >= portfolioContainer.scrollWidth - 1 ? '0.3' : '1';
-    }
+      let portfolioData = [];
 
-    function createCategoryFilters(categories) {
-      filterContainer.innerHTML = categories.map(category => `
-        <label class="filter-label">
-          <input type="checkbox" name="category" value="${category}" class="filter-checkbox">
-          ${category}
-        </label>
-      `).join('');
-      document.querySelectorAll('.filter-checkbox').forEach(cb => {
-        cb.addEventListener('change', function () {
-          this.parentElement.classList.toggle('active', this.checked);
-          filterAndDisplayItems();
-        });
-      });
-    }
+      function buildMediaMarkup(item) {
+        const src = escapeHtml(item.source);
+        const title = escapeHtml(item.title);
 
-    function filterAndDisplayItems() {
-      const selectedCategories = [...document.querySelectorAll('.filter-checkbox:checked')].map(cb => cb.value);
-      const items = selectedCategories.length === 0 ? portfolioData : portfolioData.filter(item => item.category.some(cat => selectedCategories.includes(cat)));
-
-      if (items.length === 0) {
-        portfolioContainer.innerHTML = '<p style="text-align: center; width: 100%; color: var(--dark-red);">No items match filters.</p>';
-        return;
+        switch (item.type) {
+          case "image":
+            return `<img src="${src}" alt="${title}" class="media-content" loading="lazy">`;
+          case "video":
+            return `<video controls class="media-content"><source src="${src}" type="video/mp4"></video>`;
+          case "youtube":
+            return `<div class="video-responsive"><iframe src="${src}" title="${title}" allowfullscreen loading="lazy"></iframe></div>`;
+          case "pdf":
+            return `<div class="media-callout pdf-variant"><span>PDF Document</span><a href="${src}" target="_blank" rel="noopener noreferrer" class="callout-btn">View</a></div>`;
+          case "website":
+            return `<div class="media-callout web-variant"><span>Webpage</span><a href="${src}" target="_blank" rel="noopener noreferrer" class="callout-btn">View</a></div>`;
+          default:
+            return "";
+        }
       }
 
-      portfolioContainer.innerHTML = items.map(item => {
-        const tags = item.category.map(cat => `<span class="tag">${cat}</span>`).join('');
-        let media = '';
-        if (item.type === 'image') media = `<img src="${item.source}" alt="${item.title}" class="media-content">`;
-        else if (item.type === 'video') media = `<video controls class="media-content"><source src="${item.source}" type="video/mp4"></video>`;
-        else if (item.type === 'youtube') media = `<div class="video-responsive"><iframe src="${item.source}" frameborder="0" allowfullscreen></iframe></div>`;
-        else if (item.type === 'pdf') media = `<div class="pdf-wrapper"><span>PDF Document</span><a href="${item.source}" target="_blank" class="pdf-btn">View</a></div>`;
-        else if (item.type === 'website') media = `<div class="website-wrapper"><span>Webpage</span><a href="${item.source}" target="_blank" class="website-btn">View</a></div>`;
+      function renderPortfolioItems(selectedCategories = []) {
+        const filtered = selectedCategories.length === 0
+          ? portfolioData
+          : portfolioData.filter((item) => item.category.some((cat) => selectedCategories.includes(cat)));
 
-        return `
-          <div class="portfolio-item track-item track-item-scrollable" role="listitem">
-            
-            <div class="portfolio-header">                             
-              <h3>${item.title}</h3>
-              <div class="meta-row">
-                <div class="tags-group">${tags}</div>
-                <span class="date-text">${monthNames[item.month - 1]} ${item.year}</span>
-              </div>
-            </div>
+        if (filtered.length === 0) {
+          portfolioContainer.innerHTML = `<p class="status-message error">No items match the selected filters.</p>`;
+          track.updateArrows();
+          return;
+        }
 
-            <div class="portfolio-media">
-              ${media}
-            </div>
-            
-            <div class="portfolio-body"> 
-              <p>${item.description}</p>
-            </div>
+        portfolioContainer.innerHTML = filtered
+          .map((item) => {
+            const tags = item.category.map((cat) => `<span class="tag">${escapeHtml(cat)}</span>`).join("");
+            return `
+              <article class="portfolio-item track-item track-item-scrollable" role="listitem">
+                <div class="portfolio-header">
+                  <h3>${escapeHtml(item.title)}</h3>
+                  <div class="meta-row">
+                    <div class="tags-group">${tags}</div>
+                    <span class="date-text">${formatMonthYear(item.month, item.year)}</span>
+                  </div>
+                </div>
+                <div class="portfolio-media">
+                  ${buildMediaMarkup(item)}
+                </div>
+                <div class="portfolio-body">
+                  <p>${escapeHtml(item.description)}</p>
+                </div>
+              </article>
+            `;
+          })
+          .join("");
 
-          </div>`;
-      }).join('');
-      setTimeout(updateArrowVisibility, 50);
-    }
+        requestAnimationFrame(() => track.updateArrows());
+      }
+
+      fetch("portfolio.json")
+        .then((response) => {
+          if (!response.ok) throw new Error("Failed to fetch portfolio.json");
+          return response.json();
+        })
+        .then((data) => {
+          portfolioData = data.sort((a, b) => (b.year !== a.year ? b.year - a.year : b.month - a.month));
+          const uniqueCategories = [...new Set(portfolioData.flatMap((item) => item.category))].sort();
+
+          new FilterController({
+            container: filterContainer,
+            categories: uniqueCategories,
+            onFilterChange: (selected) => renderPortfolioItems(selected)
+          });
+
+          renderPortfolioItems();
+        })
+        .catch(() => {
+          portfolioContainer.innerHTML = `<p class="status-message error">Unable to load portfolio.</p>`;
+        });
+    });
   </script>
 </body>
 
